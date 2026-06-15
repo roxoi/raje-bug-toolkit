@@ -421,7 +421,7 @@
           border-color 0.25s,
           box-shadow 0.25s;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
       }
       .new-project-card::before {
         content: '';
@@ -1407,7 +1407,7 @@
         border-color: var(--warn);
         color: var(--warn);
       }
-            /* Delete confirm modal */
+      /* Delete confirm modal */
       .delete-modal {
         background: var(--surface);
         border: 1px solid rgba(255, 51, 102, 0.35);
@@ -1503,6 +1503,205 @@
         opacity: 0.35;
         cursor: not-allowed;
       }
+      /* ── Platform dropdown (favicons + search) ── */
+      .mpd-wrap {
+        position: relative;
+        width: 100%;
+        font-family: var(--mono);
+      }
+      .mpd-trigger {
+        width: 100%;
+        background: #080b0e;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 7px 11px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        cursor: pointer;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          background 0.2s;
+        box-sizing: border-box;
+      }
+      .mpd-trigger:hover,
+      .mpd-trigger.open {
+        border-color: var(--accent2);
+      }
+      .mpd-trigger:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(0, 229, 160, 0.1);
+      }
+      .mpd-trigger-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+      .mpd-trigger-content .mpd-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .mpd-trigger-content .mpd-placeholder {
+        color: var(--muted);
+      }
+      .mpd-chevron {
+        color: var(--dim);
+        font-size: 9px;
+        flex-shrink: 0;
+        transition: transform 0.15s;
+      }
+      .mpd-trigger.open .mpd-chevron {
+        transform: rotate(180deg);
+      }
+
+      .mpd-menu {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: #080b0e;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        max-height: 260px;
+        overflow-y: auto;
+        z-index: 410;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        display: none;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) #080b0e;
+      }
+      .mpd-menu.open {
+        display: block;
+      }
+      .mpd-menu::-webkit-scrollbar {
+        width: 5px;
+      }
+      .mpd-menu::-webkit-scrollbar-track {
+        background: #080b0e;
+      }
+      .mpd-menu::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      .mpd-menu::-webkit-scrollbar-thumb:hover {
+        background: var(--accent2);
+      }
+
+      .mpd-search-wrap {
+        position: sticky;
+        top: 0;
+        background: #080b0e;
+        padding: 6px;
+        border-bottom: 1px solid var(--border);
+        z-index: 1;
+      }
+      .mpd-search {
+        width: 100%;
+        background: #0d1117;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 11px;
+        padding: 6px 8px;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.15s;
+      }
+      .mpd-search:focus {
+        border-color: var(--accent2);
+      }
+      .mpd-search::placeholder {
+        color: var(--muted);
+      }
+
+      .mpd-group-label {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 8px 12px 4px;
+      }
+      .mpd-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 12px;
+        cursor: pointer;
+        font-size: 12px;
+        font-family: var(--mono);
+        color: var(--text);
+        transition: background 0.1s;
+      }
+      .mpd-option:hover,
+      .mpd-option.active {
+        background: rgba(0, 184, 255, 0.08);
+      }
+      .mpd-option.placeholder {
+        color: var(--muted);
+      }
+      .mpd-no-results {
+        padding: 14px 12px;
+        font-size: 11px;
+        color: var(--dim);
+        text-align: center;
+        display: none;
+      }
+      .mpd-icon {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        flex-shrink: 0;
+        display: inline-block;
+        object-fit: contain;
+      }
+      .mpd-icon-emoji {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+      }
+      .mpd-icon-none {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+      .mpd-other-input {
+        width: 100%;
+        background: #080b0e;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 7px 11px;
+        outline: none;
+        margin-top: 8px;
+        box-sizing: border-box;
+        display: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .mpd-other-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(0, 229, 160, 0.1);
+      }
+      .mpd-other-input.show {
+        display: block;
+      }
     </style>
   </head>
   <body>
@@ -1513,7 +1712,7 @@
       </div>
       <div class="hdr-right">
         <button class="export-btn" id="exportBtn">⬇ Export JSON</button>
-        <a href="/raje-bug-toolkit/" class="back-btn">← Back to Toolkit</a>
+        <a href="bbh-toolkit.html" class="back-btn">← Back to Toolkit</a>
       </div>
     </header>
 
@@ -1588,17 +1787,7 @@
           </div>
           <div class="form-group">
             <label>Platform</label>
-            <select id="newPlatform">
-              <option value="">— select —</option>
-              <option value="HackerOne">HackerOne</option>
-              <option value="Bugcrowd">Bugcrowd</option>
-              <option value="Intigriti">Intigriti</option>
-              <option value="Synack">Synack</option>
-              <option value="YesWeHack">YesWeHack</option>
-              <option value="Private">Private Program</option>
-              <option value="Self-hosted">Self-hosted VDP</option>
-              <option value="Other">Other</option>
-            </select>
+            <div id="newPlatformDropdownWrapper"></div>
           </div>
           <div class="form-group">
             <label>Bounty Earned ($)</label>
@@ -1808,6 +1997,445 @@
         let editingIdx = null;
         let detailIdx = null;
         let activeDetailTab = 'checklist';
+
+        /* ── Platform dropdown engine ── */
+        let PLATFORM_GROUPS = [
+          {
+            label: '🌐 Global',
+            items: [
+              {
+                value: 'HackerOne',
+                label: 'HackerOne',
+                domain: 'hackerone.com',
+                emoji: '🛡',
+              },
+              {
+                value: 'Bugcrowd',
+                label: 'Bugcrowd',
+                domain: 'bugcrowd.com',
+                emoji: '🐛',
+              },
+              {
+                value: 'Synack',
+                label: 'Synack',
+                domain: 'synack.com',
+                emoji: '🔒',
+              },
+              {
+                value: 'Cobalt',
+                label: 'Cobalt',
+                domain: 'cobalt.io',
+                emoji: '🎯',
+              },
+            ],
+          },
+          {
+            label: '🚩 European',
+            items: [
+              {
+                value: 'Intigriti',
+                label: 'Intigriti',
+                domain: 'intigriti.com',
+                emoji: '🔍',
+              },
+              {
+                value: 'YesWeHack',
+                label: 'YesWeHack',
+                domain: 'yeswehack.com',
+                emoji: '☁️',
+              },
+              {
+                value: 'OpenBugBounty',
+                label: 'OpenBugBounty',
+                domain: 'openbugbounty.org',
+                emoji: '🌐',
+              },
+            ],
+          },
+          {
+            label: '🇮🇳 India',
+            items: [
+              {
+                value: 'BugBase',
+                label: 'BugBase',
+                domain: 'bugbase.in',
+                emoji: '🗄',
+              },
+              {
+                value: 'Hacktify',
+                label: 'Hacktify',
+                favicon: 'https://hacktify.in/logo.png',
+                emoji: '🛡',
+              },
+              {
+                value: 'BugBounter',
+                label: 'BugBounter',
+                domain: 'bugbounter.com',
+                emoji: '🐛',
+              },
+              {
+                value: 'SecurityBoat',
+                label: 'SecurityBoat',
+                domain: 'securityboat.in',
+                emoji: '⚓',
+              },
+            ],
+          },
+          {
+            label: '🏛️ Government / CERT',
+            items: [
+              {
+                value: 'CERT-In',
+                label: 'CERT-In',
+                domain: 'cert-in.org.in',
+                emoji: '🏢',
+              },
+              {
+                value: 'DoD/VDP',
+                label: 'DoD / VDP',
+                domain: 'hackerone.com',
+                emoji: '⭐',
+              },
+            ],
+          },
+          {
+            label: 'Other',
+            items: [
+              { value: 'Private', label: 'Private Program', emoji: '🔐' },
+              { value: 'Self-hosted', label: 'Self-hosted VDP', emoji: '🏠' },
+              { value: 'Other', label: 'Other', emoji: '➕' },
+            ],
+          },
+        ];
+
+        function findPlatformItem(value) {
+          for (let g = 0; g < PLATFORM_GROUPS.length; g++) {
+            for (let i = 0; i < PLATFORM_GROUPS[g].items.length; i++) {
+              if (PLATFORM_GROUPS[g].items[i].value === value)
+                return PLATFORM_GROUPS[g].items[i];
+            }
+          }
+          return null;
+        }
+
+        function getOptionIconHTML(item) {
+          if (!item) return '';
+          if (item.domain || item.favicon) {
+            let src =
+              item.favicon ||
+              'https://www.google.com/s2/favicons?domain=' +
+                item.domain +
+                '&sz=32';
+            return (
+              '<img class="mpd-icon" src="' +
+              src +
+              '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'inline-flex\';" /><span class="mpd-icon-emoji" style="display:none;">' +
+              item.emoji +
+              '</span>'
+            );
+          }
+          return '<span class="mpd-icon-emoji">' + item.emoji + '</span>';
+        }
+
+        function buildPlatformDropdownHTML(idPrefix, selectedValue) {
+          selectedValue = selectedValue || '';
+          let known = findPlatformItem(selectedValue);
+          let effectiveValue = selectedValue;
+          let otherText = '';
+          if (selectedValue && !known) {
+            effectiveValue = 'Other';
+            otherText = selectedValue;
+          }
+
+          let triggerLabelText = effectiveValue
+            ? findPlatformItem(effectiveValue)
+              ? findPlatformItem(effectiveValue).label
+              : effectiveValue
+            : '— select —';
+          let triggerIconHtml = effectiveValue
+            ? getOptionIconHTML(findPlatformItem(effectiveValue))
+            : '';
+
+          let html = [];
+          html.push('<div class="mpd-wrap" id="' + idPrefix + 'Dropdown">');
+          html.push(
+            '  <button type="button" class="mpd-trigger" id="' +
+              idPrefix +
+              'Trigger">',
+          );
+          html.push('    <span class="mpd-trigger-content">');
+          html.push(
+            '      <span class="' +
+              (triggerIconHtml ? '' : 'mpd-icon-none') +
+              '" id="' +
+              idPrefix +
+              'TriggerIcon">' +
+              triggerIconHtml +
+              '</span>',
+          );
+          html.push(
+            '      <span class="mpd-label' +
+              (effectiveValue === '' ? ' mpd-placeholder' : '') +
+              '" id="' +
+              idPrefix +
+              'TriggerLabel">' +
+              esc(triggerLabelText) +
+              '</span>',
+          );
+          html.push('    </span>');
+          html.push('    <span class="mpd-chevron">▾</span>');
+          html.push('  </button>');
+          html.push(
+            '  <input type="hidden" id="' +
+              idPrefix +
+              '" value="' +
+              esc(effectiveValue) +
+              '" />',
+          );
+          html.push('  <div class="mpd-menu" id="' + idPrefix + 'Menu">');
+          html.push(
+            '    <div class="mpd-search-wrap"><input type="text" class="mpd-search" id="' +
+              idPrefix +
+              'Search" placeholder="Search platforms..." autocomplete="off" /></div>',
+          );
+          html.push(
+            '    <div class="mpd-option placeholder' +
+              (effectiveValue === '' ? ' active' : '') +
+              '" data-value="" data-label="— select —"><span class="mpd-icon-none"></span><span>— select —</span></div>',
+          );
+
+          PLATFORM_GROUPS.forEach(function (group) {
+            html.push(
+              '    <div class="mpd-group-label">' + group.label + '</div>',
+            );
+            group.items.forEach(function (item) {
+              let activeCls = item.value === effectiveValue ? ' active' : '';
+              html.push(
+                '    <div class="mpd-option' +
+                  activeCls +
+                  '" data-value="' +
+                  esc(item.value) +
+                  '" data-label="' +
+                  esc(item.label) +
+                  '">' +
+                  getOptionIconHTML(item) +
+                  '<span>' +
+                  esc(item.label) +
+                  '</span></div>',
+              );
+            });
+          });
+
+          html.push(
+            '    <div class="mpd-no-results" id="' +
+              idPrefix +
+              'NoResults">No platforms match your search</div>',
+          );
+          html.push('  </div>');
+          html.push(
+            '  <input type="text" id="' +
+              idPrefix +
+              'Other" class="mpd-other-input' +
+              (effectiveValue === 'Other' ? ' show' : '') +
+              '" placeholder="Enter program/platform name" autocomplete="off" value="' +
+              esc(otherText) +
+              '" />',
+          );
+          html.push('</div>');
+          return html.join('\n');
+        }
+
+        function initPlatformDropdown(idPrefix) {
+          let wrap = document.getElementById(idPrefix + 'Dropdown');
+          if (!wrap) return;
+          let trigger = document.getElementById(idPrefix + 'Trigger');
+          let menu = document.getElementById(idPrefix + 'Menu');
+          let hiddenInput = document.getElementById(idPrefix);
+          let triggerLabel = document.getElementById(idPrefix + 'TriggerLabel');
+          let triggerIcon = document.getElementById(idPrefix + 'TriggerIcon');
+          let otherInput = document.getElementById(idPrefix + 'Other');
+          let searchInput = document.getElementById(idPrefix + 'Search');
+          let noResults = document.getElementById(idPrefix + 'NoResults');
+          let searchWrap = searchInput.closest('.mpd-search-wrap');
+
+          // Anchor marks the menu's original position so it can be restored
+          let menuAnchor = document.createComment(
+            'mpd-menu-anchor-' + idPrefix,
+          );
+          wrap.insertBefore(menuAnchor, menu);
+
+          function positionMenu() {
+            let rect = trigger.getBoundingClientRect();
+            let menuHeight = menu.offsetHeight || 260;
+            let spaceBelow = window.innerHeight - rect.bottom;
+            let top;
+            if (spaceBelow < menuHeight + 8 && rect.top > menuHeight + 8) {
+              top = rect.top - menuHeight - 4;
+            } else {
+              top = rect.bottom + 4;
+            }
+            menu.style.position = 'fixed';
+            menu.style.top = top + 'px';
+            menu.style.left = rect.left + 'px';
+            menu.style.width = rect.width + 'px';
+          }
+
+          function openMenu() {
+            document.body.appendChild(menu);
+            menu.classList.add('open');
+            trigger.classList.add('open');
+            searchInput.value = '';
+            filterOptions('');
+            positionMenu();
+            setTimeout(function () {
+              searchInput.focus();
+              positionMenu();
+            }, 30);
+          }
+          function closeMenu() {
+            menu.classList.remove('open');
+            trigger.classList.remove('open');
+            menu.style.position = '';
+            menu.style.top = '';
+            menu.style.left = '';
+            menu.style.width = '';
+            if (menuAnchor.parentNode) {
+              menuAnchor.parentNode.insertBefore(menu, menuAnchor);
+            } else {
+              wrap.insertBefore(menu, otherInput);
+            }
+          }
+          trigger.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (menu.classList.contains('open')) closeMenu();
+            else openMenu();
+          });
+
+          function filterOptions(query) {
+            query = query.trim().toLowerCase();
+            let children = Array.from(menu.children).filter(function (c) {
+              return c !== searchWrap && c !== noResults;
+            });
+            let currentGroup = null,
+              groupHasMatch = false,
+              anyVisible = false;
+            function finalizeGroup() {
+              if (currentGroup)
+                currentGroup.style.display = groupHasMatch ? '' : 'none';
+            }
+            children.forEach(function (el) {
+              if (el.classList.contains('mpd-group-label')) {
+                finalizeGroup();
+                currentGroup = el;
+                groupHasMatch = false;
+                return;
+              }
+              if (el.classList.contains('mpd-option')) {
+                if (el.classList.contains('placeholder')) {
+                  el.style.display = query ? 'none' : '';
+                  return;
+                }
+                let label = (el.getAttribute('data-label') || '').toLowerCase();
+                let match = label.indexOf(query) !== -1;
+                el.style.display = match ? '' : 'none';
+                if (match) {
+                  groupHasMatch = true;
+                  anyVisible = true;
+                }
+              }
+            });
+            finalizeGroup();
+            noResults.style.display = anyVisible || !query ? 'none' : 'block';
+            positionMenu();
+          }
+
+          searchInput.addEventListener('input', function () {
+            filterOptions(searchInput.value);
+          });
+          searchInput.addEventListener('click', function (e) {
+            e.stopPropagation();
+          });
+          searchInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') e.preventDefault();
+            if (e.key === 'Escape') closeMenu();
+          });
+
+          menu.querySelectorAll('.mpd-option').forEach(function (opt) {
+            opt.addEventListener('click', function () {
+              menu.querySelectorAll('.mpd-option').forEach(function (o) {
+                o.classList.remove('active');
+              });
+              opt.classList.add('active');
+
+              let value = opt.getAttribute('data-value');
+              let label = opt.getAttribute('data-label');
+
+              hiddenInput.value = value;
+              triggerLabel.textContent = label;
+              triggerLabel.classList.toggle('mpd-placeholder', value === '');
+
+              let iconEl = opt.querySelector(
+                '.mpd-icon:not([style*="display: none"]), .mpd-icon-emoji:not([style*="display: none"])',
+              );
+              triggerIcon.innerHTML = '';
+              if (iconEl) {
+                let clone = iconEl.cloneNode(true);
+                clone.style.display = '';
+                triggerIcon.appendChild(clone);
+                triggerIcon.className = '';
+              } else {
+                triggerIcon.className = 'mpd-icon-none';
+              }
+
+              if (value === 'Other') {
+                otherInput.classList.add('show');
+                setTimeout(function () {
+                  otherInput.focus();
+                }, 50);
+              } else {
+                otherInput.classList.remove('show');
+                otherInput.value = '';
+              }
+
+              closeMenu();
+              hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+          });
+
+          document.addEventListener('click', function (e) {
+            if (!wrap.contains(e.target) && !menu.contains(e.target))
+              closeMenu();
+          });
+          window.addEventListener(
+            'scroll',
+            function () {
+              if (menu.classList.contains('open')) positionMenu();
+            },
+            true,
+          );
+          window.addEventListener('resize', function () {
+            if (menu.classList.contains('open')) positionMenu();
+          });
+        }
+        function resetPlatformDropdown(idPrefix) {
+          let el = document.getElementById(idPrefix + 'Dropdown');
+          if (!el) return;
+          let menu = document.getElementById(idPrefix + 'Menu');
+          if (menu && menu.parentNode === document.body) {
+            menu.parentNode.removeChild(menu);
+          }
+          el.outerHTML = buildPlatformDropdownHTML(idPrefix, '');
+          initPlatformDropdown(idPrefix);
+        }
+
+        function getPlatformDropdownValue(idPrefix) {
+          let hiddenInput = document.getElementById(idPrefix);
+          let otherInput = document.getElementById(idPrefix + 'Other');
+          if (!hiddenInput) return '';
+          if (hiddenInput.value === 'Other')
+            return (otherInput.value || '').trim();
+          return hiddenInput.value;
+        }
 
         /* Phase map  mirrors the toolkit sidebar */
         let PHASES = [
@@ -2363,31 +2991,8 @@
               '<div class="detail-fields">',
               '  <div class="detail-field">',
               '    <label>Platform</label>',
-              '    <select id="editPlatform">',
-              '      <option value="">— select —</option>',
-              [
-                'HackerOne',
-                'Bugcrowd',
-                'Intigriti',
-                'Synack',
-                'YesWeHack',
-                'Private',
-                'Self-hosted',
-                'Other',
-              ]
-                .map(function (v) {
-                  return (
-                    '<option value="' +
-                    v +
-                    '"' +
-                    (p.platform === v ? ' selected' : '') +
-                    '>' +
-                    v +
-                    '</option>'
-                  );
-                })
-                .join(''),
-              '    </select>',
+              '    ' +
+                buildPlatformDropdownHTML('editPlatform', p.platform || ''),
               '  </div>',
               '  <div class="detail-field">',
               '    <label>Severity Focus</label>',
@@ -2433,13 +3038,15 @@
               '</div>',
             ].join('');
 
+            initPlatformDropdown('editPlatform');
+
             document
               .getElementById('detailSaveBtn')
               .addEventListener('click', function () {
                 let projects = loadProjects();
                 if (!projects[detailIdx]) return;
                 projects[detailIdx].platform =
-                  document.getElementById('editPlatform').value;
+                  getPlatformDropdownValue('editPlatform');
                 projects[detailIdx].severity =
                   document.getElementById('editSeverity').value;
                 projects[detailIdx].bounty =
@@ -2533,7 +3140,7 @@
 
           showToast('Loading ' + p.target + '…');
           setTimeout(function () {
-            window.location.href = '/raje-bug-toolkit/';
+            window.location.href = 'bbh-toolkit.html';
           }, 700);
         }
 
@@ -2590,7 +3197,7 @@
           .getElementById('addProjectBtn')
           .addEventListener('click', function () {
             let target = document.getElementById('newTarget').value.trim();
-            let platform = document.getElementById('newPlatform').value;
+            let platform = getPlatformDropdownValue('newPlatform');
             let bounty =
               parseFloat(document.getElementById('newBounty').value) || 0;
             let severity = document.getElementById('newSeverity').value;
@@ -2598,6 +3205,13 @@
             if (!target) {
               document.getElementById('newTarget').focus();
               showToast('Enter a target domain', true);
+              return;
+            }
+            if (
+              document.getElementById('newPlatform').value === 'Other' &&
+              !platform
+            ) {
+              showToast('Enter a name for the platform', true);
               return;
             }
             let projects = loadProjects();
@@ -2621,7 +3235,7 @@
             });
             saveProjects(projects);
             document.getElementById('newTarget').value = '';
-            document.getElementById('newPlatform').value = '';
+            resetPlatformDropdown('newPlatform');
             document.getElementById('newBounty').value = '';
             document.getElementById('newSeverity').value = '';
             document.getElementById('newNotes').value = '';
@@ -2756,6 +3370,10 @@
         })();
 
         /* Init  */
+        document.getElementById('newPlatformDropdownWrapper').innerHTML =
+          buildPlatformDropdownHTML('newPlatform', '');
+        initPlatformDropdown('newPlatform');
+
         render();
       })();
     </script>
