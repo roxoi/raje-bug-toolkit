@@ -978,6 +978,42 @@
         border-color: #ff3366;
         box-shadow: 0 0 8px rgba(255, 51, 102, 0.2);
       }
+
+      /* 1. Base reset button styles ensuring smooth transitions */
+      .animated-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+      }
+
+      /* 2. Plus Icon Animation: Rotate and Scale */
+      .animated-btn:hover .anim-plus {
+        transform: rotate(90deg) scale(1.1);
+      }
+      .anim-plus {
+        transform-origin: center;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* 3. Layers Icon Animation: Expand/Shift Tier Heights */
+      .anim-layer-top,
+      .anim-layer-mid,
+      .anim-layer-bot {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: center;
+      }
+      /* Pull top layer up slightly, push bottom layer down */
+      .animated-btn:hover .anim-layer-top {
+        transform: translateY(-2px);
+      }
+      .animated-btn:hover .anim-layer-mid {
+        transform: translateY(0px);
+      }
+      .animated-btn:hover .anim-layer-bot {
+        transform: translateY(2px);
+      }
     </style>
   </head>
   <body>
@@ -995,24 +1031,79 @@
           >0 / 0 checks</span
         >
         <div class="prog-badge" id="gPct">0%</div>
+        <!-- + New Project Button -->
         <button
-          class="reset-btn"
+          class="reset-btn animated-btn"
           id="newProjectBtn"
           title="Create a new project"
         >
-          + New Project
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://w3.org"
+          >
+            <path
+              class="anim-plus"
+              d="M12 5V19M5 12H19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          New Project
         </button>
+
+        <!-- Projects Link -->
         <a
           href="projects.html"
-          class="reset-btn"
+          class="reset-btn animated-btn"
           style="
             text-decoration: none;
             color: var(--accent2);
             border-color: rgba(0, 184, 255, 0.4);
           "
           title="Manage saved projects"
-          >⊞ Projects</a
         >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://w3.org"
+          >
+            <!-- Top layer -->
+            <path
+              class="anim-layer-top"
+              d="M12 2L2 7l10 5 10-5-10-5z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <!-- Middle architectural tier -->
+            <path
+              class="anim-layer-mid"
+              d="M2 12l10 5 10-5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <!-- Bottom architectural tier -->
+            <path
+              class="anim-layer-bot"
+              d="M2 17l10 5 10-5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Projects
+        </a>
       </div>
     </header>
 
@@ -1234,32 +1325,6 @@
                   border-color: var(--accent2);
                   background: rgba(0, 184, 255, 0.04);
                 }
-                .pf-badge {
-                  display: inline-block;
-                  font-size: 9px;
-                  font-weight: 700;
-                  letter-spacing: 0.8px;
-                  text-transform: uppercase;
-                  padding: 3px 8px;
-                  border-radius: 4px;
-                  margin-bottom: 5px;
-                  width: fit-content;
-                }
-                .pf-global {
-                  background: rgba(0, 184, 255, 0.15);
-                  color: var(--accent2);
-                  border: 1px solid rgba(0, 184, 255, 0.3);
-                }
-                .pf-india {
-                  background: rgba(0, 229, 160, 0.12);
-                  color: var(--accent);
-                  border: 1px solid rgba(0, 229, 160, 0.28);
-                }
-                .pf-eu {
-                  background: rgba(255, 107, 53, 0.14);
-                  color: var(--warn);
-                  border: 1px solid rgba(255, 107, 53, 0.3);
-                }
                 .pf-name {
                   font-size: 13px;
                   font-weight: 600;
@@ -1305,7 +1370,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-global">Global</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=hackerone.com&sz=16"
@@ -1329,7 +1393,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-global">Global</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=https://bugcrowd.com&sz=16"
@@ -1353,7 +1416,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-global">Global</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=https://www.synack.com&sz=16"
@@ -1377,7 +1439,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-global">Global</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=https://www.cobalt.io&sz=16"
@@ -1406,7 +1467,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-eu">EU</span>
                   <p class="pf-name">
                     <img
                       src="https://app.intigriti.com/favicon.svg"
@@ -1430,7 +1490,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-eu">EU</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=https://yeswehack.com&sz=16"
@@ -1454,7 +1513,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-eu">Open</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=https://www.openbugbounty.org&sz=16"
@@ -1483,7 +1541,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-india">India</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=https://www.bugbase.in&sz=16"
@@ -1507,7 +1564,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-india">India</span>
                   <p class="pf-name">
                     <img
                       src="https://hacktify.in/logo.png"
@@ -1531,7 +1587,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-india">India</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=https://www.bugbounter.com&sz=16"
@@ -1555,7 +1610,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-india">India</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=https://www.securityboat.in&sz=16"
@@ -1584,7 +1638,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-india">India</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=https://www.cert-in.org.in&sz=16"
@@ -1608,7 +1661,6 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  <span class="pf-badge pf-global">Global</span>
                   <p class="pf-name">
                     <img
                       src="https://www.google.com/s2/favicons?domain=https://hackerone.com&sz=16"
@@ -7191,7 +7243,15 @@ echo "=== Recon Summary ==="
       "
     >
       <div style="text-align: center; max-width: 440px; padding: 32px 24px">
-        <div style="font-size: 48px; margin-bottom: 16px">🎯</div>
+        <img
+          src="roxoi16x16.ico"
+          style="
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            object-fit: contain;
+          "
+        />
         <div
           style="
             font-family: var(--sans);
@@ -7278,7 +7338,7 @@ echo "=== Recon Summary ==="
           border: 1px solid var(--border);
           border-radius: 10px;
           padding: 26px 28px;
-          width: 520px;
+          width: fit-content;
           max-width: 96vw;
         "
       >
@@ -7338,6 +7398,40 @@ echo "=== Recon Summary ==="
               id="modalTarget"
               type="text"
               placeholder="target.com"
+              autocomplete="off"
+              style="
+                width: 100%;
+                background: #080b0e;
+                border: 1px solid var(--border);
+                border-radius: 5px;
+                color: var(--text);
+                font-family: var(--mono);
+                font-size: 13px;
+                padding: 8px 12px;
+                outline: none;
+                transition: border-color 0.15s;
+              "
+            />
+          </div>
+          <div>
+            <label
+              aria-label="Program Url"
+              for="modalProgramUrl"
+              style="
+                display: block;
+                font-size: 9px;
+                font-weight: 700;
+                letter-spacing: 1.2px;
+                text-transform: uppercase;
+                color: var(--muted);
+                margin-bottom: 5px;
+              "
+              >Program URL</label
+            >
+            <input
+              id="modalProgramUrl"
+              type="text"
+              placeholder="https://hackerone.com/tar..."
               autocomplete="off"
               style="
                 width: 100%;
@@ -7909,9 +8003,9 @@ echo "=== Recon Summary ==="
               "
               >Notes (optional)</label
             >
-            <input
+            <textarea
               id="modalNotes"
-              type="text"
+              rows="6"
               placeholder="Scope, bounty range, initial recon notes..."
               style="
                 width: 100%;
@@ -7923,8 +8017,9 @@ echo "=== Recon Summary ==="
                 font-size: 12px;
                 padding: 8px 12px;
                 outline: none;
+                resize: vertical; /* Allows users to expand height but protects your layout width */
               "
-            />
+            ></textarea>
           </div>
           <div
             id="modalError"
@@ -7992,6 +8087,37 @@ echo "=== Recon Summary ==="
         let DL_PROJECTS = 'bbh_deleted_targets';
         let LS_PROJECTS = 'bbh_projects';
         let MAX_PROJECTS = 50;
+
+        let PLATFORM_DOMAIN_MAP = [
+          { value: 'HackerOne', domain: 'hackerone.com' },
+          { value: 'Bugcrowd', domain: 'bugcrowd.com' },
+          { value: 'Synack', domain: 'synack.com' },
+          { value: 'Cobalt', domain: 'cobalt.io' },
+          { value: 'Intigriti', domain: 'intigriti.com' },
+          { value: 'YesWeHack', domain: 'yeswehack.com' },
+          { value: 'OpenBugBounty', domain: 'openbugbounty.org' },
+          { value: 'BugBase', domain: 'bugbase.in' },
+          { value: 'Hacktify', domain: 'hacktify.in' },
+          { value: 'BugBounter', domain: 'bugbounter.com' },
+          { value: 'SecurityBoat', domain: 'securityboat.in' },
+          { value: 'CERT-In', domain: 'cert-in.org.in' },
+        ];
+
+        function getPlatformValueByDomain(hostname) {
+          hostname = hostname.toLowerCase().replace(/^www\./, '');
+          for (let i = 0; i < PLATFORM_DOMAIN_MAP.length; i++) {
+            let entry = PLATFORM_DOMAIN_MAP[i];
+            if (
+              hostname === entry.domain ||
+              hostname.endsWith('.' + entry.domain)
+            ) {
+              return entry.value;
+            }
+          }
+          return null;
+        }
+
+        let modalPlatformAutoSet = true;
 
         // Dynamic copyright year
         let y = new Date().getFullYear();
@@ -8629,6 +8755,27 @@ echo "=== Recon Summary ==="
         var otherInput = document.getElementById('modalPlatformOther');
         var searchInput = document.getElementById('modalPlatformSearch');
         var noResults = document.getElementById('modalPlatformNoResults');
+        function autoDetectModalPlatformFromUrl(urlValue) {
+          if (!urlValue) return;
+          let hostname;
+          try {
+            let url = urlValue.match(/^https?:\/\//i)
+              ? urlValue
+              : 'https://' + urlValue;
+            hostname = new URL(url).hostname;
+          } catch (e) {
+            return;
+          }
+          let value = getPlatformValueByDomain(hostname);
+          if (!value) return;
+          let opt = menu.querySelector(
+            '.mpd-option[data-value="' + value + '"]',
+          );
+          if (!opt) return;
+          let wasAutoSet = modalPlatformAutoSet;
+          opt.click();
+          modalPlatformAutoSet = wasAutoSet;
+        }
         var searchWrap = searchInput.closest('.mpd-search-wrap');
 
         function openMenu() {
@@ -8753,6 +8900,24 @@ echo "=== Recon Summary ==="
           });
         });
 
+        let modalProgramUrlInput = document.getElementById('modalProgramUrl');
+
+        if (modalProgramUrlInput) {
+          ['input', 'change', 'blur'].forEach(function (evt) {
+            modalProgramUrlInput.addEventListener(evt, function () {
+              if (modalPlatformAutoSet) {
+                autoDetectModalPlatformFromUrl(modalProgramUrlInput.value);
+              }
+            });
+          });
+        }
+
+        menu.querySelectorAll('.mpd-option').forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            modalPlatformAutoSet = false;
+          });
+        });
+
         document.addEventListener('click', function (e) {
           if (!wrap.contains(e.target)) {
             closeMenu();
@@ -8790,6 +8955,8 @@ echo "=== Recon Summary ==="
           let modal = document.getElementById('newProjectModal');
           modal.style.display = 'flex';
           document.getElementById('modalTarget').value = '';
+          document.getElementById('modalProgramUrl').value = '';
+          modalPlatformAutoSet = true;
           if (typeof resetModalPlatformDropdown === 'function') {
             resetModalPlatformDropdown();
           }
@@ -8861,12 +9028,16 @@ echo "=== Recon Summary ==="
           }
           let severity = document.getElementById('modalSeverity').value;
           let notes = document.getElementById('modalNotes').value.trim();
+          let programUrl = document
+            .getElementById('modalProgramUrl')
+            .value.trim();
           projects.unshift({
             target: target,
             platform: platform,
             severity: severity,
             bounty: 0,
             notes: notes,
+            programUrl: programUrl,
             savedAt: new Date().toISOString(),
             checkedCount: 0,
             totalCount: document.querySelectorAll('.cbox').length || 203,

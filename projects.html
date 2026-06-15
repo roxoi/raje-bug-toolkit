@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="roxoi16x16.ico" type="image/x-icon" />
-    <title>Projects — BugHunt Toolkit</title>
+    <title>Projects | BugHunt Toolkit</title>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap');
       :root {
@@ -173,6 +173,32 @@
         }
       }
 
+      @keyframes drawCheck {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes drawCheck {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      @keyframes warnPop {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.2) rotate(-6deg);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+        }
+      }
+
       * {
         box-sizing: border-box;
         margin: 0;
@@ -195,6 +221,19 @@
             transparent 1px
           );
         background-size: 40px 40px;
+      }
+      ::-webkit-scrollbar {
+        width: 3px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #080b0e;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent2);
       }
       header {
         background: var(--surface);
@@ -309,7 +348,7 @@
       }
 
       .page {
-        max-width: 960px;
+        max-width: 75vw;
         margin: 0 auto;
         padding: 28px 24px;
       }
@@ -386,7 +425,7 @@
       }
       .stat-card:hover::after {
         opacity: 1;
-        animation: shimmer 0.8s linear;
+        animation: shimmer 10s infinite;
       }
       .stat-label {
         font-size: 9px;
@@ -450,7 +489,7 @@
       }
       .form-row {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr auto;
+        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
         gap: 10px;
         align-items: end;
       }
@@ -552,11 +591,11 @@
         transition: opacity 0.2s;
       }
       .btn-primary:hover {
-        background: linear-gradient(
+        /* background: linear-gradient(
           135deg,
           rgba(0, 229, 160, 0.25),
           rgba(0, 184, 255, 0.2)
-        );
+        ); */
         box-shadow:
           0 0 18px rgba(0, 229, 160, 0.2),
           0 2px 8px rgba(0, 0, 0, 0.3);
@@ -564,9 +603,64 @@
       }
       .btn-primary:hover::after {
         opacity: 1;
-        animation: shimmer 0.6s linear;
+        animation: shimmer 5s infinite;
       }
       .btn-primary:active {
+        transform: translateY(0) scale(0.98);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(
+          135deg,
+          rgba(84, 103, 97, 0.15),
+          rgba(2, 65, 90, 0.1)
+        );
+        border: 1px solid var(--muted);
+        border-radius: 5px;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 8px 18px;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          box-shadow 0.2s,
+          transform 0.15s var(--ease-spring);
+        white-space: nowrap;
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-secondary::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          120deg,
+          transparent 30%,
+          rgba(21, 17, 17, 0.06) 50%,
+          transparent 70%
+        );
+        background-size: 200% 100%;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .btn-secondary:hover {
+        background: linear-gradient(
+          135deg,
+          rgba(54, 69, 64, 0.25),
+          rgba(59, 69, 73, 0.2)
+        );
+        box-shadow:
+          0 0 18px rgba(57, 69, 65, 0.2),
+          0 2px 8px rgba(0, 0, 0, 0.3);
+        transform: translateY(-1px);
+      }
+      .btn-secondary:hover::after {
+        opacity: 1;
+        animation: shimmer 0.6s linear;
+      }
+      .btn-secondary:active {
         transform: translateY(0) scale(0.98);
       }
 
@@ -938,7 +1032,7 @@
         z-index: 200;
         align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 8px;
         backdrop-filter: blur(0px);
         transition:
           background 0.25s,
@@ -956,8 +1050,7 @@
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 10px;
-        padding: 22px 24px;
-        width: 520px;
+        width: fit-content;
         max-width: 94vw;
         max-height: 90vh;
         overflow-y: auto;
@@ -1170,7 +1263,7 @@
         scrollbar-color: var(--border) transparent;
       }
       .detail-body::-webkit-scrollbar {
-        width: 4px;
+        width: 3px;
       }
       .detail-body::-webkit-scrollbar-thumb {
         background: var(--border);
@@ -1379,7 +1472,7 @@
       /* Toast */
       .toast {
         position: fixed;
-        bottom: 22px;
+        top: 22px;
         right: 22px;
         background: var(--surface);
         border: 1px solid var(--accent);
@@ -1389,7 +1482,7 @@
         font-size: 12px;
         font-weight: 700;
         z-index: 9999;
-        transform: translateY(60px) scale(0.9);
+        transform: translateY(-60px) scale(0.9);
         opacity: 0;
         transition:
           transform 0.3s var(--ease-spring),
@@ -1398,15 +1491,49 @@
         box-shadow:
           0 8px 32px rgba(0, 0, 0, 0.5),
           0 0 0 1px rgba(255, 255, 255, 0.04);
+
+        /* Layout adjustments for SVG icon and text placement */
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
+
       .toast.show {
         transform: translateY(0) scale(1);
         opacity: 1;
       }
+
       .toast.warn {
         border-color: var(--warn);
         color: var(--warn);
       }
+
+      .toast-icon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        display: block;
+      }
+
+      .animate-check path {
+        stroke-dasharray: 24;
+        stroke-dashoffset: 24;
+        animation: drawCheck 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.05s;
+      }
+
+      .animate-warn {
+        transform-origin: center;
+        animation: warnPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+      .toast.show .animate-check path {
+        animation: drawCheck 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.25s;
+      }
+
+      .toast.show .animate-warn {
+        animation: warnPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards
+          0.25s;
+      }
+
       /* Delete confirm modal */
       .delete-modal {
         background: var(--surface);
@@ -1582,14 +1709,14 @@
         display: block;
       }
       .mpd-menu::-webkit-scrollbar {
-        width: 5px;
+        width: 3px;
       }
       .mpd-menu::-webkit-scrollbar-track {
         background: #080b0e;
       }
       .mpd-menu::-webkit-scrollbar-thumb {
         background: var(--border);
-        border-radius: 3px;
+        border-radius: 2px;
       }
       .mpd-menu::-webkit-scrollbar-thumb:hover {
         background: var(--accent2);
@@ -1702,6 +1829,313 @@
       .mpd-other-input.show {
         display: block;
       }
+
+      /* Base structural container wrapper alignment */
+      .hdr-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      /* Shared animated control layout logic */
+      .animated-ctrl {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition:
+          background-color 0.2s ease-in-out,
+          border-color 0.2s ease-in-out;
+      }
+
+      /* 1. Export Icon Animation: Arrow dips down, line bounces subtly */
+      .anim-arrow-down {
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .anim-line-bottom {
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: bottom;
+      }
+      .animated-ctrl:hover .anim-arrow-down {
+        transform: translateY(2px);
+      }
+      .animated-ctrl:hover .anim-line-bottom {
+        transform: scaleX(1.1);
+      }
+
+      /* 2. Back Icon Animation: Arrow shifts smoothly left */
+      .anim-arrow-left {
+        transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      .animated-ctrl:hover .anim-arrow-left {
+        transform: translateX(-4px);
+      }
+
+      /* Base button alignments ensuring icons sit level with text */
+      .animated-btn-group {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        transition:
+          background-color 0.2s ease,
+          transform 0.1s ease;
+      }
+
+      /* Active press effect for a snappy mechanical feel */
+      .animated-btn-group:active {
+        transform: scale(0.98);
+      }
+
+      /* 1. Clear / Trash Icon Animation: Liftoff Lid */
+      .anim-trash-lid {
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        transform-origin: top left;
+      }
+      #resetProjectBtn:hover .anim-trash-lid {
+        transform: translateY(-2px) rotate(-4deg);
+      }
+
+      /* 2. Create / Plus Icon Animation: Rotate and Scale */
+      .anim-btn-plus {
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: center;
+      }
+      #addProjectBtn:hover .anim-btn-plus {
+        transform: rotate(90deg) scale(1.15);
+      }
+      /* Core physics definitions for layout actions */
+      .act-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.1s ease;
+      }
+      .act-btn:active {
+        transform: scale(0.96);
+      }
+
+      /* Individual component vector rules */
+      .anim-pencil,
+      .anim-lens,
+      .anim-reload,
+      .anim-play,
+      .anim-lid {
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: center;
+      }
+
+      /* 1. Notes Hover: Tilt/Write wiggle */
+      span:hover .anim-pencil {
+        transform: rotate(-15deg) translate(-1px, -1px);
+      }
+      /* 2. Details Hover: Magnify scale pop */
+      [data-action='detail']:hover .anim-lens {
+        transform: scale(1.15);
+      }
+      /* 3. Active Status Hover: Infinite smooth clockwise spin loop */
+      [data-action='resume']:hover .anim-reload {
+        transform: rotate(360deg);
+      }
+      /* 4. Resume State Hover: Elastic punch slide right */
+      [data-action='resume']:hover .anim-play {
+        transform: scale(1.1) translateX(1px);
+      }
+      /* 5. Delete Hover: Shift lid layout up on its anchor point */
+      [data-action='delete'] .anim-lid {
+        transform-origin: top left;
+      }
+      [data-action='delete']:hover .anim-lid {
+        transform: translateY(-2px) rotate(-6deg);
+      }
+      /* Empty State Container layout styling */
+      .empty-state {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Icon box style and micro-animation configuration */
+      .es-icon-wrap {
+        margin-bottom: 16px;
+        color: var(--accent2, #00b8ff);
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+      }
+
+      .empty-state:hover .es-icon-wrap {
+        opacity: 1;
+      }
+
+      /* Clipboard Vector Item Animations */
+      .anim-check-line1,
+      .anim-check-line2 {
+        transition:
+          transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+          opacity 0.3s ease;
+        transform: translateX(-4px);
+        opacity: 0;
+      }
+
+      .empty-state:hover .anim-check-line1 {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      .empty-state:hover .anim-check-line2 {
+        transform: translateX(0);
+        transition-delay: 0.08s;
+        opacity: 1;
+      }
+
+      /* Action Link Button Micro-Animations */
+      .es-cta-btn {
+        margin-top: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(0, 184, 255, 0.1);
+        border: 1px solid rgba(0, 184, 255, 0.3);
+        border-radius: 6px;
+        color: var(--accent2, #00b8ff);
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+          background 0.2s ease,
+          border-color 0.2s ease,
+          transform 0.1s ease;
+      }
+
+      .es-cta-btn:hover {
+        background: rgba(0, 184, 255, 0.15);
+        border-color: rgba(0, 184, 255, 0.5);
+      }
+
+      .es-cta-btn:active {
+        transform: scale(0.97);
+      }
+
+      .anim-arrow-right {
+        transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+
+      .es-cta-btn:hover .anim-arrow-right {
+        transform: translateX(3px);
+      }
+      /* Notes hover-preview */
+      .notes-hover-preview {
+        cursor: help;
+      }
+      .notes-preview-modal {
+        width: 90vw;
+        max-width: 100vw;
+      }
+      .notes-preview-body {
+        white-space: pre-wrap;
+        word-break: break-word;
+        color: var(--text);
+        font-size: 12px;
+        line-height: 1.7;
+        max-height: 70vh;
+        overflow-y: auto;
+        padding: 1px 2rem 1rem 2rem;
+        background: #37353533;
+      }
+      @keyframes warningPulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.9;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.9;
+        }
+      }
+
+      .delete-modal-icon svg {
+        animation: warningPulse 2s infinite ease-in-out;
+        transform-origin: center;
+      }
+      .notes-preview-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 1rem;
+      }
+      .notes-preview-header h3 {
+        margin-bottom: 0;
+      }
+      .close-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 4px;
+        color: var(--dim);
+        border-radius: 4px;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.1s ease;
+      }
+      .close-btn:hover {
+        color: var(--danger);
+        background: rgba(255, 51, 102, 0.06);
+      }
+      .close-btn:active {
+        transform: scale(0.92);
+      }
+      .anim-close-cross {
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: center;
+      }
+      .close-btn:hover .anim-close-cross {
+        transform: rotate(90deg) scale(1.1);
+      }
+
+      .anim-edit-box,
+      .anim-edit-pencil {
+        transition:
+          transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+          opacity 0.3s ease;
+      }
+
+      .anim-edit-pencil {
+        transform-origin: 8px 16px;
+      }
+
+      .anim-edit-box {
+        transform-origin: 4px 4px;
+      }
+
+      #notesPreviewEditBtn:hover .anim-edit-pencil,
+      span:hover .anim-edit-pencil {
+        transform: translate(1px, -2px) rotate(8deg) scale(1.05);
+      }
+
+      #notesPreviewEditBtn:hover .anim-edit-box,
+      span:hover .anim-edit-box {
+        transform: scale(0.96);
+        opacity: 0.8;
+      }
+      #notesPreviewEditBtn:active {
+        transform: scale(0.97);
+        transition: transform 0.05s ease; /* Snappy compression feedback loop */
+      }
     </style>
   </head>
   <body>
@@ -1711,8 +2145,62 @@
         BugHunt Toolkit
       </div>
       <div class="hdr-right">
-        <button class="export-btn" id="exportBtn">⬇ Export JSON</button>
-        <a href="/raje-bug-toolkit/" class="back-btn">← Back to Toolkit</a>
+        <!-- Export JSON Button -->
+        <button class="export-btn animated-ctrl" id="exportBtn">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://w3.org"
+          >
+            <!-- Bouncing Arrow -->
+            <path
+              class="anim-arrow-down"
+              d="M12 3v13M19 10l-7 7-7-7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <!-- Stable Base Line -->
+            <path
+              class="anim-line-bottom"
+              d="M5 21h14"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Export JSON
+        </button>
+
+        <!-- Back to Toolkit Link -->
+        <a
+          href="/raje-bug-toolkit/"
+          class="back-btn animated-ctrl"
+          style="text-decoration: none"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://w3.org"
+          >
+            <!-- Leftward Shifting Arrow -->
+            <path
+              class="anim-arrow-left"
+              d="M19 12H5M12 19l-7-7 7-7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Back to Toolkit
+        </a>
       </div>
     </header>
 
@@ -1774,10 +2262,34 @@
 
       <!-- New project form -->
       <div class="new-project-card">
-        <h3>+ New Project</h3>
+        <h3 style="display: inline-flex; align-items: center; gap: 8px">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 5V19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M5 12H19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          New Project
+        </h3>
         <div class="form-row">
           <div class="form-group">
-            <label>Target Domain</label>
+            <label for="newTarget">Target Domain</label>
             <input
               type="text"
               id="newTarget"
@@ -1786,11 +2298,22 @@
             />
           </div>
           <div class="form-group">
-            <label>Platform</label>
+            <label for="programUrl">Program URL</label>
+            <input
+              type="text"
+              id="programUrl"
+              placeholder="https://hackerone.com/tar..."
+              autocomplete="off"
+            />
+          </div>
+        </div>
+        <div class="form-row" style="margin-top: 1rem">
+          <div class="form-group">
+            <label for="newPlatformDropdownWrapper">Platform</label>
             <div id="newPlatformDropdownWrapper"></div>
           </div>
           <div class="form-group">
-            <label>Bounty Earned ($)</label>
+            <label for="newBounty">Bounty Earned ($)</label>
             <input
               type="number"
               id="newBounty"
@@ -1799,11 +2322,8 @@
               step="1"
             />
           </div>
-          <button class="btn-primary" id="addProjectBtn">Create Project</button>
-        </div>
-        <div class="form-row-2" style="margin-top: 10px">
           <div class="form-group">
-            <label>Priority / Severity Focus</label>
+            <label for="newSeverity">Priority / Severity Focus</label>
             <select id="newSeverity">
               <option value="">— select —</option>
               <option value="critical">Critical</option>
@@ -1813,14 +2333,81 @@
               <option value="info">Informational</option>
             </select>
           </div>
-          <div class="form-group" style="grid-column: span 2">
-            <label>Notes (optional)</label>
-            <input
-              type="text"
-              id="newNotes"
-              placeholder="Scope, bounty range, initial recon notes..."
-            />
-          </div>
+        </div>
+        <div class="form-group" style="margin-top: 1rem">
+          <label for="newNotes">Notes (optional)</label>
+          <textarea
+            id="newNotes"
+            rows="4"
+            placeholder="Scope, bounty range, initial recon notes..."
+          ></textarea>
+        </div>
+        <div
+          style="
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+          "
+        >
+          <button
+            class="btn-secondary animated-btn-group"
+            style="width: 30%"
+            id="resetProjectBtn"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://w3.org"
+            >
+              <!-- Animated Trash Lid -->
+              <path
+                class="anim-trash-lid"
+                d="M3 6h18M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <!-- Trash Body Base -->
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Clear Project
+          </button>
+
+          <button
+            class="btn-primary animated-btn-group"
+            style="width: 30%"
+            id="addProjectBtn"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://w3.org"
+            >
+              <path
+                class="anim-btn-plus"
+                d="M12 5V19M5 12H19"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Create Project
+          </button>
         </div>
       </div>
 
@@ -1903,25 +2490,147 @@
       </div>
     </footer>
 
-    <!-- Notes / Edit modal -->
+    <!-- Notes Edit modal -->
     <div class="modal-overlay" id="notesModal">
       <div class="modal">
         <h3 id="modalTitle">Edit Notes</h3>
         <textarea
           id="modalNotes"
+          style="width: 80rem; height: 70vh"
           placeholder="Scope details, recon findings, bug leads..."
         ></textarea>
-        <div class="modal-actions">
+        <div
+          class="modal-actions"
+          style="margin-right: 0.5rem; margin-bottom: 0.5rem"
+        >
           <button class="act-btn" id="modalCancel">Cancel</button>
           <button class="btn-primary" id="modalSave">Save Notes</button>
         </div>
       </div>
     </div>
 
+    <!-- Notes preview modal (read-only) -->
+    <div class="modal-overlay" id="notesPreviewModal">
+      <div class="modal notes-preview-modal">
+        <div class="notes-preview-header">
+          <h3 id="notesPreviewTitle">Notes</h3>
+          <div style="display: flex; align-items: center; gap: 8px">
+            <button
+              class="act-btn"
+              id="notesPreviewEditBtn"
+              type="button"
+              title="Edit notes"
+              style="
+                font-size: 11px;
+                padding: 4px 10px;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                color: var(--accent);
+                border-color: rgba(0, 229, 160, 0.35);
+              "
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://w3.org"
+                class="anim-edit-icon"
+              >
+                <path
+                  class="anim-edit-box"
+                  d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  class="anim-edit-pencil"
+                  d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Edit
+            </button>
+
+            <button
+              class="close-btn"
+              id="notesPreviewClose"
+              title="Close"
+              type="button"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://w3.org"
+              >
+                <path
+                  class="anim-close-cross"
+                  d="M18 6L6 18M6 6l12 12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="notes-preview-body" id="notesPreviewBody"></div>
+      </div>
+    </div>
+
     <!-- Delete confirm modal -->
     <div class="modal-overlay" id="deleteModal">
       <div class="delete-modal">
-        <div class="delete-modal-icon">⚠️</div>
+        <div
+          class="delete-modal-icon"
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffbc00;
+          "
+        >
+          <svg
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://w3.org"
+          >
+            <!-- Warning Triangle -->
+            <path
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 9v4"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 17h.01"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
         <h3>Delete Project</h3>
         <p id="deleteModalDesc">
           This will permanently remove all saved progress and checklist state
@@ -1956,7 +2665,30 @@
             <h3 id="dTitle">—</h3>
             <div class="dh-meta" id="dMeta"></div>
           </div>
-          <button class="detail-close" id="detailClose">✕</button>
+          <!-- <button class="detail-close" id="detailClose">✕</button> -->
+          <button
+              class="close-btn"
+              id="detailClose"
+              title="Close"
+              type="button"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://w3.org"
+              >
+                <path
+                  class="anim-close-cross"
+                  d="M18 6L6 18M6 6l12 12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
         </div>
         <div class="detail-prog-bar">
           <div class="detail-prog-row">
@@ -2110,6 +2842,81 @@
             ],
           },
         ];
+
+        /* ── URL → Platform auto-detect ── */
+        function getPlatformByDomain(hostname) {
+          hostname = hostname.toLowerCase().replace(/^www\./, '');
+          for (let g = 0; g < PLATFORM_GROUPS.length; g++) {
+            for (let i = 0; i < PLATFORM_GROUPS[g].items.length; i++) {
+              let item = PLATFORM_GROUPS[g].items[i];
+              if (
+                item.domain &&
+                (hostname === item.domain ||
+                  hostname.endsWith('.' + item.domain))
+              ) {
+                return item;
+              }
+            }
+          }
+          return null;
+        }
+
+        function setPlatformDropdownValue(idPrefix, value) {
+          let hiddenInput = document.getElementById(idPrefix);
+          let triggerLabel = document.getElementById(idPrefix + 'TriggerLabel');
+          let triggerIcon = document.getElementById(idPrefix + 'TriggerIcon');
+          let otherInput = document.getElementById(idPrefix + 'Other');
+          let menu = document.getElementById(idPrefix + 'Menu');
+          if (!hiddenInput) return;
+
+          let item = findPlatformItem(value);
+          if (!item) return;
+
+          if (hiddenInput.value === item.value) return;
+
+          hiddenInput.value = item.value;
+
+          triggerLabel.textContent = item.label;
+          triggerLabel.classList.remove('mpd-placeholder');
+
+          triggerIcon.innerHTML = getOptionIconHTML(item);
+          triggerIcon.className = '';
+
+          menu.querySelectorAll('.mpd-option').forEach(function (o) {
+            o.classList.toggle(
+              'active',
+              o.getAttribute('data-value') === item.value,
+            );
+          });
+
+          if (item.value === 'Other') {
+            otherInput.classList.add('show');
+          } else {
+            otherInput.classList.remove('show');
+            otherInput.value = '';
+          }
+
+          let ev = new Event('change', { bubbles: true });
+          ev._autoSet = true;
+          hiddenInput.dispatchEvent(ev);
+        }
+
+        function autoDetectPlatformFromUrl(urlValue, platformIdPrefix) {
+          if (!urlValue) return;
+          let hostname;
+          try {
+            let url = urlValue.match(/^https?:\/\//i)
+              ? urlValue
+              : 'https://' + urlValue;
+            hostname = new URL(url).hostname;
+          } catch (e) {
+            return;
+          }
+          let item = getPlatformByDomain(hostname);
+          if (item) {
+            setPlatformDropdownValue(platformIdPrefix, item.value);
+          }
+        }
 
         function findPlatformItem(value) {
           for (let g = 0; g < PLATFORM_GROUPS.length; g++) {
@@ -2671,7 +3478,7 @@
                 '    <div class="proj-name">',
                 '      ' + esc(p.target),
                 isActive
-                  ? '<span class="active-badge">active session</span>'
+                  ? '<span class="logo-dot" title="active session"></span>'
                   : '',
                 sevHtml,
                 bountyHtml,
@@ -2704,7 +3511,8 @@
                           iconHtml = '<span>' + item.emoji + '</span>';
                         }
                       } else {
-                        iconHtml = '<span>📋</span>';
+                        iconHtml =
+                          '<span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org"> <!-- Clipboard Board Frame Base --> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <!-- Top Document Spring Clip --> <rect x="8" y="2" width="8" height="4" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <!-- Document Checklist Data Row Lines --> <path d="M9 10h6M9 14h6M9 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg></span>';
                       }
                       return (
                         '<span style="display:flex;align-items:center;gap:5px;">' +
@@ -2726,11 +3534,28 @@
                   formatDate(p.savedAt) +
                   '</strong></span>',
                 p.notes
-                  ? '<span title="' +
-                    esc(p.notes) +
-                    '">📝 ' +
-                    esc(p.notes.slice(0, 50)) +
-                    (p.notes.length > 50 ? '…' : '') +
+                  ? '<span style="width:100%;display:inline-flex;align-items:center;justify-content:space-between;gap:0px;color:var(--dim);font-size:11px;">' +
+                    '<span>' +
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org"> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <rect x="8" y="2" width="8" height="4" rx="1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>  <path class="anim-list-line" d="M9 10h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path class="anim-list-line-long" d="M9 14h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path class="anim-list-line" d="M9 18h3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>' +
+                    (p.notes.length > 75
+                      ? '<p style="width:100%">' +
+                        esc(p.notes.slice(0, 72)) +
+                        '...</p></span>' +
+                        '<span class="notes-hover-preview notes-view-icon" data-action="notes-prev" data-idx="' +
+                        i +
+                        '" title="View full notes" style="display:inline-flex;align-items:center;cursor:pointer;color:var(--accent2);opacity:0.75;transition:opacity 0.2s;" onmouseenter="this.style.opacity=\'1\'" onmouseleave="this.style.opacity=\'0.75\'">' +
+                        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>' +
+                        '</span>' +
+                        '</span>'
+                      : '<p>' +
+                        esc(p.notes) +
+                        '</p></span>' +
+                        '<span class="notes-edit-icon" data-action="notes-edit" data-idx="' +
+                        i +
+                        '" title="Edit notes" style="display:inline-flex;align-items:center;cursor:pointer;color:var(--accent);opacity:0.75;transition:opacity 0.2s;" onmouseenter="this.style.opacity=\'1\'" onmouseleave="this.style.opacity=\'0.75\'">' +
+                        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" class="anim-edit-icon"><path class="anim-edit-box" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path class="anim-edit-pencil" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                        '</span>' +
+                        '</span>') +
                     '</span>'
                   : '',
                 '    </div>',
@@ -2743,17 +3568,19 @@
                 '    </div>',
                 '  </div>',
                 '  <div class="proj-actions">',
-                '    <button class="act-btn" data-action="detail"  data-idx="' +
+                '    <button class="act-btn" data-action="detail" data-idx="' +
                   i +
-                  '">🔍 Details</button>',
-                '    <button class="act-btn resume" data-action="resume"  data-idx="' +
+                  '"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><g class="anim-lens"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></svg> Details</button>',
+                '    <button class="act-btn resume" data-action="resume" data-idx="' +
                   i +
                   '">' +
-                  (isActive ? '⟳ Active' : '▶ Resume') +
+                  (!isActive
+                    ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><path class="anim-reload" d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l6.73-6.19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>Active`
+                    : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><polygon class="anim-play" points="5 3 19 12 5 21 5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="currentColor"/> </svg>Resume`) +
                   '</button>',
-                '    <button class="act-btn danger"  data-action="delete"  data-idx="' +
+                '    <button class="act-btn danger" data-action="delete" data-idx="' +
                   i +
-                  '">✕</button>',
+                  '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org"><path class="anim-lid" d="M3 6h18M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>',
                 '  </div>',
                 '</div>',
               ].join('\n');
@@ -2768,8 +3595,11 @@
               let idx = parseInt(this.getAttribute('data-idx'), 10);
               if (action === 'resume') resumeProject(idx);
               if (action === 'delete') openDeleteModal(idx);
-              // if (action === 'delete') deleteProject(idx);
               if (action === 'detail') openDetail(idx);
+              if (action === 'notes-edit') openNotesEdit(idx);
+              if (action === 'notes-prev') {
+                openNotesPreview(projects[idx], idx);
+              }
             });
           });
 
@@ -2781,10 +3611,34 @@
               openDetail(idx);
             });
           });
+
+          grid.querySelectorAll('.notes-edit-icon').forEach(function (el) {
+            el.addEventListener('click', function (e) {
+              e.stopPropagation();
+              let idx = parseInt(this.getAttribute('data-idx'), 10);
+              openNotesEdit(idx);
+            });
+          });
         }
+
+        function openNotesEdit(idx) {
+          let projects = loadProjects();
+          let p = projects[idx];
+          if (!p) return;
+          // close preview if open
+          document.getElementById('notesPreviewModal').classList.remove('open');
+          editingIdx = idx;
+          document.getElementById('modalTitle').textContent =
+            'Edit Notes — ' + p.target;
+          document.getElementById('modalNotes').value = p.notes || '';
+          document.getElementById('notesModal').classList.add('open');
+          setTimeout(function () {
+            document.getElementById('modalNotes').focus();
+          }, 80);
+        }
+
         /* Delete modal */
         var deleteTargetIdx = null;
-
         function openDeleteModal(idx) {
           var projects = loadProjects();
           var p = projects[idx];
@@ -2941,7 +3795,24 @@
           if (tab === 'checklist') {
             if (!checkedArr.length && !(p.state && p.state.checked)) {
               body.innerHTML =
-                '<div class="empty-state" style="padding:30px 0"><div class="es-icon">📋</div><h3>No checklist data yet</h3><p>Resume this project in the toolkit and start checking items.</p></div>';
+                '<div class="empty-state" style="padding:30px 0">' +
+                '<div class="es-icon-wrap">' +
+                '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org">' +
+                '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<rect x="8" y="2" width="8" height="4" rx="1" stroke="currentColor" stroke-width="2" fill="#080b0e" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<path class="anim-check-line1" d="M9 10h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+                '<path class="anim-check-line2" d="M9 14h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+                '</svg>' +
+                '</div>' +
+                '<h3>No checklist data yet</h3>' +
+                '<p style="margin: 0; color: var(--text-muted, #8a99ad);">Resume this project in the toolkit and start checking items.</p>' +
+                '<a href="/raje-bug-toolkit/" class="es-cta-btn">' +
+                'Open Checklist' +
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org">' +
+                '<path class="anim-arrow-right" d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '</svg>' +
+                '</a>' +
+                '</div>';
               return;
             }
             let html = '';
@@ -3022,12 +3893,12 @@
             body.innerHTML = [
               '<div class="detail-fields">',
               '  <div class="detail-field">',
-              '    <label>Platform</label>',
+              '    <span>Platform</span>',
               '    ' +
                 buildPlatformDropdownHTML('editPlatform', p.platform || ''),
               '  </div>',
               '  <div class="detail-field">',
-              '    <label>Severity Focus</label>',
+              '    <span>Severity Focus</span>',
               '    <select id="editSeverity">',
               '      <option value="">— select —</option>',
               ['critical', 'high', 'medium', 'low', 'info']
@@ -3047,20 +3918,20 @@
               '    </select>',
               '  </div>',
               '  <div class="detail-field">',
-              '    <label>Bounty Earned ($)</label>',
+              '    <label for="editBounty">Bounty Earned ($)</label>',
               '    <input type="number" id="editBounty" value="' +
                 esc(String(p.bounty || '')) +
                 '" min="0" placeholder="0" />',
               '  </div>',
               '  <div class="detail-field">',
-              '    <label>Program URL</label>',
+              '    <label for="editProgramUrl">Program URL</label>',
               '    <input type="text" id="editProgramUrl" value="' +
                 esc(p.programUrl || '') +
                 '" placeholder="https://hackerone.com/..." />',
               '  </div>',
               '  <div class="detail-field" style="grid-column:span 2">',
-              '    <label>Notes</label>',
-              '    <textarea id="editNotes">' +
+              '    <label for="editNotes">Notes</label>',
+              '    <textarea rows="3" id="editNotes">' +
                 esc(p.notes || '') +
                 '</textarea>',
               '  </div>',
@@ -3071,6 +3942,29 @@
             ].join('');
 
             initPlatformDropdown('editPlatform');
+
+            let editProgramUrlInput = document.getElementById('editProgramUrl');
+            let editPlatformAutoSet = true;
+
+            if (editProgramUrlInput) {
+              ['input', 'change', 'blur'].forEach(function (evt) {
+                editProgramUrlInput.addEventListener(evt, function () {
+                  if (editPlatformAutoSet) {
+                    autoDetectPlatformFromUrl(
+                      editProgramUrlInput.value,
+                      'editPlatform',
+                    );
+                  }
+                });
+              });
+            }
+
+            let editPlatformHidden = document.getElementById('editPlatform');
+            if (editPlatformHidden) {
+              editPlatformHidden.addEventListener('change', function (e) {
+                if (!e._autoSet) editPlatformAutoSet = false;
+              });
+            }
 
             document
               .getElementById('detailSaveBtn')
@@ -3134,7 +4028,6 @@
           let p = projects[idx];
           if (!p) return;
 
-          // Save current active session back to projects list before switching
           let activeTarget = getActiveTarget();
           if (activeTarget && activeTarget !== p.target.trim().toLowerCase()) {
             try {
@@ -3275,12 +4168,67 @@
             showToast('Project created: ' + target);
           });
 
+        // reset project details
+        document
+          .getElementById('resetProjectBtn')
+          .addEventListener('click', function () {
+            document.getElementById('newTarget').value = '';
+            resetPlatformDropdown('newPlatform');
+            document.getElementById('newBounty').value = '';
+            document.getElementById('newSeverity').value = '';
+            document.getElementById('newNotes').value = '';
+          });
+
         document
           .getElementById('newTarget')
           .addEventListener('keydown', function (e) {
             if (e.key === 'Enter')
               document.getElementById('addProjectBtn').click();
           });
+
+        /* Notes preview (read-only) */
+        function openNotesPreview(proj, idx) {
+          notesPreviewIdx = idx !== undefined ? idx : null;
+          document.getElementById('notesPreviewTitle').textContent = proj.target
+            ? proj.target + ' - Notes'
+            : 'Notes';
+          document.getElementById('notesPreviewBody').textContent =
+            proj.notes || '';
+          document.getElementById('notesPreviewModal').classList.add('open');
+        }
+
+        function closeNotesPreview() {
+          document.getElementById('notesPreviewModal').classList.remove('open');
+        }
+
+        var notesPreviewIdx = null;
+        document
+          .getElementById('notesPreviewEditBtn')
+          .addEventListener('click', function () {
+            closeNotesPreview();
+            if (notesPreviewIdx !== null) openNotesEdit(notesPreviewIdx);
+          });
+        document
+          .getElementById('notesPreviewClose')
+          .addEventListener('click', function () {
+            closeNotesPreview();
+          });
+
+        document
+          .getElementById('notesPreviewModal')
+          .addEventListener('click', function (e) {
+            if (e.target === this) closeNotesPreview();
+          });
+        document.addEventListener('keydown', function (e) {
+          if (
+            e.key === 'Escape' &&
+            document
+              .getElementById('notesPreviewModal')
+              .classList.contains('open')
+          ) {
+            closeNotesPreview();
+          }
+        });
 
         /* Notes modal (legacy quick edit) */
         document
@@ -3353,7 +4301,20 @@
         /* Toast  */
         function showToast(msg, warn) {
           let t = document.getElementById('toast');
-          t.textContent = (warn ? '⚠ ' : '✓ ') + msg;
+
+          // Define inline SVGs with crisp paths and CSS animation hooks
+          const successSvg = `
+    <svg class="toast-icon animate-check" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/>
+    </svg>`;
+
+          const warnSvg = `
+    <svg class="toast-icon animate-warn" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M12 9v4M12 17h.01"/>
+      <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M12 3L2 21h20L12 3z"/>
+    </svg>`;
+
+          t.innerHTML = (warn ? warnSvg : successSvg) + `<span>${msg}</span>`;
           t.className = 'toast show' + (warn ? ' warn' : '');
           clearTimeout(t._tid);
           t._tid = setTimeout(function () {
@@ -3406,6 +4367,27 @@
           buildPlatformDropdownHTML('newPlatform', '');
         initPlatformDropdown('newPlatform');
 
+        let newProgramUrlInput = document.getElementById('programUrl');
+        let newPlatformAutoSet = true;
+
+        if (newProgramUrlInput) {
+          ['input', 'change', 'blur'].forEach(function (evt) {
+            newProgramUrlInput.addEventListener(evt, function () {
+              if (newPlatformAutoSet) {
+                autoDetectPlatformFromUrl(
+                  newProgramUrlInput.value,
+                  'newPlatform',
+                );
+              }
+            });
+          });
+        }
+        let newPlatformHidden = document.getElementById('newPlatform');
+        if (newPlatformHidden) {
+          newPlatformHidden.addEventListener('change', function (e) {
+            if (!e._autoSet) newPlatformAutoSet = false;
+          });
+        }
         render();
       })();
     </script>
