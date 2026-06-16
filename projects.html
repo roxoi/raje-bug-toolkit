@@ -178,12 +178,6 @@
           stroke-dashoffset: 0;
         }
       }
-      @keyframes drawCheck {
-        to {
-          stroke-dashoffset: 0;
-        }
-      }
-
       @keyframes warnPop {
         0% {
           transform: scale(0.5);
@@ -204,24 +198,6 @@
         margin: 0;
         padding: 0;
       }
-
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: var(--mono);
-        font-size: 13px;
-        line-height: 1.6;
-        min-height: 100vh;
-        /* subtle grid texture */
-        background-image:
-          linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
-          linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0.012) 1px,
-            transparent 1px
-          );
-        background-size: 40px 40px;
-      }
       ::-webkit-scrollbar {
         width: 3px;
       }
@@ -235,6 +211,35 @@
       ::-webkit-scrollbar-thumb:hover {
         background: var(--accent2);
       }
+      /* Firefox */
+      @supports (-moz-appearance: none) {
+        html {
+          scrollbar-width: thin;
+          scrollbar-color: var(--border) #080b0e;
+        }
+        html:hover {
+          scrollbar-color: var(--accent2) #080b0e;
+        }
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.6;
+        min-height: 100vh;
+        overflow-x: hidden;
+        /* subtle grid texture */
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.012) 1px,
+            transparent 1px
+          );
+        background-size: 40px 40px;
+      }
+
       header {
         background: var(--surface);
         border-bottom: 1px solid var(--border);
@@ -247,8 +252,6 @@
         z-index: 100;
         gap: 12px;
         flex-wrap: wrap;
-        /* header scanline shimmer strip */
-        overflow: hidden;
         animation: fadeIn 0.4s var(--ease-out-quint) both;
       }
       header::after {
@@ -267,6 +270,131 @@
         animation: shimmer 3.5s linear infinite;
         background-size: 600px 1px;
       }
+
+      [tooltip] {
+        position: relative;
+        cursor: pointer;
+        z-index: 999;
+      }
+
+      [tooltip]::after,
+      [tooltip]::before {
+        position: absolute;
+        z-index: 999;
+        left: 50%;
+        opacity: 0;
+        pointer-events: none;
+        will-change: transform, opacity;
+        transition:
+          opacity 0.25s var(--ease-out-quint),
+          transform 0.35s var(--ease-spring);
+      }
+
+      [tooltip]::after {
+        content: attr(tooltip);
+        bottom: 100%;
+        transform: translate(-50%, 4px) scale(0.95);
+        margin-bottom: 10px;
+
+        font-family: var(--sans);
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text);
+        white-space: nowrap;
+        background-color: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 6px 12px;
+        box-shadow: 0 4px 20px rgba(102, 102, 102, 0.5);
+      }
+      [tooltip]::before {
+        content: '';
+        bottom: 100%;
+        transform: translate(-50%, 4px);
+        margin-bottom: 4px;
+        border-width: 6px 6px 0 6px;
+        border-style: solid;
+        border-color: var(--border) transparent transparent transparent;
+      }
+
+      [tooltip]:not(.tooltip-bottom):hover::after,
+      [tooltip]:not(.tooltip-bottom):hover::before {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+
+      [tooltip].tooltip-bottom::after {
+        bottom: auto;
+        top: 100%;
+        transform: translate(-50%, -4px) scale(0.95);
+        margin-top: 10px;
+        margin-bottom: 0;
+      }
+      [tooltip].tooltip-bottom::before {
+        bottom: auto;
+        top: 100%;
+        transform: translate(-50%, -4px);
+        margin-top: 4px;
+        margin-bottom: 0;
+        border-width: 0 6px 6px 6px;
+        border-color: transparent transparent var(--border) transparent;
+      }
+
+      [tooltip].tooltip-bottom:hover::after,
+      [tooltip].tooltip-bottom:hover::before {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+
+      [tooltip].tooltip-shift-left::after {
+        left: 0;
+        transform: translate(0, 4px) scale(0.95);
+      }
+      [tooltip].tooltip-shift-left::before {
+        left: 15px;
+        transform: translate(0, 4px);
+      }
+
+      [tooltip].tooltip-shift-left:not(.tooltip-bottom):hover::after,
+      [tooltip].tooltip-shift-left:not(.tooltip-bottom):hover::before {
+        transform: translate(0, 0) scale(1);
+      }
+
+      [tooltip].tooltip-shift-right::after {
+        left: auto;
+        right: 0;
+        transform: translate(0, 4px) scale(0.95);
+      }
+      [tooltip].tooltip-shift-right::before {
+        left: auto;
+        right: 15px;
+        transform: translate(0, 4px);
+      }
+
+      [tooltip].tooltip-shift-right:not(.tooltip-bottom):hover::after,
+      [tooltip].tooltip-shift-right:not(.tooltip-bottom):hover::before {
+        transform: translate(0, 0) scale(1);
+      }
+
+      [tooltip].tooltip-bottom.tooltip-shift-left:hover::after,
+      [tooltip].tooltip-bottom.tooltip-shift-left:hover::before,
+      [tooltip].tooltip-bottom.tooltip-shift-right:hover::after,
+      [tooltip].tooltip-bottom.tooltip-shift-right:hover::before {
+        transform: translate(0, 0) scale(1);
+      }
+      [tooltip-variant='accent']::after {
+        border-color: var(--accent);
+      }
+      [tooltip-variant='accent2']::after {
+        border-color: var(--accent2);
+      }
+      [tooltip-variant='warn']::after {
+        border-color: var(--warn);
+      }
+      [tooltip-variant='danger']::after {
+        border-color: var(--danger);
+      }
+
       .logo {
         font-family: var(--sans);
         font-weight: 800;
@@ -274,6 +402,7 @@
         color: #fff;
         display: flex;
         align-items: center;
+        justify-items: center;
         gap: 8px;
         animation: slideInLeft 0.5s var(--ease-out-quint) 0.1s both;
       }
@@ -765,10 +894,8 @@
           box-shadow 0.22s,
           transform 0.22s var(--ease-spring),
           background 0.22s;
-        cursor: pointer;
         animation: cardSlideIn 0.4s var(--ease-out-quint) both;
         position: relative;
-        overflow: hidden;
       }
       /* left accent bar that reveals on hover */
       .proj-card::before {
@@ -982,7 +1109,7 @@
       }
       .act-btn {
         background: none;
-        border: 1px solid var(--border);
+        border: none;
         border-radius: 4px;
         color: var(--dim);
         font-family: var(--mono);
@@ -1000,17 +1127,13 @@
       .act-btn:hover {
         color: var(--accent2);
         border-color: var(--accent2);
-        background: rgba(0, 184, 255, 0.06);
         transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
       .act-btn:active {
         transform: translateY(0) scale(0.96);
       }
       .act-btn.danger:hover {
         color: var(--danger);
-        border-color: var(--danger);
-        background: rgba(255, 51, 102, 0.06);
         box-shadow: 0 0 10px rgba(255, 51, 102, 0.12);
       }
       .act-btn.resume {
@@ -1018,7 +1141,6 @@
         border-color: rgba(0, 229, 160, 0.4);
       }
       .act-btn.resume:hover {
-        background: rgba(0, 229, 160, 0.1);
         border-color: var(--accent);
         box-shadow: 0 0 12px rgba(0, 229, 160, 0.15);
       }
@@ -1054,6 +1176,7 @@
         max-width: 94vw;
         max-height: 90vh;
         overflow-y: auto;
+        overflow-x: hidden;
         animation: modalIn 0.3s var(--ease-spring) both;
         box-shadow:
           0 24px 80px rgba(0, 0, 0, 0.6),
@@ -1104,7 +1227,7 @@
         max-height: 90vh;
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        overflow: visible;
         animation: modalIn 0.3s var(--ease-spring) both;
         box-shadow:
           0 24px 80px rgba(0, 0, 0, 0.6),
@@ -1258,18 +1381,7 @@
         padding: 18px 24px;
         overflow-y: auto;
         flex: 1;
-        /* custom scrollbar */
-        scrollbar-width: thin;
-        scrollbar-color: var(--border) transparent;
       }
-      .detail-body::-webkit-scrollbar {
-        width: 3px;
-      }
-      .detail-body::-webkit-scrollbar-thumb {
-        background: var(--border);
-        border-radius: 2px;
-      }
-
       /* Checklist detail view */
       .phase-group {
         margin-bottom: 20px;
@@ -1517,8 +1629,8 @@
 
       .animate-check path {
         stroke-dasharray: 24;
-        stroke-dashoffset: 24;
-        animation: drawCheck 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.05s;
+        stroke-dashoffset: -24;
+        animation: drawCheck 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.05s;
       }
 
       .animate-warn {
@@ -1702,24 +1814,9 @@
         z-index: 410;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         display: none;
-        scrollbar-width: thin;
-        scrollbar-color: var(--border) #080b0e;
       }
       .mpd-menu.open {
         display: block;
-      }
-      .mpd-menu::-webkit-scrollbar {
-        width: 3px;
-      }
-      .mpd-menu::-webkit-scrollbar-track {
-        background: #080b0e;
-      }
-      .mpd-menu::-webkit-scrollbar-thumb {
-        background: var(--border);
-        border-radius: 2px;
-      }
-      .mpd-menu::-webkit-scrollbar-thumb:hover {
-        background: var(--accent2);
       }
 
       .mpd-search-wrap {
@@ -2136,17 +2233,44 @@
         transform: scale(0.97);
         transition: transform 0.05s ease; /* Snappy compression feedback loop */
       }
+      .divider {
+        color: #ccc;
+        font-size: 20px;
+      }
+
+      /* The application title */
+      .tagline {
+        font-size: 16px;
+        color: #555;
+      }
     </style>
   </head>
   <body>
     <header>
       <div class="logo">
-        <div class="logo-dot"></div>
-        BugHunt Toolkit
+        <img
+          src="roxoi16x16.ico"
+          height="32"
+          width="32"
+          alt="logo"
+          style="
+            object-fit: cover;
+            border: 1px solid green;
+            border-radius: 4px;
+            padding: 1px;
+          "
+        />
+        <div style="text-transform: uppercase">roxoi</div>
+        <span class="divider">|</span>
+        <span class="tagline">BugHunt Toolkit</span>
       </div>
+
       <div class="hdr-right">
-        <!-- Export JSON Button -->
-        <button class="export-btn animated-ctrl" id="exportBtn">
+        <button
+          class="export-btn animated-ctrl"
+          id="exportBtn"
+          tooltip="Export project in JSON"
+        >
           <svg
             width="16"
             height="16"
@@ -2173,7 +2297,6 @@
               stroke-linejoin="round"
             />
           </svg>
-          Export JSON
         </button>
 
         <!-- Back to Toolkit Link -->
@@ -2181,6 +2304,7 @@
           href="/raje-bug-toolkit/"
           class="back-btn animated-ctrl"
           style="text-decoration: none"
+          tooltip="Back to active toolkit"
         >
           <svg
             width="16"
@@ -2199,7 +2323,6 @@
               stroke-linejoin="round"
             />
           </svg>
-          Back to Toolkit
         </a>
       </div>
     </header>
@@ -2452,30 +2575,24 @@
       "
     >
       <div style="display: flex; align-items: center; gap: 8px">
-        <div
-          style="
-            width: 7px;
-            height: 7px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 6px var(--accent);
-          "
-        ></div>
-        <span
-          style="
-            font-family: var(--sans);
-            font-weight: 800;
-            font-size: 13px;
-            color: #fff;
-            text-transform: uppercase;
-          "
-          >roxoi</span
-        >
-        <span style="color: var(--border); font-size: 11px">|</span>
-        <span style="color: var(--dim); font-size: 11px">BugHunt Toolkit</span>
+        <div class="logo">
+          <img
+            src="roxoi16x16.ico"
+            height="32"
+            width="32"
+            alt="logo"
+            style="
+              object-fit: cover;
+              border: 1px solid green;
+              border-radius: 4px;
+              padding: 1px;
+            "
+          />
+          <div style="text-transform: uppercase">roxoi</div>
+        </div>
       </div>
       <div style="color: var(--muted); font-size: 11px; letter-spacing: 0.3px">
-        © <span id="footerYear"></span>
+        &copy; <span id="footerYear"></span>
         <span
           style="
             color: var(--accent);
@@ -2519,7 +2636,7 @@
               class="act-btn"
               id="notesPreviewEditBtn"
               type="button"
-              title="Edit notes"
+              tooltip="Edit notes"
               style="
                 font-size: 11px;
                 padding: 4px 10px;
@@ -2561,7 +2678,7 @@
             <button
               class="close-btn"
               id="notesPreviewClose"
-              title="Close"
+              tooltip="Close"
               type="button"
             >
               <svg
@@ -2667,28 +2784,28 @@
           </div>
           <!-- <button class="detail-close" id="detailClose">✕</button> -->
           <button
-              class="close-btn"
-              id="detailClose"
-              title="Close"
-              type="button"
+            class="close-btn"
+            id="detailClose"
+            tooltip="Close"
+            type="button"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://w3.org"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://w3.org"
-              >
-                <path
-                  class="anim-close-cross"
-                  d="M18 6L6 18M6 6l12 12"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </button>
+              <path
+                class="anim-close-cross"
+                d="M18 6L6 18M6 6l12 12"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
         </div>
         <div class="detail-prog-bar">
           <div class="detail-prog-row">
@@ -3478,7 +3595,7 @@
                 '    <div class="proj-name">',
                 '      ' + esc(p.target),
                 isActive
-                  ? '<span class="logo-dot" title="active session"></span>'
+                  ? '<span class="logo-dot" tooltip="active session"></span>'
                   : '',
                 sevHtml,
                 bountyHtml,
@@ -3535,7 +3652,7 @@
                   '</strong></span>',
                 p.notes
                   ? '<span style="width:100%;display:inline-flex;align-items:center;justify-content:space-between;gap:0px;color:var(--dim);font-size:11px;">' +
-                    '<span>' +
+                    '<span tooltip="Target Note">' +
                     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org"> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <rect x="8" y="2" width="8" height="4" rx="1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>  <path class="anim-list-line" d="M9 10h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path class="anim-list-line-long" d="M9 14h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path class="anim-list-line" d="M9 18h3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>' +
                     (p.notes.length > 75
                       ? '<p style="width:100%">' +
@@ -3543,7 +3660,7 @@
                         '...</p></span>' +
                         '<span class="notes-hover-preview notes-view-icon" data-action="notes-prev" data-idx="' +
                         i +
-                        '" title="View full notes" style="display:inline-flex;align-items:center;cursor:pointer;color:var(--accent2);opacity:0.75;transition:opacity 0.2s;" onmouseenter="this.style.opacity=\'1\'" onmouseleave="this.style.opacity=\'0.75\'">' +
+                        '" tooltip="View full notes" style="display:inline-flex;align-items:center;cursor:pointer;color:var(--accent2);opacity:0.75;transition:opacity 0.2s;" onmouseenter="this.style.opacity=\'1\'" onmouseleave="this.style.opacity=\'0.75\'">' +
                         '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>' +
                         '</span>' +
                         '</span>'
@@ -3552,7 +3669,7 @@
                         '</p></span>' +
                         '<span class="notes-edit-icon" data-action="notes-edit" data-idx="' +
                         i +
-                        '" title="Edit notes" style="display:inline-flex;align-items:center;cursor:pointer;color:var(--accent);opacity:0.75;transition:opacity 0.2s;" onmouseenter="this.style.opacity=\'1\'" onmouseleave="this.style.opacity=\'0.75\'">' +
+                        '" tooltip="Edit notes" style="display:inline-flex;align-items:center;cursor:pointer;color:var(--accent);opacity:0.75;transition:opacity 0.2s;" onmouseenter="this.style.opacity=\'1\'" onmouseleave="this.style.opacity=\'0.75\'">' +
                         '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" class="anim-edit-icon"><path class="anim-edit-box" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path class="anim-edit-pencil" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
                         '</span>' +
                         '</span>') +
@@ -3568,19 +3685,20 @@
                 '    </div>',
                 '  </div>',
                 '  <div class="proj-actions">',
-                '    <button class="act-btn" data-action="detail" data-idx="' +
+                '    <button tooltip="Details" class="act-btn" data-action="detail" data-idx="' +
                   i +
-                  '"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><g class="anim-lens"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></svg> Details</button>',
+                  '"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><g class="anim-lens"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></svg></button>',
                 '    <button class="act-btn resume" data-action="resume" data-idx="' +
                   i +
-                  '">' +
+                  `" tooltip=${isActive ? 'Resume' : 'Active'} tooltip-varient="accent"` +
+                  '>' +
                   (!isActive
-                    ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><path class="anim-reload" d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l6.73-6.19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>Active`
-                    : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><polygon class="anim-play" points="5 3 19 12 5 21 5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="currentColor"/> </svg>Resume`) +
+                    ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><path class="anim-reload" d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l6.73-6.19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>`
+                    : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><polygon class="anim-play" points="5 3 19 12 5 21 5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="currentColor"/> </svg>`) +
                   '</button>',
-                '    <button class="act-btn danger" data-action="delete" data-idx="' +
+                '    <button tooltip="Delete" tooltip-varient="warn" class="act-btn danger" data-action="delete" data-idx="' +
                   i +
-                  '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org"><path class="anim-lid" d="M3 6h18M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>',
+                  '"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org"><path class="anim-lid" d="M3 6h18M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>',
                 '  </div>',
                 '</div>',
               ].join('\n');
@@ -3604,13 +3722,13 @@
           });
 
           // Click card body to open detail
-          grid.querySelectorAll('.proj-card').forEach(function (card) {
-            card.addEventListener('click', function (e) {
-              if (e.target.closest('[data-action]')) return;
-              let idx = parseInt(card.getAttribute('data-idx'), 10);
-              openDetail(idx);
-            });
-          });
+          // grid.querySelectorAll('.proj-card').forEach(function (card) {
+          //   card.addEventListener('click', function (e) {
+          //     if (e.target.closest('[data-action]')) return;
+          //     let idx = parseInt(card.getAttribute('data-idx'), 10);
+          //     openDetail(idx);
+          //   });
+          // });
 
           grid.querySelectorAll('.notes-edit-icon').forEach(function (el) {
             el.addEventListener('click', function (e) {
@@ -4307,7 +4425,6 @@
     <svg class="toast-icon animate-check" viewBox="0 0 24 24">
       <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/>
     </svg>`;
-
           const warnSvg = `
     <svg class="toast-icon animate-warn" viewBox="0 0 24 24">
       <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M12 9v4M12 17h.01"/>
@@ -4388,6 +4505,67 @@
             if (!e._autoSet) newPlatformAutoSet = false;
           });
         }
+        document.addEventListener(
+          'mouseover',
+          (event) => {
+            const target = event.target.closest('[tooltip]');
+            if (!target) return;
+            if (event.relatedTarget && target.contains(event.relatedTarget))
+              return;
+
+            target.classList.remove(
+              'tooltip-bottom',
+              'tooltip-shift-left',
+              'tooltip-shift-right',
+            );
+
+            const rect = target.getBoundingClientRect();
+            const viewWidth = window.innerWidth;
+            const tooltipText = target.getAttribute('tooltip');
+            const estimatedWidth = Math.max(tooltipText.length * 7.5 + 24, 120);
+            const estimatedHeight = 40; // tooltip height + margin, roughly
+            const halfTooltip = estimatedWidth / 2;
+
+            // Find nearest ancestor that actually clips overflow (modal, scroll container, etc.)
+            // getBoundingClientRect on that ancestor tells us the *real* available space,
+            // not just the viewport edge.
+            let clipParent = target.parentElement;
+            let clipRect = null;
+            while (clipParent && clipParent !== document.body) {
+              const style = getComputedStyle(clipParent);
+              const overflowY = style.overflowY;
+              if (
+                overflowY === 'auto' ||
+                overflowY === 'scroll' ||
+                overflowY === 'hidden'
+              ) {
+                clipRect = clipParent.getBoundingClientRect();
+                break;
+              }
+              clipParent = clipParent.parentElement;
+            }
+
+            // Space above the trigger, bounded by the clipping ancestor if one exists
+            const topBoundary = clipRect ? Math.max(clipRect.top, 0) : 0;
+            const spaceAbove = rect.top - topBoundary;
+
+            if (spaceAbove < estimatedHeight) {
+              target.classList.add('tooltip-bottom');
+            }
+
+            // Horizontal clamping: prefer the clip ancestor's bounds, fall back to viewport
+            const leftBoundary = clipRect ? clipRect.left : 0;
+            const rightBoundary = clipRect ? clipRect.right : viewWidth;
+
+            const elementCenter = rect.left + rect.width / 2;
+            if (elementCenter - halfTooltip < leftBoundary + 12) {
+              target.classList.add('tooltip-shift-left');
+            } else if (elementCenter + halfTooltip > rightBoundary - 12) {
+              target.classList.add('tooltip-shift-right');
+            }
+          },
+          true,
+        );
         render();
       })();
     </script>

