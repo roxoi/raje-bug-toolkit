@@ -239,13 +239,13 @@
       [tooltip] {
         position: relative;
         cursor: pointer;
-        z-index: 999;
+        z-index: 250;
       }
 
       [tooltip]::after,
       [tooltip]::before {
         position: absolute;
-        z-index: 999;
+        z-index: 250;
         left: 50%;
         opacity: 0;
         pointer-events: none;
@@ -679,6 +679,7 @@
       .sb.open {
         opacity: 1;
         padding: 15px;
+        max-height: none;
         transition:
           max-height 0.4s var(--ease-spring),
           opacity 0.28s ease 0.05s,
@@ -1525,7 +1526,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        z-index: 999;
+        z-index: 250;
         box-shadow: 0 6px 20px rgb(0 135 123 / 60%);
         opacity: 0;
         visibility: hidden;
