@@ -783,11 +783,11 @@
       .sb.open {
         opacity: 1;
         padding: 15px;
-        max-height: none;
+        max-height: 9999px;
         transition:
-          max-height 0.4s var(--ease-spring),
-          opacity 0.28s ease 0.05s,
-          padding 0.35s var(--ease-out-quint);
+          max-height 1.2s ease-in-out,
+          opacity 0.4s ease 0.05s,
+          padding 0.5s var(--ease-out-quint);
       }
       .cb {
         position: relative;
@@ -14098,7 +14098,7 @@ echo "=== Recon Summary ==="
             head.classList.add('open');
             if (body) {
               body.classList.add('open');
-              body.style.maxHeight = 'none';
+              body.style.maxHeight = '9999px';
             }
             if (tog) tog.classList.add('open');
           }
@@ -14159,21 +14159,11 @@ echo "=== Recon Summary ==="
               this.classList.add('open');
               if (tog) tog.classList.add('open');
               openSections.add(idx);
-              body.style.maxHeight = body.scrollHeight + 'px';
-              body.addEventListener('transitionend', function handler(e) {
-                if (
-                  e.propertyName === 'max-height' &&
-                  body.classList.contains('open')
-                ) {
-                  body.style.maxHeight = 'none';
-                  body.removeEventListener('transitionend', handler);
-                }
-              });
+              body.style.maxHeight = '9999px';
             }
             saveState({ openSections: Array.from(openSections) });
           });
         });
-
         function setCollapseBtnState(btn, expanded) {
           btn.setAttribute('data-state', expanded ? 'expanded' : 'collapsed');
           btn.setAttribute('tooltip', expanded ? 'Collapse All' : 'Expand All');
@@ -14203,16 +14193,7 @@ echo "=== Recon Summary ==="
           if (tog) tog.classList.add('open');
           openSections.add(idx);
 
-          body.style.maxHeight = body.scrollHeight + 'px';
-          body.addEventListener('transitionend', function handler(e) {
-            if (
-              e.propertyName === 'max-height' &&
-              body.classList.contains('open')
-            ) {
-              body.style.maxHeight = 'none';
-              body.removeEventListener('transitionend', handler);
-            }
-          });
+          body.style.maxHeight = '9999px';
         }
 
         function animateSectionClose(head) {
