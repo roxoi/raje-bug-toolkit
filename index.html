@@ -3512,7 +3512,8 @@ httpx -l all_subs.txt \
   -ports 80,443,8080,8443,8888,8081,3000,3001,4000,5000,9090,10000 \
   -threads 50 -o alive_ports.txt
 
-naabu -list live_subs.txt -c 50 -o naabu_ports.txt
+sed -e 's|^[^/]*//||' -e 's|/.*||' live_subs.txt > clean_subs.txt
+naabu -list clean_subs.txt -c 50 -o naabu_ports.txt
 nmap -sV -sC -iL naabu_ports.txt -oN nmap_scan.txt</pre
                 >
               </div>
