@@ -546,10 +546,14 @@
       .sidebar {
         width: 210px;
         flex-shrink: 0;
+        position: relative;
         background: var(--surface);
         border-right: 1px solid var(--border);
-        overflow-y: auto;
-        overflow-x: hidden;
+        overflow-y: visible;
+        overflow-x: visible;
+        display: flex;
+        flex-direction: column;
+        transition: width 0.25s var(--ease-out-quint);
       }
 
       .ovr-prog {
@@ -1668,6 +1672,110 @@
         opacity: 0.5;
         margin: 4px 0;
       }
+      .sidebar-toggle-btn {
+        position: fixed;
+        left: 208px;
+        top: 50vh;
+        transform: translateY(-50%);
+        z-index: 201;
+        height: fit-content;
+        width: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border-top: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        border-left: none;
+        color: var(--dim);
+        cursor: pointer;
+        transition:
+          color 0.15s,
+          background 0.15s,
+          left 0.25s var(--ease-out-quint); 
+      }
+      .sidebar-toggle-btn:hover {
+        color: var(--accent2);
+        background: rgba(0, 184, 255, 0.06);
+      }
+      .sidebar.collapsed ~ .sidebar-toggle-btn {
+        left: 54px;
+      }
+
+      .toggle-icon {
+        transition: transform 0.3s var(--ease-spring);
+      }
+      .sidebar.collapsed ~ .sidebar-toggle-btn .toggle-icon {
+        transform: rotate(180deg);
+      }
+
+      .sidebar-inner {
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        transition: width 0.25s var(--ease-out-quint);
+      }
+
+      /* Collapsed = icon rail */
+      .sidebar.collapsed {
+        width: 56px;
+      }
+      .sidebar.collapsed .sb-label,
+      .sidebar.collapsed .ovr-prog,
+      .sidebar.collapsed .divider-dashed,
+      .sidebar.collapsed .pb-label {
+        display: none;
+      }
+      .sidebar.collapsed .pb {
+        justify-content: center;
+        padding: 9px 0;
+        gap: 0;
+      }
+      .sidebar.collapsed .pb .pnum {
+        display: flex;
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .sidebar.collapsed:hover {
+        overflow: visible;
+        z-index: 100;
+        transition: width 0.25s var(--ease-out-quint);
+      }
+      .sidebar.collapsed .sidebar-toggle-btn {
+        left: 54px;
+      }
+      .sidebar.collapsed:hover .sidebar-inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 210px;
+        height: calc(100vh - 53px);
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        box-shadow: 6px 0 24px rgba(0, 0, 0, 0.45);
+        overflow-y: auto;
+        overflow-x: hidden;
+        transition: width 0.25s var(--ease-out-quint);
+      }
+      .sidebar.collapsed:hover .sb-label,
+      .sidebar.collapsed:hover .ovr-prog,
+      .sidebar.collapsed:hover .divider-dashed {
+        display: block;
+      }
+      .sidebar.collapsed:hover .pb-label {
+        display: inline;
+      }
+      .sidebar.collapsed:hover .pb {
+        justify-content: flex-start;
+        padding: 7px 14px;
+        gap: 8px;
+      }
     </style>
   </head>
   <body>
@@ -1790,144 +1898,171 @@
     </header>
 
     <div class="layout">
-      <div class="sidebar">
-        <div class="ovr-prog">
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-            "
-          >
-            <span class="ovr-label">Progress</span>
-            <span class="ovr-pct" id="oPct">0%</span>
+      <div class="sidebar" id="sidebarEl">
+        <div class="sidebar-inner" id="sidebarInner">
+          <div class="ovr-prog">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <span class="ovr-label">Progress</span>
+              <span class="ovr-pct" id="oPct">0%</span>
+            </div>
+            <div class="ovr-track">
+              <div class="ovr-fill" id="oFill" style="width: 0%"></div>
+            </div>
           </div>
-          <div class="ovr-track">
-            <div class="ovr-fill" id="oFill" style="width: 0%"></div>
-          </div>
+          <div class="divider-dashed"></div>
+          <div class="sb-label">Phases</div>
+          <button class="pb active" data-phase="0">
+            <span class="pnum">0</span>Scope Review
+          </button>
+          <button class="pb" data-phase="1">
+            <span class="pnum">1</span>Subdomain Enum
+          </button>
+          <button class="pb" data-phase="2">
+            <span class="pnum">2</span>Live Host Probe
+          </button>
+          <button class="pb" data-phase="3">
+            <span class="pnum">3</span>Visual Triage
+          </button>
+          <button class="pb" data-phase="4">
+            <span class="pnum">4</span>App Walkthrough
+          </button>
+          <button class="pb" data-phase="5">
+            <span class="pnum">5</span>Auth Testing
+          </button>
+          <button class="pb" data-phase="6">
+            <span class="pnum">6</span>IDOR Testing
+          </button>
+          <button class="pb" data-phase="7">
+            <span class="pnum">7</span>XSS Testing
+          </button>
+          <button class="pb" data-phase="8">
+            <span class="pnum">8</span>JS Mining
+          </button>
+          <button class="pb" data-phase="9">
+            <span class="pnum">9</span>Param Discovery
+          </button>
+          <button class="pb" data-phase="10">
+            <span class="pnum">10</span>Business Logic
+          </button>
+          <button class="pb" data-phase="11">
+            <span class="pnum">11</span>Fuzzing
+          </button>
+          <button class="pb" data-phase="12">
+            <span class="pnum">12</span>Nuclei Scan
+          </button>
+          <button class="pb" data-phase="13">
+            <span class="pnum">13</span>SQLi Testing
+          </button>
+          <button class="pb" data-phase="14">
+            <span class="pnum">14</span>Reporting
+          </button>
+          <div class="divider-dashed"></div>
+          <button class="pb sbanimated-btn" data-phase="16">
+            <svg
+              class="btn-icon labs-icon"
+              style="--icon-color: #f97583"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path class="layer-3" d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path class="layer-2" d="M2 12l10 5 10-5" />
+              <path class="layer-1" d="M2 17l10 5 10-5" />
+            </svg>
+            PortSwigger Labs
+          </button>
+
+          <button class="pb sbanimated-btn" data-phase="15">
+            <svg
+              class="btn-icon download-icon"
+              style="--icon-color: var(--accent2)"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                class="tray"
+                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+              />
+              <polyline class="arrow-head" points="7 10 12 15 17 10" />
+              <line class="arrow-shaft" x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            File Generator
+          </button>
+
+          <!-- File Reference -->
+          <button class="pb sbanimated-btn" data-phase="17">
+            <svg
+              class="btn-icon folder-icon"
+              style="--icon-color: var(--accent)"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                class="folder-base"
+                d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+              />
+              <line class="folder-line" x1="2" y1="10" x2="22" y2="10" />
+            </svg>
+            File Reference
+          </button>
+
+          <button class="pb sbanimated-btn" data-phase="18">
+            <svg
+              class="btn-icon clock-icon"
+              style="--icon-color: var(--warn)"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polyline class="clock-hand" points="12 6 12 12 16 14" />
+            </svg>
+            Timeline
+          </button>
         </div>
-        <div class="divider-dashed"></div>
-        <div class="sb-label">Phases</div>
-        <button class="pb active" data-phase="0">
-          <span class="pnum">0</span>Scope Review
-        </button>
-        <button class="pb" data-phase="1">
-          <span class="pnum">1</span>Subdomain Enum
-        </button>
-        <button class="pb" data-phase="2">
-          <span class="pnum">2</span>Live Host Probe
-        </button>
-        <button class="pb" data-phase="3">
-          <span class="pnum">3</span>Visual Triage
-        </button>
-        <button class="pb" data-phase="4">
-          <span class="pnum">4</span>App Walkthrough
-        </button>
-        <button class="pb" data-phase="5">
-          <span class="pnum">5</span>Auth Testing
-        </button>
-        <button class="pb" data-phase="6">
-          <span class="pnum">6</span>IDOR Testing
-        </button>
-        <button class="pb" data-phase="7">
-          <span class="pnum">7</span>XSS Testing
-        </button>
-        <button class="pb" data-phase="8">
-          <span class="pnum">8</span>JS Mining
-        </button>
-        <button class="pb" data-phase="9">
-          <span class="pnum">9</span>Param Discovery
-        </button>
-        <button class="pb" data-phase="10">
-          <span class="pnum">10</span>Business Logic
-        </button>
-        <button class="pb" data-phase="11">
-          <span class="pnum">11</span>Fuzzing
-        </button>
-        <button class="pb" data-phase="12">
-          <span class="pnum">12</span>Nuclei Scan
-        </button>
-        <button class="pb" data-phase="13">
-          <span class="pnum">13</span>SQLi Testing
-        </button>
-        <button class="pb" data-phase="14">
-          <span class="pnum">14</span>Reporting
-        </button>
-        <div class="divider-dashed"></div>
-        <button class="pb sbanimated-btn" data-phase="16">
-          <svg
-            class="btn-icon labs-icon"
-            style="--icon-color: #f97583"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path class="layer-3" d="M12 2L2 7l10 5 10-5-10-5z" />
-            <path class="layer-2" d="M2 12l10 5 10-5" />
-            <path class="layer-1" d="M2 17l10 5 10-5" />
-          </svg>
-          PortSwigger Labs
-        </button>
-
-        <button class="pb sbanimated-btn" data-phase="15">
-          <svg
-            class="btn-icon download-icon"
-            style="--icon-color: var(--accent2)"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path class="tray" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline class="arrow-head" points="7 10 12 15 17 10" />
-            <line class="arrow-shaft" x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          File Generator
-        </button>
-
-        <!-- File Reference -->
-        <button class="pb sbanimated-btn" data-phase="17">
-          <svg
-            class="btn-icon folder-icon"
-            style="--icon-color: var(--accent)"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path
-              class="folder-base"
-              d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
-            />
-            <line class="folder-line" x1="2" y1="10" x2="22" y2="10" />
-          </svg>
-          File Reference
-        </button>
-
-        <button class="pb sbanimated-btn" data-phase="18">
-          <svg
-            class="btn-icon clock-icon"
-            style="--icon-color: var(--warn)"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <polyline class="clock-hand" points="12 6 12 12 16 14" />
-          </svg>
-          Timeline
-        </button>
       </div>
+
+      <button
+        class="sidebar-toggle-btn"
+        id="sidebarToggleBtn"
+        type="button"
+        tooltip="Collapse sidebar"
+        tooltip-variant="accent2"
+      >
+        <svg
+          class="toggle-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
 
       <div class="main">
         <!-- PHASE 0 -->
@@ -14758,6 +14893,47 @@ echo "=== Recon Summary ==="
             });
           });
         }
+
+        // Sidebar collapse / icon rail toggle
+        (function () {
+          let sidebarEl = document.getElementById('sidebarEl');
+          let toggleBtn = document.getElementById('sidebarToggleBtn');
+          if (!sidebarEl || !toggleBtn) return;
+
+          sidebarEl.querySelectorAll('.pb').forEach(function (btn) {
+            Array.from(btn.childNodes).forEach(function (node) {
+              if (node.nodeType === 3 && node.textContent.trim()) {
+                let span = document.createElement('span');
+                span.className = 'pb-label';
+                span.textContent = node.textContent;
+                btn.replaceChild(span, node);
+              }
+            });
+          });
+
+          function applyCollapsed(collapsed) {
+            sidebarEl.classList.toggle('collapsed', collapsed);
+            toggleBtn.setAttribute(
+              'tooltip',
+              collapsed ? 'Expand sidebar' : 'Collapse sidebar',
+            );
+          }
+
+          applyCollapsed(!!loadState().sidebarCollapsed);
+
+          toggleBtn.addEventListener('click', function () {
+            let next = !sidebarEl.classList.contains('collapsed');
+            applyCollapsed(next);
+            saveState({ sidebarCollapsed: next });
+          });
+
+          sidebarEl.addEventListener('mouseenter', function () {
+            toggleBtn.style.left = '210px';
+          });
+          sidebarEl.addEventListener('mouseleave', function () {
+            toggleBtn.style.left = '';
+          });
+        })();
 
         // Init
         buildFileList();
