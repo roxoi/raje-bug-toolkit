@@ -2950,7 +2950,7 @@
               {
                 value: 'BugBase',
                 label: 'BugBase',
-                domain: 'bugbase.in',
+                domain: 'bugbase.ai',
                 emoji: '🗄',
               },
               {
@@ -3674,10 +3674,11 @@
                           '<span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org"> <!-- Clipboard Board Frame Base --> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <!-- Top Document Spring Clip --> <rect x="8" y="2" width="8" height="4" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <!-- Document Checklist Data Row Lines --> <path d="M9 10h6M9 14h6M9 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg></span>';
                       }
                       return (
-                        '<span style="display:flex;align-items:center;gap:5px;">' +
+                        '<span style="display:flex;align-items:center;gap:5px;cursor:pointer;">' +
                         iconHtml +
                         '<strong>' +
-                        esc(p.platform) +
+                          (p.programUrl?.trim() ?  `<a href="${p.programUrl}" target="_blank" tooltip=${p.programUrl} tooltip-variant="accent2" style="text-decoration:none; color:inherit;">${esc(p.platform)}</a>`
+                           : esc(p.platform)) +
                         '</strong></span>'
                       );
                     })()
