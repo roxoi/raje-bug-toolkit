@@ -3432,11 +3432,20 @@ print(f"PATH: {os.environ['PATH']}")
 !go version
 
 # !go install github.com/projectdiscovery/katana/cmd/katana@latest
+
 # #use tool using full path
 # !~/go/bin/katana -h
-# katana -u live_subs.txt -jc -kf all -d 5 \
+# ~/go/bin/katana -u live_subs.txt -jc -kf all -d 5 \
 #  -ef "woff,css,png,jpg,woff2,jpeg,gif,svg" \
 #  -rl 10 -o endpoints.txt > /dev/null 2>&1
+
+# OR 
+
+# %%bash
+# ~/go/bin/katana -u live_subs.txt -jc -kf all -d 5 \
+#  -ef "woff,css,png,jpg,woff2,jpeg,gif,svg" \
+#  -rl 10 -o endpoints.txt > katana.log 2>&1
+
 # Don't forget `> /dev/null 2>&1` at the end because firefox usage more resource for rendering
 </pre>
               </div>
