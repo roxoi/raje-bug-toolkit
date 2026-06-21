@@ -2386,7 +2386,7 @@
                 }
 
                 .sbanimated-btn:hover .clock-icon .clock-hand {
-                  transform: rotate(15deg);
+                  transform: rotate(30deg);
                 }
 
                 .sbanimated-btn:active .btn-icon,
@@ -3409,44 +3409,79 @@ Array.from(document.querySelectorAll("a")).map(el => el.href);
                   </button>
                 </div>
                 <pre>
-# Download Go installation package
-!wget https://go.dev/dl/go1.26.1.linux-amd64.tar.gz
+#  Mount Drive FIRST — Colab can disconnect on idle, and you
+#    don't want a 2-hour crawl living only in the VM's local disk.
 
-# Remove any existing Go installation
-!rm -rf /usr/local/go
-
-# Extract the downloaded tar file to /usr/local
-!tar -C /usr/local -xzf go1.26.1.linux-amd64.tar.gz
-
-# Set environment variables for Go
+from google.colab import drive
+drive.mount('/content/drive')
+WORKDIR = '/content/drive/MyDrive/katana_runs'
 import os
+os.makedirs(WORKDIR, exist_ok=True)
+
+#  Install Go — check go.dev/dl for the current version before
+#    running this; hardcoding a version means this goes stale.
+#    As of writing, 1.26.4 is current; adjust if needed.
+
+!wget -q https://go.dev/dl/go1.26.4.linux-amd64.tar.gz
+!rm -rf /usr/local/go
+!tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz
 
 os.environ['GOROOT'] = '/usr/local/go'
-os.environ['PATH'] = os.environ['GOROOT'] + '/bin:' + os.environ['PATH']
-
-# Display GOROOT and PATH for verification
-print(f"GOROOT: {os.environ['GOROOT']}")
-print(f"PATH: {os.environ['PATH']}")
-
-# Verify Go installation
+os.environ['GOPATH'] = '/root/go'
+os.environ['PATH'] = os.environ['GOROOT'] + '/bin:' + os.environ['GOPATH'] + '/bin:' + os.environ['PATH']
 !go version
 
-# !go install github.com/projectdiscovery/katana/cmd/katana@latest
+#  Install katana + uro (uro cleans the output — non-negotiable
 
-# #use tool using full path
-# !~/go/bin/katana -h
-# ~/go/bin/katana -u live_subs.txt -jc -kf all -d 5 \
-#  -ef "woff,css,png,jpg,woff2,jpeg,gif,svg" \
-#  -rl 10 -o endpoints.txt > /dev/null 2>&1
+!go install github.com/projectdiscovery/katana/cmd/katana@latest
+!pip install -q uro
 
-# OR 
+#  Sanity checks before the real run
 
-# %%bash
-# ~/go/bin/katana -u live_subs.txt -jc -kf all -d 5 \
-#  -ef "woff,css,png,jpg,woff2,jpeg,gif,svg" \
-#  -rl 10 -o endpoints.txt > katana.log 2>&1
+!free -h          # check RAM headroom before deciding on -jsl
+!~/go/bin/katana -health-check
 
-# Don't forget `> /dev/null 2>&1` at the end because firefox usage more resource for rendering
+# Spot-check that you're not crawling Cloudflare challenge pages from
+# a flagged cloud IP — run this against ONE known-live URL first.
+!~/go/bin/katana -u https://TARGET -d 1 -silent | head -5
+
+# The actual crawl
+#    Changes from before:
+#    - added -xhr and -fx (catches endpoint classes -jc alone misses)
+#    - -sr + -srd saves raw responses so you can verify you're getting
+#      real content, not soft-blocked junk, without re-crawling
+#    - -rl kept conservative; check the program's stated rate limit
+#      and don't exceed it — you're on a shared cloud IP range
+#    - output goes to Drive, not local disk
+#    - dropped -jsl unless `free -h` above showed enough headroom;
+#      add it back only if memory allows
+
+!~/go/bin/katana \
+  -u live_subs.txt \
+  -jc -kf all -xhr -fx \
+  -d 5 \
+  -ef "woff,css,png,jpg,woff2,jpeg,gif,svg,ico,mp4,webm" \
+  -rl 10 \
+  -sr -srd "{WORKDIR}/responses" \
+  -o "{WORKDIR}/endpoints_raw.txt" \
+  -jsonl
+
+#  Clean the output immediately — don't let raw output sit
+#    unfiltered like last time
+
+!cat "{WORKDIR}/endpoints_raw.txt" | jq -r '.endpoint // .url // empty' > "{WORKDIR}/urls_only.txt"
+!cat "{WORKDIR}/urls_only.txt" | uro -o "{WORKDIR}/filtered.txt"
+
+print("Raw lines:", end=" ")
+!wc -l "{WORKDIR}/urls_only.txt"
+print("Filtered lines:", end=" ")
+!wc -l "{WORKDIR}/filtered.txt"
+
+#  Quick spot-check: are responses actually varied, or are you
+#    getting blocked/cloaked content from the cloud IP?
+
+!pip install -q httpx[cli] 2>/dev/null || go install github.com/projectdiscovery/httpx/cmd/httpx@latest
+!cat "{WORKDIR}/filtered.txt" | ~/go/bin/httpx -sc -cl -title -silent | head -30
 </pre>
               </div>
             </div>
