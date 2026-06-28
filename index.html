@@ -227,12 +227,21 @@
           opacity: 1;
         }
       }
-      * {
+      *, *::before, *::after {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
 
+      /* Firefox */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) #080b0e;
+      }
+
+      *.scrollbar-active {
+        scrollbar-color: var(--accent2) #080b0e;
+      }
       ::-webkit-scrollbar {
         width: 3px;
       }
@@ -250,16 +259,6 @@
         background-color: #00ffb242;
       }
 
-      /* Firefox */
-      @supports (-moz-appearance: none) {
-        html {
-          scrollbar-width: thin;
-          scrollbar-color: var(--border) #080b0e;
-        }
-        html:hover {
-          scrollbar-color: var(--accent2) #080b0e;
-        }
-      }
       body {
         background: var(--bg);
         color: var(--text);
@@ -1417,10 +1416,6 @@
         z-index: 410;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         display: none;
-
-        /* Firefox thin scrollbar */
-        scrollbar-width: thin;
-        scrollbar-color: var(--border) #080b0e;
       }
       .mpd-menu.open {
         display: block;
