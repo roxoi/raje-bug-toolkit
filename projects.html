@@ -4332,6 +4332,7 @@
           .addEventListener('click', function () {
             let target = document.getElementById('newTarget').value.trim();
             let platform = getPlatformDropdownValue('newPlatform');
+            let programUrl = document.getElementById('programUrl').value.trim();
             let bounty =
               parseFloat(document.getElementById('newBounty').value) || 0;
             let severity = document.getElementById('newSeverity').value;
@@ -4359,6 +4360,7 @@
             projects.unshift({
               target: target,
               platform: platform,
+              programUrl: programUrl,
               severity: severity,
               bounty: bounty,
               notes: notes,
@@ -4371,6 +4373,7 @@
             document.getElementById('newTarget').value = '';
             resetPlatformDropdown('newPlatform');
             document.getElementById('newBounty').value = '';
+            document.getElementById('programUrl').value = '';
             document.getElementById('newSeverity').value = '';
             document.getElementById('newNotes').value = '';
             render();

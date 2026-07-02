@@ -1,0 +1,2718 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	  <meta charset="UTF-8" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	  <title>raje@pancholi:~$</title>
+		<link rel="shortcut icon" href="house.ico" type="image/x-icon">
+	  <link rel="preconnect" href="https://fonts.googleapis.com" />
+	  <link
+	    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+	    rel="stylesheet"
+	  />
+	  <style>
+	    :root {
+				--bg: #060a07;
+				--bg-panel: #233122b0;
+				--bg-panel-alt: #121711;
+				--border: #233122b0;
+				--border-soft: #233122b0;
+				--green: #39ff6a;
+				--green-dim: #1f7a3f;
+				--text: #c9f5d2;
+				--text-dim: #5f8f6c;
+				--amber: #ffd166;
+	      --font-display:
+	        'JetBrains Mono', 'Fira Code', ui-monospace, Menlo, Consolas,
+	        monospace;
+	      --font-body:
+	        'IBM Plex Mono', 'JetBrains Mono', ui-monospace, Menlo, Consolas,
+	        monospace;
+	    }
+
+	    * {
+	      box-sizing: border-box;
+	    }
+	    html,
+	    body {
+	      margin: 0;
+	      padding: 0;
+	    }
+	    ::selection {
+				background-color: #00db0473;
+				color: #00e90f;
+			}
+	    body {
+	      background: var(--bg);
+	      color: var(--text);
+	      font-family: var(--font-body);
+	      min-height: 100vh;
+	      position: relative;
+	      overflow-x: hidden;
+	    }
+
+	    body::before {
+	      content: '';
+	      position: fixed;
+	      inset: 0;
+	      background: repeating-linear-gradient(
+	        to bottom,
+	        rgba(57, 255, 106, 0.025) 0px,
+	        rgba(57, 255, 106, 0.025) 1px,
+	        transparent 1px,
+	        transparent 3px
+	      );
+	      pointer-events: none;
+	      z-index: 9000;
+	      mix-blend-mode: overlay;
+	    }
+	    body::after {
+	      content: '';
+	      position: fixed;
+	      inset: 0;
+	      background: radial-gradient(
+	        ellipse at center,
+	        transparent 55%,
+	        rgba(0, 0, 0, 0.65) 100%
+	      );
+	      pointer-events: none;
+	      z-index: 8999;
+	    }
+
+	    @keyframes flicker {
+	      0%,
+	      97%,
+	      100% {
+	        opacity: 1;
+	      }
+	      98% {
+	        opacity: 0.94;
+	      }
+	      99% {
+	        opacity: 0.98;
+	      }
+	    }
+	    .crt-flicker {
+	      animation: flicker 7s infinite;
+	    }
+
+	    a {
+	      color: inherit;
+	      text-decoration: none;
+	    }
+	    :focus-visible {
+	      outline: 2px solid var(--amber);
+	      outline-offset: 2px;
+	    }
+
+	    /* BOOT */
+	    #boot {
+	      position: fixed;
+	      inset: 0;
+	      background: var(--bg);
+	      color: var(--green);
+	      font-family: var(--font-display);
+	      z-index: 10000;
+	      padding: 40px;
+	      font-size: 14px;
+	      line-height: 1.7;
+	      cursor: pointer;
+	      transition: opacity 0.4s ease;
+	    }
+	    #boot.hide {
+	      opacity: 0;
+	      pointer-events: none;
+	    }
+	    #boot .line {
+	      opacity: 0;
+	      white-space: pre-wrap;
+	    }
+	    #boot .hint {
+	      position: absolute;
+	      bottom: 24px;
+	      left: 40px;
+	      color: var(--text-dim);
+	      font-size: 12px;
+	    }
+
+	    /* LAYOUT */
+	    .wrap {
+	      margin: 0 auto;
+	      padding: 28px 20px 70px;
+	      position: relative;
+	      z-index: 1;
+	    }
+
+	    header {
+	      border: 1px solid var(--border);
+	      background: var(--bg-panel);
+	      border-radius: 4px;
+	      padding: 22px 24px;
+	      margin-bottom: 18px;
+	      display: flex;
+	      flex-wrap: wrap;
+	      gap: 18px;
+	      justify-content: space-between;
+	      align-items: center;
+	    }
+	    .brand {
+	      font-family: var(--font-display);
+	    }
+	    .brand .logo {
+	      font-size: 26px;
+	      font-weight: 800;
+	      letter-spacing: 2px;
+	      color: var(--green);
+	      text-shadow: 0 0 12px rgba(57, 255, 106, 0.35);
+	    }
+	    .brand .path {
+	      font-size: 13px;
+	      color: var(--text-dim);
+	      margin-top: 4px;
+	    }
+	    .cursor-blink {
+	      display: inline-block;
+	      width: 0.8rem;
+	      height: 0.2rem;
+	      background: var(--green);
+	      vertical-align: -2px;
+	      margin-left: 4px;
+	      animation: blink 1.1s steps(1) infinite;
+	    }
+	    @keyframes blink {
+	      0%,
+	      49% {
+	        opacity: 1;
+	      }
+	      50%,
+	      100% {
+	        opacity: 0;
+	      }
+	    }
+
+	    .header-right {
+	      display: flex;
+	      align-items: center;
+	      gap: 16px;
+	      flex-wrap: wrap;
+	    }
+	    .clock {
+	      font-family: var(--font-display);
+	      font-size: 12px;
+	      color: var(--text-dim);
+	      text-align: right;
+	      line-height: 1.5;
+	    }
+	    .clock b {
+	      color: var(--green);
+	      font-weight: 700;
+	    }
+
+	    .launch-btn {
+	      font-family: var(--font-display);
+	      font-weight: 700;
+	      font-size: 13px;
+	      color: var(--bg);
+	      background: var(--green);
+	      border: 1px solid var(--green);
+	      padding: 10px 16px;
+	      border-radius: 3px;
+	      display: inline-flex;
+	      align-items: center;
+	      gap: 8px;
+	      transition:
+	        transform 0.15s ease,
+	        box-shadow 0.15s ease;
+	      box-shadow: 0 0 0 rgba(57, 255, 106, 0);
+	    }
+	    .launch-btn:hover {
+	      transform: translateY(-1px);
+	      box-shadow: 0 4px 18px rgba(57, 255, 106, 0.35);
+	    }
+	    .launch-btn:active {
+	      transform: translateY(0);
+	    }
+
+	    /* WEBSEARCH */
+	    .websearch-row {
+	      border: 1px solid var(--border);
+	      background: var(--bg-panel);
+	      border-radius: 8px;
+	      padding: 6px 8px 6px 14px;
+	      margin-bottom: 18px;
+	      display: flex;
+	      align-items: center;
+	      transition:
+	        border-color 0.15s ease,
+	        box-shadow 0.15s ease;
+	    }
+	    .websearch-row:focus-within {
+	      border-color: var(--green-dim);
+	      box-shadow: 0 0 0 3px rgba(57, 255, 106, 0.08);
+	    }
+	    .ws-form {
+	      flex: 1;
+	      min-width: 0;
+	      display: flex;
+	      align-items: center;
+	      gap: 10px;
+	      font-family: var(--font-display);
+	      font-size: 14px;
+	    }
+	    .ws-form .prompt {
+	      color: var(--green);
+	      font-weight: 700;
+	      flex-shrink: 0;
+	    }
+
+	    .ws-engine-select {
+	      position: relative;
+	      flex-shrink: 0;
+	    }
+	    .ws-engine-btn {
+	      display: flex;
+	      align-items: center;
+	      gap: 6px;
+	      background: var(--bg-panel-alt);
+	      border: 1px solid var(--border-soft);
+	      border-radius: 6px;
+	      padding: 6px 9px;
+	      color: var(--text);
+	      font-family: var(--font-display);
+	      font-size: 12px;
+	      cursor: pointer;
+	      transition:
+	        border-color 0.15s ease,
+	        background 0.15s ease;
+	    }
+	    .ws-engine-btn:hover {
+	      border-color: var(--green-dim);
+	    }
+	    .ws-engine-icon {
+	      width: 14px;
+	      height: 14px;
+	      border-radius: 3px;
+	      flex-shrink: 0;
+	    }
+	    .ws-engine-caret {
+	      color: var(--text-dim);
+	      font-size: 9px;
+	      transition: transform 0.15s ease;
+	    }
+	    .ws-engine-select.open .ws-engine-caret {
+	      transform: rotate(180deg);
+	    }
+	    .ws-engine-menu {
+	      position: absolute;
+	      top: calc(100% + 6px);
+	      left: 0;
+	      min-width: 175px;
+	      background: var(--bg-panel);
+	      border: 1px solid var(--border);
+	      border-radius: 6px;
+	      padding: 6px;
+	      margin: 0;
+	      list-style: none;
+	      display: none;
+	      flex-direction: column;
+	      gap: 2px;
+	      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+	      z-index: 20;
+	    }
+	    .ws-engine-select.open .ws-engine-menu {
+	      display: flex;
+	    }
+	    .ws-engine-option {
+	      display: flex;
+	      align-items: center;
+	      gap: 8px;
+	      padding: 7px 8px;
+	      border-radius: 4px;
+	      color: var(--text-dim);
+	      font-size: 12.5px;
+	      font-family: var(--font-display);
+	      cursor: pointer;
+	      transition:
+	        background 0.12s ease,
+	        color 0.12s ease;
+	    }
+	    .ws-engine-option:hover {
+	      background: var(--bg-panel-alt);
+	      color: var(--text);
+	    }
+	    .ws-engine-option.selected {
+	      color: var(--green);
+	    }
+	    .ws-engine-option img {
+	      width: 14px;
+	      height: 14px;
+	      border-radius: 3px;
+	      flex-shrink: 0;
+	    }
+	    .ws-form input {
+	      flex: 1;
+	      min-width: 0;
+	      background: transparent;
+	      border: none;
+	      outline: none;
+	      color: var(--text);
+	      font-family: var(--font-display);
+	      font-size: 14px;
+	      caret-color: var(--green);
+	    }
+	    .ws-form input::placeholder {
+	      color: var(--text-dim);
+	    }
+	    .ws-go {
+	      flex-shrink: 0;
+	      font-family: var(--font-display);
+	      font-weight: 700;
+	      font-size: 13px;
+	      color: var(--bg);
+	      background: var(--green);
+	      border: 1px solid var(--green);
+	      border-radius: 6px;
+	      padding: 8px 12px;
+	      cursor: pointer;
+	      transition:
+	        transform 0.12s ease,
+	        box-shadow 0.12s ease;
+	    }
+	    .ws-go:hover {
+	      transform: translateY(-1px);
+	      box-shadow: 0 4px 14px rgba(57, 255, 106, 0.3);
+	    }
+
+	    /* SEARCH */
+	    .search-row {
+	      border: 1px solid var(--border);
+	      background: var(--bg-panel);
+	      border-radius: 4px;
+	      padding: 12px 16px;
+	      margin-bottom: 18px;
+	      display: flex;
+	      align-items: center;
+	      gap: 10px;
+	      font-family: var(--font-display);
+	      font-size: 14px;
+	    }
+	    .search-row span.prompt {
+	      color: var(--green);
+	      font-weight: 700;
+	    }
+	    .search-row input {
+	      flex: 1;
+	      background: transparent;
+	      border: none;
+	      outline: none;
+	      color: var(--text);
+	      font-family: var(--font-display);
+	      font-size: 14px;
+	      caret-color: var(--green);
+	    }
+	    .search-row input::placeholder {
+	      color: var(--text-dim);
+	    }
+	    .search-count {
+	      color: var(--text-dim);
+	      font-size: 12px;
+	      white-space: nowrap;
+	    }
+
+	    /* RECENT — header */
+	    .recent {
+	      border: 1px solid var(--border);
+	      background: var(--bg-panel);
+	      border-radius: 4px;
+	      padding: 16px 18px;
+	      margin-bottom: 22px;
+	    }
+	    .recent h2 {
+	      font-family: var(--font-display);
+	      font-size: 13px;
+	      color: var(--amber);
+	      margin: 0;
+	      letter-spacing: 1px;
+	      font-weight: 700;
+	      display: flex;
+	      align-items: center;
+	      gap: 8px;
+	    }
+	    .recent-head {
+	      display: flex;
+	      align-items: center;
+	      justify-content: space-between;
+	      gap: 12px;
+	      margin-bottom: 14px;
+	    }
+	    .clear-btn {
+	      font-family: var(--font-display);
+	      font-size: 11px;
+	      color: var(--text-dim);
+	      background: transparent;
+	      border: 1px solid var(--border-soft);
+	      border-radius: 3px;
+	      padding: 5px 9px;
+	      cursor: pointer;
+	      transition:
+	        color 0.15s ease,
+	        border-color 0.15s ease;
+	    }
+	    .clear-btn:hover {
+	      color: var(--amber);
+	      border-color: var(--amber);
+	    }
+	    .recent h2 .dot {
+	      width: 7px;
+	      height: 7px;
+	      border-radius: 50%;
+	      background: var(--amber);
+	      box-shadow: 0 0 8px var(--amber);
+	    }
+	    .recent-empty {
+	      color: var(--text-dim);
+	      font-size: 13px;
+	    }
+
+	    /* APP ICON GRID (new recent cards) */
+	    .recent-list {
+	      display: flex;
+	      flex-wrap: wrap;
+	      gap: 16px 12px;
+	    }
+
+	    .app-icon-wrap {
+	      position: relative;
+	      display: flex;
+	      flex-direction: column;
+	      align-items: center;
+	      width: 72px;
+	      cursor: grab;
+	      user-select: none;
+	    }
+	    .app-icon-wrap:active {
+	      cursor: grabbing;
+	    }
+	    .app-icon-wrap.dragging {
+	      opacity: 0.35;
+	      transform: scale(0.92);
+	      transition:
+	        opacity 0.15s,
+	        transform 0.15s;
+	    }
+	    .app-icon-wrap.drag-over {
+	      outline: 2px dashed var(--green-dim);
+	      outline-offset: 3px;
+	      border-radius: 14px;
+	    }
+
+	    /* pin / remove buttons */
+	    .app-icon-actions {
+	      display: none;
+	      position: absolute;
+	      top: -0.2rem;
+	      gap: 1.2rem;
+	      z-index: 10;
+	    }
+	    .app-icon-wrap:hover .app-icon-actions {
+	      display: flex;
+	    }
+	    .app-icon-wrap.pinned .app-icon-actions {
+	      display: flex;
+	    }
+	    .icon-btn {
+	      border: none;
+	      width: 20px;
+	      height: 20px;
+	      display: flex;
+	      align-items: center;
+	      background: none;
+	      justify-content: space-between;
+	      padding: 0;
+	      cursor: pointer;
+	      transition:
+	        color 0.15s,
+	        border-color 0.15s,
+	        background 0.15s;
+	    }
+	    .pin-btn-svg {
+	      fill: #4a5568;
+	      transition: fill 0.2s ease;
+	    }
+	    .pin-btn-svg:hover,
+	    .pin-btn-svg.pinned {
+	      fill: #e3e8f0;
+	    }
+	    .remove-btn g {
+	      stroke: #4a5568;
+	      transition: stroke 0.2s ease;
+	    }
+	    .remove-btn:hover g {
+	      stroke: #ff4d4d;
+	    }
+
+	    /* the big icon box */
+	    .app-icon-box {
+	      width: 56px;
+	      height: 56px;
+	      border-radius: 14px;
+	      background: #111d13;
+	      border: 1px solid var(--border-soft);
+	      display: flex;
+	      align-items: center;
+	      justify-content: center;
+	      overflow: hidden;
+	      transition:
+	        transform 0.15s ease,
+	        box-shadow 0.15s ease,
+	        border-color 0.15s ease;
+	      position: relative;
+	    }
+	    .app-icon-wrap:hover .app-icon-box {
+	      transform: translateY(-3px) scale(1.06);
+	      box-shadow: 0 8px 24px rgba(57, 255, 106, 0.18);
+	      border-color: var(--green-dim);
+	    }
+	    .app-icon-wrap.pinned .app-icon-box {
+	      border-color: var(--amber);
+	      box-shadow: 0 0 0 1px rgba(255, 209, 102, 0.2) inset;
+	    }
+	    /* loading shimmer */
+	    .app-icon-box.loading::after {
+	      content: '';
+	      position: absolute;
+	      inset: 0;
+	      background: linear-gradient(
+	        90deg,
+	        transparent 0%,
+	        rgba(57, 255, 106, 0.08) 50%,
+	        transparent 100%
+	      );
+	      animation: shimmer 1.2s infinite;
+	    }
+	    @keyframes shimmer {
+	      0% {
+	        transform: translateX(-100%);
+	      }
+	      100% {
+	        transform: translateX(100%);
+	      }
+	    }
+
+	    .app-icon-box img {
+	      width: 34px;
+	      height: 34px;
+	      object-fit: contain;
+	      border-radius: 6px;
+	      image-rendering: -webkit-optimize-contrast;
+	    }
+	    .app-icon-box .fav-fallback {
+	      width: 34px;
+	      height: 34px;
+	      display: flex;
+	      align-items: center;
+	      justify-content: center;
+	      font-family: var(--font-display);
+	      font-size: 18px;
+	      font-weight: 700;
+	      color: var(--green-dim);
+	      border-radius: 6px;
+	    }
+
+	    /* title below icon */
+	    .app-icon-label {
+	      margin-top: 6px;
+	      font-family: var(--font-display);
+	      font-size: 9.5px;
+	      color: var(--text-dim);
+	      text-align: center;
+	      line-height: 1.3;
+	      /* 2-line clamp */
+	      display: -webkit-box;
+	      -webkit-box-orient: vertical;
+	      overflow: hidden;
+	      word-break: break-word;
+	      max-width: 72px;
+	      transition: color 0.15s;
+	    }
+	    .app-icon-wrap:hover .app-icon-label {
+	      color: var(--green);
+	    }
+	    .app-icon-wrap.pinned .app-icon-label {
+	      color: var(--amber);
+	    }
+
+	    /* fetching state label */
+	    .app-icon-label.fetching {
+	      color: var(--text-dim);
+	      opacity: 0.5;
+	    }
+
+	    /* DIRECTORY GRID */
+	    .grid {
+	      display: grid;
+	      grid-template-columns: repeat(2, 1fr);
+	      gap: 14px;
+	    }
+	    @media (max-width: 760px) {
+	      .grid {
+	        grid-template-columns: 1fr;
+	      }
+	    }
+
+	    .cat {
+	      border: 1px solid var(--border);
+	      background: var(--bg-panel);
+	      border-radius: 4px;
+	      overflow: hidden;
+	    }
+	    .cat-head {
+	      width: 100%;
+	      background: transparent;
+	      border: none;
+	      cursor: pointer;
+	      display: flex;
+	      align-items: center;
+	      gap: 10px;
+	      padding: 14px 16px;
+	      text-align: left;
+	      color: var(--text);
+	      font-family: var(--font-display);
+	      font-size: 14px;
+	    }
+	    .cat-head:hover {
+	      background: var(--bg-panel-alt);
+	    }
+	    .chev {
+	      color: var(--green);
+	      font-size: 12px;
+	      transition: transform 0.25s ease;
+	      display: inline-block;
+	    }
+	    .cat.open .chev {
+	      transform: rotate(90deg);
+	    }
+	    .perm {
+	      color: var(--text-dim);
+	      font-size: 11px;
+	      display: none;
+	    }
+	    @media (min-width: 560px) {
+	      .perm {
+	        display: inline;
+	      }
+	    }
+	    .dirname {
+	      color: var(--green);
+	      font-weight: 700;
+	    }
+	    .desc {
+	      color: var(--text-dim);
+	      font-size: 12px;
+	      margin-left: auto;
+	      font-weight: 400;
+	      display: none;
+	    }
+	    @media (min-width: 560px) {
+	      .desc {
+	        display: inline;
+	      }
+	    }
+
+	    .cat-body {
+	      display: grid;
+	      grid-template-rows: 0fr;
+	      transition: grid-template-rows 0.28s ease;
+	    }
+	    .cat.open .cat-body {
+	      grid-template-rows: 1fr;
+	    }
+	    .cat-body-inner {
+	      overflow: hidden;
+	      min-height: 0;
+	    }
+	    .item-list {
+	      padding: 2px 8px 10px;
+	    }
+
+	    .item-row {
+	      display: flex;
+	      align-items: center;
+	      gap: 10px;
+	      padding: 7px 10px;
+	      border-radius: 3px;
+	      font-size: 13px;
+	      transition: background 0.15s ease;
+	    }
+	    .item-row:hover {
+	      background: var(--bg-panel-alt);
+	    }
+	    .item-row .perm {
+	      min-width: 118px;
+	    }
+	    .item-row .fav {
+	      width: 14px;
+	      height: 14px;
+	      flex-shrink: 0;
+	      border-radius: 3px;
+	      object-fit: contain;
+	      background: transparent;
+	    }
+	    .item-row a {
+	      color: var(--text);
+	      flex: 1;
+	      min-width: 0;
+	      overflow: hidden;
+	      text-overflow: ellipsis;
+	      white-space: nowrap;
+	    }
+	    .item-row a:hover {
+	      color: var(--green);
+	      text-shadow: 0 0 6px rgba(57, 255, 106, 0.4);
+	    }
+	    .item-row.hidden {
+	      display: none;
+	    }
+	    .cat.cat-hidden {
+	      display: none;
+	    }
+
+	    footer {
+	      margin-top: 26px;
+	      text-align: center;
+	      color: var(--text-dim);
+	      font-size: 12px;
+	      font-family: var(--font-display);
+	    }
+	    footer .green {
+	      color: var(--green-dim);
+	    }
+
+	    @media (prefers-reduced-motion: reduce) {
+	      .crt-flicker,
+	      .cursor-blink,
+	      #boot,
+	      .cat-body,
+	      .launch-btn {
+	        animation: none !important;
+	        transition: none !important;
+	      }
+	    }
+
+	    /* SETTINGS MODAL */
+	    .settings-btn {
+	      font-family: var(--font-display);
+	      font-weight: 700;
+	      font-size: 13px;
+	      color: var(--text-dim);
+	      background: transparent;
+	      border: 1px solid var(--border-soft);
+	      border-radius: 3px;
+	      padding: 10px 14px;
+	      cursor: pointer;
+	      display: inline-flex;
+	      align-items: center;
+	      gap: 7px;
+	      transition:
+	        color 0.15s ease,
+	        border-color 0.15s ease;
+	    }
+	    .settings-btn:hover {
+	      color: var(--text);
+	      border-color: var(--green-dim);
+	    }
+
+	    .modal-backdrop {
+	      display: none;
+	      position: fixed;
+	      inset: 0;
+	      background: rgba(0, 0, 0, 0.75);
+	      z-index: 11000;
+	      align-items: center;
+	      justify-content: center;
+	      backdrop-filter: blur(3px);
+	    }
+	    .modal-backdrop.open {
+	      display: flex;
+	    }
+	    .modal {
+	      background: var(--bg-panel);
+	      border: 1px solid var(--border);
+	      border-radius: 6px;
+	      width: min(480px, 92vw);
+	      font-family: var(--font-display);
+	      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+	      overflow: hidden;
+	    }
+	    .modal-header {
+	      display: flex;
+	      align-items: center;
+	      justify-content: space-between;
+	      padding: 16px 20px;
+	      border-bottom: 1px solid var(--border-soft);
+	    }
+	    .modal-header h2 {
+	      margin: 0;
+	      font-size: 14px;
+	      font-weight: 700;
+	      color: var(--green);
+	      letter-spacing: 1px;
+	    }
+	    .modal-close {
+	      background: transparent;
+	      border: none;
+	      color: var(--text-dim);
+	      font-size: 18px;
+	      cursor: pointer;
+	      line-height: 1;
+	      padding: 2px 6px;
+	      border-radius: 3px;
+	    }
+	    .modal-close:hover {
+	      color: var(--text);
+	    }
+	    .modal-body {
+	      padding: 20px;
+	      display: flex;
+	      flex-direction: column;
+	      gap: 20px;
+	    }
+	    .modal-section-label {
+	      font-size: 11px;
+	      color: var(--amber);
+	      letter-spacing: 1px;
+	      font-weight: 700;
+	      margin-bottom: 10px;
+	    }
+	    .modal-row {
+	      display: flex;
+	      gap: 10px;
+	      flex-wrap: wrap;
+	    }
+	    .m-btn {
+	      font-family: var(--font-display);
+	      font-size: 12px;
+	      font-weight: 700;
+	      background: transparent;
+	      border: 1px solid var(--border-soft);
+	      border-radius: 3px;
+	      padding: 9px 15px;
+	      cursor: pointer;
+	      display: inline-flex;
+	      align-items: center;
+	      gap: 7px;
+	      transition: all 0.15s ease;
+	      white-space: nowrap;
+	    }
+	    .m-btn.import {
+	      color: var(--amber);
+	      border-color: #3a2e10;
+	    }
+	    .m-btn.import:hover {
+	      background: #1a1406;
+	      border-color: var(--amber);
+	    }
+	    .m-btn.export {
+	      color: var(--green);
+	      border-color: var(--green-dim);
+	    }
+	    .m-btn.export:hover {
+	      background: #0c1a0e;
+	      border-color: var(--green);
+	    }
+	    .m-btn.danger {
+	      color: #ff6b6b;
+	      border-color: #3a1010;
+	    }
+	    .m-btn.danger:hover {
+	      background: #1a0606;
+	      border-color: #ff6b6b;
+	    }
+	    .modal-import-stats {
+	      font-size: 11px;
+	      color: var(--text-dim);
+	      margin-top: 8px;
+	    }
+	    .modal-import-stats .hl {
+	      color: var(--green);
+	    }
+	    #bm-file-input {
+	      display: none;
+	    }
+
+	    /* TOAST */
+	    #toast {
+	      position: fixed;
+	      bottom: 28px;
+	      left: 50%;
+	      transform: translateX(-50%) translateY(80px);
+	      background: var(--bg-panel);
+	      border: 1px solid var(--border);
+	      border-radius: 4px;
+	      padding: 11px 20px;
+	      font-family: var(--font-display);
+	      font-size: 13px;
+	      color: var(--text);
+	      z-index: 20000;
+	      pointer-events: none;
+	      transition:
+	        transform 0.25s ease,
+	        opacity 0.25s ease;
+	      opacity: 0;
+	      white-space: nowrap;
+	    }
+	    #toast.show {
+	      transform: translateX(-50%) translateY(0);
+	      opacity: 1;
+	    }
+	    #toast.success {
+	      border-color: var(--green-dim);
+	    }
+	    #toast.error {
+	      border-color: #ff6b6b;
+	    }
+	  </style>
+	</head>
+	<body>
+	  <div id="boot" aria-hidden="true">
+	    <div id="boot-lines"></div>
+	    <div class="hint">click anywhere to skip</div>
+	  </div>
+
+	  <div class="wrap crt-flicker">
+	    <header>
+	      <div class="brand">
+	        <div class="logo">RAJE://HOME<span class="cursor-blink"></span></div>
+	        <div class="path">raje@pancholi:~/0x01$ whoami &amp;&amp; ls -la</div>
+	      </div>
+	      <div class="header-right">
+	        <div class="clock">
+	          <div><b id="clk-time">00:00:00</b></div>
+	          <div>uptime <span id="clk-uptime">00:00</span></div>
+	        </div>
+	        <a
+	          class="launch-btn"
+	          href="https://other4.github.io/raje-bug-toolkit/"
+	          target="_blank"
+	          rel="noopener"
+	        >
+	          $ ./launch-toolkit.sh
+	        </a>
+	        <button class="settings-btn" id="settings-btn" type="button">
+	          ⚙️ settings
+	        </button>
+	      </div>
+	    </header>
+
+	    <div class="websearch-row">
+	      <form id="ws-form" class="ws-form">
+	        <span class="prompt">$</span>
+	        <div class="ws-engine-select" id="ws-engine-select">
+	          <button
+	            type="button"
+	            class="ws-engine-btn"
+	            id="ws-engine-btn"
+	            aria-haspopup="listbox"
+	            aria-expanded="false"
+	          >
+	            <img class="ws-engine-icon" id="ws-engine-icon" alt="" />
+	            <span class="ws-engine-name" id="ws-engine-name">Google</span>
+	            <span class="ws-engine-caret">▾</span>
+	          </button>
+	          <ul class="ws-engine-menu" id="ws-engine-menu" role="listbox"></ul>
+	        </div>
+	        <input
+	          id="ws-input"
+	          type="text"
+	          placeholder="search the web..."
+	          autocomplete="off"
+	          spellcheck="false"
+	        />
+	        <button type="submit" class="ws-go">↵ run</button>
+	      </form>
+	    </div>
+
+	    <div class="recent">
+	      <div class="recent-head">
+	        <h2><span class="dot"></span>history | tail -8</h2>
+	        <button class="clear-btn" id="clear-recent" type="button">
+	          $ rm -rf history
+	        </button>
+	      </div>
+	      <div class="recent-list" id="recent-list">
+	        <div class="recent-empty">
+	          no links opened yet this profile — click anything below and it'll
+	          show up here.
+	        </div>
+	      </div>
+	    </div>
+
+	    <div class="search-row">
+	      <span class="prompt">$ grep -i</span>
+	      <input
+	        id="filter"
+	        type="text"
+	        placeholder="filter tools, writeups, platforms..."
+	        autocomplete="off"
+	        spellcheck="false"
+	      />
+	      <span class="search-count" id="filter-count"></span>
+	    </div>
+
+	    <div class="grid" id="grid"></div>
+
+	    <footer>
+	      <span id="stats"></span> · <span class="green">last sync</span>
+	      <span id="sync-date"></span>
+	    </footer>
+	    <!-- TOAST -->
+	    <div id="toast" role="status" aria-live="polite"></div>
+
+	    <!-- SETTINGS MODAL -->
+	    <div class="modal-backdrop" id="modal-backdrop">
+	      <div
+	        class="modal"
+	        role="dialog"
+	        aria-modal="true"
+	        aria-labelledby="modal-title"
+	      >
+	        <div class="modal-header">
+	          <h2 id="modal-title">⚙️ settings &amp; bookmarks</h2>
+	          <button
+	            class="modal-close"
+	            id="modal-close"
+	            type="button"
+	            aria-label="Close"
+	          >
+	            ✕
+	          </button>
+	        </div>
+	        <div class="modal-body">
+	          <div>
+	            <div class="modal-section-label">// bookmark i/o</div>
+	            <div class="modal-row">
+	              <button type="button" class="m-btn import" id="import-btn">
+	                ↑ import bookmarks.html
+	              </button>
+	              <button type="button" class="m-btn export" id="export-btn">
+	                ↓ export bookmarks.html
+	              </button>
+	            </div>
+	            <div class="modal-import-stats" id="modal-import-stats"></div>
+	          </div>
+	          <div>
+	            <div class="modal-section-label">// danger zone</div>
+	            <div class="modal-row">
+	              <button
+	                type="button"
+	                class="m-btn danger"
+	                id="clear-import-btn"
+	              >
+	                ✕ clear imported bookmarks
+	              </button>
+	              <button
+	                type="button"
+	                class="m-btn danger"
+	                id="clear-history-modal-btn"
+	              >
+	                ✕ clear visit history
+	              </button>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+
+	    <input type="file" id="bm-file-input" accept=".html,.htm" />
+	  </div>
+
+	  <script>
+	    /* DATA */
+	    const DATA = [
+	      {
+	        dir: '~/ai',
+	        desc: 'assistants & quick tools',
+	        items: [
+	          ['ChatGPT', 'https://chatgpt.com/'],
+	          [
+	            'Copilot',
+	            'https://copilot.microsoft.com/chats/QsWL3QUtyrtYDfaHn6fWU',
+	          ],
+	          ['BLACKBOX.AI', 'https://www.blackbox.ai/'],
+	          ['Le Chat (Mistral)', 'https://chat.mistral.ai/chat'],
+	          ['Duck.ai', 'https://duck.ai/chat?t=ffab'],
+	          ['Google AI mode', 'https://www.google.com/search?udm=50'],
+	          [
+	            'HTML → Markdown converter',
+	            'https://codebeautify.org/html-to-markdown',
+	          ],
+	          [
+	            'Extract URLs from text',
+	            'https://www.text-utils.com/extract-urls/',
+	          ],
+	        ],
+	      },
+	      {
+	        dir: '~/recon',
+	        desc: 'recon & osint',
+	        items: [
+	          [
+	            'Pentest-Tools — subdomain finder',
+	            'https://pentest-tools.com/information-gathering/find-subdomains-of-domain',
+	          ],
+	          [
+	            'Pentest-Tools — dashboard',
+	            'https://app.pentest-tools.com/dashboard',
+	          ],
+	          ['C99 — subdomain finder', 'https://subdomainfinder.c99.nl/'],
+	          ['OSINT.sh — subdomain finder', 'https://osint.sh/subdomain/'],
+	          ['WhoXY — whois API', 'https://www.whoxy.com/'],
+	          [
+	            'Shodan — filter reference',
+	            'https://www.shodan.io/search/filters',
+	          ],
+	          ['Shodan — account', 'https://account.shodan.io/'],
+	          ['ARIN — Whois-RWS', 'https://whois.arin.net/ui/'],
+	          ['nslookup.io — DNS lookup', 'https://www.nslookup.io/'],
+	          ['Wayback Machine', 'https://web.archive.org/'],
+	          ['MxToolbox — MX lookup', 'https://mxtoolbox.com/'],
+	          ['MxToolbox — DNS lookup', 'https://mxtoolbox.com/dnslookup.aspx'],
+	          ['ViewDNS.info', 'https://viewdns.info/'],
+	          ['Who.is', 'https://who.is/'],
+	          ['DNSArchive', 'https://dnsarchive.net/'],
+	          [
+	            'IPAddressGuide — CIDR to IPv4',
+	            'https://www.ipaddressguide.com/cidr',
+	          ],
+	          ['OneForAll (GitHub)', 'https://github.com/shmilylty/OneForAll'],
+	          [
+	            'shuffledns (GitHub)',
+	            'https://github.com/projectdiscovery/shuffledns',
+	          ],
+	          [
+	            'trickest/resolvers.txt',
+	            'https://github.com/trickest/resolvers/blob/main/resolvers.txt',
+	          ],
+	          [
+	            'nuclei — subdomain-takeover templates',
+	            'https://github.com/projectdiscovery/nuclei-templates/blob/8b2bc8ab8ef801d4342bb4ec4fedb5460296da29/subdomain-takeover/detect-all-takeovers.yaml',
+	          ],
+	          [
+	            'LinkFinder (GitHub)',
+	            'https://github.com/GerbenJavado/LinkFinder',
+	          ],
+	          [
+	            'Awesome-Dorks (GitHub)',
+	            'https://github.com/0xPugal/Awesome-Dorks',
+	          ],
+	          [
+	            'waybackurls (GitHub)',
+	            'https://github.com/tomnomnom/waybackurls',
+	          ],
+	          [
+	            'GrayhatWarfare — public buckets',
+	            'https://buckets.grayhatwarfare.com/',
+	          ],
+	          ['GrayhatWarfare', 'https://grayhatwarfare.com/'],
+	          [
+	            'WhoisXML — Domain Research Suite',
+	            'https://drs.whoisxmlapi.com/',
+	          ],
+	          ['chaos (ProjectDiscovery)', 'https://chaos.projectdiscovery.io/'],
+	          [
+	            'Subfinder + Shodan/Censys API setup',
+	            'https://saurabh-jain.medium.com/integrating-shodan-and-censys-api-keys-into-subfinder-c28452af2efb',
+	          ],
+	          [
+	            'Nmap cheat sheet (StationX)',
+	            'https://stationx-public-download.s3.us-west-2.amazonaws.com/nmap_cheet_sheet_v7.pdf',
+	          ],
+	          [
+	            'Nmap cheat sheet (Comparitech)',
+	            'https://cdn.comparitech.com/wp-content/uploads/2019/06/Nmap-Cheat-Sheet.pdf',
+	          ],
+	        ],
+	      },
+	      {
+	        dir: '~/terminal',
+	        desc: 'terminals & google drive',
+	        items: [
+	          [
+	            'G-Drive(other4)',
+	            'https://drive.google.com/drive/u/0/folders/1b-3uWcR-G6B8GinBB3ISDTCBnRMBkssI',
+	          ],
+	          [
+	            'pytools - Colab',
+	            'https://colab.research.google.com/drive/1OnQ6nWeZ_dHLPSeQEsotE2EMLOzOWREW',
+	          ],
+	        ],
+	      },
+	      {
+	        dir: '~/payloads',
+	        desc: 'exploitation & payloads',
+	        items: [
+	          [
+	            'PayloadsAllTheThings (repo)',
+	            'https://github.com/swisskyrepo/PayloadsAllTheThings',
+	          ],
+	          [
+	            'PayloadsAllTheThings (site)',
+	            'https://swisskyrepo.github.io/PayloadsAllTheThings/',
+	          ],
+	          [
+	            'OWASP — XSS filter evasion cheat sheet',
+	            'https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html',
+	          ],
+	          [
+	            'Bypassing 403 Forbidden — guide',
+	            'https://medium.com/@diablo0x/bypassing-403-forbidden-a-guide-for-cybersecurity-professionals-7b2225991595',
+	          ],
+	          [
+	            'jwt-secrets wordlist (wallarm)',
+	            'https://github.com/wallarm/jwt-secrets/blob/master/jwt.secrets.list',
+	          ],
+	          ['Assetnote wordlists', 'https://wordlists.assetnote.io/'],
+	          [
+	            'SecLists (GitHub)',
+	            'https://github.com/danielmiessler/SecLists/tree/master',
+	          ],
+	          [
+	            'Command injection payload list',
+	            'https://github.com/payloadbox/command-injection-payload-list',
+	          ],
+	          [
+	            'bugbounty-cheatsheet (EdOverflow)',
+	            'https://github.com/EdOverflow/bugbounty-cheatsheet/tree/master/cheatsheets',
+	          ],
+	          [
+	            'AllAboutBugBounty (daffainfo)',
+	            'https://github.com/daffainfo/AllAboutBugBounty',
+	          ],
+	          [
+	            'AllAboutBugBounty (fork)',
+	            'https://github.com/other4/AllAboutBugBounty',
+	          ],
+	          [
+	            'Clickjacking vulnerability tester',
+	            'file:///home/raje/raje1/RKT/bbh/tl/clickjacking.html',
+	          ],
+	          [
+	            'LostSec (B1naryo)',
+	            'https://github.com/B1naryo/LostSec/tree/main',
+	          ],
+	          [
+	            'Crypto-Cat — CTF writeups + scripts',
+	            'https://github.com/Crypto-Cat/CTF/tree/main',
+	          ],
+	          [
+	            'phar-jpg polyglot generator',
+	            'https://github.com/kunte0/phar-jpg-polyglot',
+	          ],
+	        ],
+	      },
+	      {
+	        dir: '~/api',
+	        desc: 'web & api testing',
+	        items: [
+	          ['Interactsh — web client', 'https://app.interactsh.com/#/'],
+	          ['Pipedream — source', 'https://pipedream.com/sources/dc_bPuaK8A'],
+	          ['OWASP crAPI', 'https://github.com/OWASP/crAPI'],
+	          ['CWE — MITRE', 'https://cwe.mitre.org/index.html'],
+	          [
+	            'OWASP API Top 10 — Broken Object Level Authz',
+	            'https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/',
+	          ],
+	          ['jwt.io', 'https://www.jwt.io/'],
+	          [
+	            'JWT validator (javainuse)',
+	            'https://www.javainuse.com/jwtvalidator',
+	          ],
+	          [
+	            'Burp Suite docs — desktop',
+	            'https://portswigger.net/burp/documentation/desktop',
+	          ],
+	          [
+	            'Burp Suite documentation',
+	            'https://portswigger.net/burp/documentation',
+	          ],
+	          ['feroxbuster (GitHub)', 'https://github.com/epi052/feroxbuster'],
+	          ['kiterunner (GitHub)', 'https://github.com/assetnote/kiterunner'],
+	          [
+	            'WebSockets — MDN glossary',
+	            'https://developer.mozilla.org/en-US/docs/Glossary/WebSockets',
+	          ],
+	          [
+	            'Writing a WebSocket server in Java — MDN',
+	            'https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_a_WebSocket_server_in_Java',
+	          ],
+	          [
+	            'bxss — blind XSS scanner',
+	            'https://github.com/ethicalhackingplayground/bxss',
+	          ],
+	          ['XSS.Report — dashboard', 'https://xss.report/dashboard#payloads'],
+	        ],
+	      },
+	      {
+	        dir: '~/web-academy',
+	        desc: 'portswigger academy',
+	        items: [
+	          [
+	            'All labs',
+	            'https://portswigger.net/web-security/all-labs#web-cache-poisoning',
+	          ],
+	          ['All topics', 'https://portswigger.net/web-security/all-topics'],
+	          [
+	            'Learning paths',
+	            'https://portswigger.net/web-security/learning-paths',
+	          ],
+	          [
+	            'Business logic vulnerabilities',
+	            'https://portswigger.net/web-security/logic-flaws',
+	          ],
+	          [
+	            'Business logic — examples',
+	            'https://portswigger.net/web-security/logic-flaws/examples',
+	          ],
+	          ['JWT attacks', 'https://portswigger.net/web-security/jwt'],
+	          ['API testing', 'https://portswigger.net/web-security/api-testing'],
+	          [
+	            'GraphQL API vulnerabilities',
+	            'https://portswigger.net/web-security/graphql',
+	          ],
+	          [
+	            'Access control vulnerabilities',
+	            'https://portswigger.net/web-security/access-control',
+	          ],
+	          [
+	            'Information disclosure',
+	            'https://portswigger.net/web-security/information-disclosure',
+	          ],
+	          [
+	            'Prototype pollution',
+	            'https://portswigger.net/web-security/prototype-pollution',
+	          ],
+	          [
+	            'HTTP request smuggling',
+	            'https://portswigger.net/web-security/request-smuggling',
+	          ],
+	          [
+	            'XSS cheat sheet',
+	            'https://portswigger.net/web-security/cross-site-scripting/cheat-sheet',
+	          ],
+	          [
+	            'Lab — username enumeration',
+	            'https://portswigger.net/web-security/authentication/password-based/lab-username-enumeration-via-different-responses',
+	          ],
+	          [
+	            'Exploiting XSS in hidden inputs & meta tags',
+	            'https://portswigger.net/research/exploiting-xss-in-hidden-inputs-and-meta-tags',
+	          ],
+	          [
+	            'XSS in hidden input fields',
+	            'https://portswigger.net/research/xss-in-hidden-input-fields',
+	          ],
+	          [
+	            'HTTP/1.1 must die',
+	            'https://portswigger.net/research/http1-must-die',
+	          ],
+	          [
+	            'Top 10 web hacking techniques of 2024',
+	            'https://portswigger.net/research/top-10-web-hacking-techniques-of-2024',
+	          ],
+	        ],
+	      },
+	      {
+	        dir: '~/labs',
+	        desc: 'practice labs',
+	        items: [
+	          ['TryHackMe — your rooms', 'https://tryhackme.com/rooms?tab=saved'],
+	          [
+	            '25 Days of Cyber Security',
+	            'https://tryhackme.com/room/learncyberin25days',
+	          ],
+	          ['Vulnversity', 'https://tryhackme.com/room/vulnversity'],
+	          [
+	            'Metasploit: Introduction',
+	            'https://tryhackme.com/room/metasploitintro',
+	          ],
+	          [
+	            'thmrevenant/tryhackme — rooms',
+	            'https://github.com/thmrevenant/tryhackme/tree/main/rooms',
+	          ],
+	          [
+	            'NahamStore — writeup',
+	            'https://blog.raw.pm/en/TryHackMe-Nahamstore-write-up/',
+	          ],
+	          [
+	            'Intro to Bug Bounty Hunting (Udemy)',
+	            'https://www.udemy.com/course/intro-to-bug-bounty-by-nahamsec/',
+	          ],
+	          [
+	            'Intro to Request Smuggling — workshop',
+	            'https://gosecure.github.io/request-smuggling-workshop/#0',
+	          ],
+	        ],
+	      },
+	      {
+	        dir: '~/writeups',
+	        desc: 'learning & writeups',
+	        items: [
+	          ['Pentester Land — writeups', 'https://pentester.land/writeups/'],
+	          ['Pentester Land', 'https://pentester.land/'],
+	          ['Vulnerability Lab', 'https://www.vulnerability-lab.com/'],
+	          ['Orange Tsai — blog', 'https://blog.orange.tw/'],
+	          [
+	            'Awesome-Bugbounty-Writeups (GitHub)',
+	            'https://github.com/devanshbatham/Awesome-Bugbounty-Writeups',
+	          ],
+	          [
+	            'AnkitCuriosity — Write-Ups',
+	            'https://github.com/AnkitCuriosity/Write-Ups',
+	          ],
+	          [
+	            'Exploiting request smuggling → reflected XSS',
+	            'https://medium.com/@ryangcox/exploiting-http-request-smuggling-to-deliver-reflected-xss-lab-walkthrough-52239f628022',
+	          ],
+	          [
+	            '0.CL request smuggling — writeup',
+	            'https://brandon-t-elliott.github.io/0-cl-request-smuggling',
+	          ],
+	          [
+	            'DoubleClickjacking — new era of UI redressing',
+	            'https://www.evil.blog/2024/12/doubleclickjacking-what.html',
+	          ],
+	          ['Paulos Yibelo — Hacking Research', 'https://www.evil.blog/'],
+	          [
+	            'HackerOne report — Mozilla VPN RCE',
+	            'https://hackerone.com/reports/2995025',
+	          ],
+	          [
+	            'Bug Bounty Testing — essential guideline',
+	            'https://github.com/twseptian/bug-bounty-testing-essential-guideline-startup-bug-hunters',
+	          ],
+	          [
+	            'BugBountyBooks (GitHub)',
+	            'https://github.com/akr3ch/BugBountyBooks/tree/main',
+	          ],
+	          [
+	            'Resources for Beginners — books.md',
+	            'https://github.com/nahamsec/Resources-for-Beginner-Bug-Bounty-Hunters/blob/master/assets/books.md',
+	          ],
+	          [
+	            'Resources for Beginners — tools.md',
+	            'https://github.com/nahamsec/Resources-for-Beginner-Bug-Bounty-Hunters/blob/master/assets/tools.md',
+	          ],
+	          ['devcraft.io — vakzz CTF writeups', 'https://devcraft.io/'],
+	          [
+	            'Web Hacking 101 (local PDF)',
+	            'file:///home/raje/raje1/RKT/kaliDoc/Web%20Hacking%20101.pdf',
+	          ],
+	          [
+	            'The Hacker Playbook 3 (local PDF)',
+	            'file:///home/raje/Downloads/5_The%20Hacker%20Playbook%203%20-%20Practical%20Guide%20To%20Penetration%20Testing%20by%20Peter%20Kim.pdf',
+	          ],
+	          [
+	            "Web Application Hacker's Handbook (local PDF)",
+	            "file:///home/raje/Downloads/3_The%20Web%20Application%20Hacker's%20Handbook%20-%20Finding%20and%20Exploiting%20Security%20Flaws,%202nd%20Edition%20by%20Dafydd%20Stuttard,%20Marcus%20Pinto.pdf",
+	          ],
+	          [
+	            'Bug Bounty Bootcamp (local PDF)',
+	            'file:///home/raje/Downloads/Bug%20Bounty%20Bootcamp%20The%20Guide%20to%20Finding%20and%20Reporting%20Web%20Vulnerabilities%20by%20Vickie%20Li.pdf',
+	          ],
+	          [
+	            'Real-World Bug Hunting (local PDF)',
+	            'file:///home/raje/Downloads/Real-World%20Bug%20Hunting%20-%20A%20Field%20Guide%20to%20Web%20Hacking%20by%20Peter%20Yaworski.pdf',
+	          ],
+	          ['CVE.org', 'https://www.cve.org/'],
+	          ['NVD', 'https://nvd.nist.gov/'],
+	          [
+	            'CVE-2019-19330',
+	            'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-19330',
+	          ],
+	          [
+	            'Cloudflare — what happens in a TLS handshake',
+	            'https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/',
+	          ],
+	        ],
+	      },
+	      {
+	        dir: '~/platforms',
+	        desc: 'bug bounty platforms',
+	        items: [
+	          ['HackerOne', 'https://hackerone.com/'],
+	          ['Bugcrowd', 'https://www.bugcrowd.com/'],
+	          ['Intigriti', 'https://www.intigriti.com/'],
+	          [
+	            'Intigriti — programs overview',
+	            'https://app.intigriti.com/researcher/programs/overview',
+	          ],
+	          ['YesWeHack', 'https://www.yeswehack.com/'],
+	          ['Synack', 'https://www.synack.com/'],
+	          ['Cobalt', 'https://www.cobalt.io/'],
+	          ['Zerocopter', 'https://www.zerocopter.com/'],
+	          ['Yogosha', 'https://yogosha.com/'],
+	          ['HackenProof', 'https://hackenproof.com/'],
+	          ['Detectify', 'https://detectify.com/'],
+	          ['Safehats', 'https://safehats.com/'],
+	          ['OpenBugBounty', 'https://www.openbugbounty.org/'],
+	          ['CyberArmyID', 'https://www.cyberarmy.id/'],
+	          ['FireBounty', 'https://firebounty.com/'],
+	          ['BugBase — programs directory', 'https://bugbase.ai/programs'],
+	        ],
+	      },
+	      {
+	        dir: '~/mail',
+	        desc: 'mail, drive & temp',
+	        items: [
+	          ['Gmail — inbox 1', 'https://mail.google.com/mail/u/3/#inbox'],
+	          ['Gmail — inbox 2', 'https://mail.google.com/mail/u/0/#inbox'],
+	          ['Gmail — inbox 3', 'https://mail.google.com/mail/u/1/#inbox'],
+	          ['Zoho Mail', 'https://mail.zoho.in/zm/#mail/folder/inbox'],
+	          ['Google Drive', 'https://drive.google.com/drive/u/2/my-drive'],
+	          ['Temp Mail', 'https://temp-mail.org/'],
+	        ],
+	      },
+	      {
+	        dir: '~/dev-tools',
+	        desc: 'decoders & utilities & terminals',
+	        items: [
+	          ['RegExr', 'https://regexr.com/'],
+	          ['CrackStation', 'https://crackstation.net/'],
+	          ['CyberChef', 'https://gchq.github.io/CyberChef/'],
+	          ['HackTricks', 'https://book.hacktricks.wiki/en/index.html'],
+	          ['JSON Viewer', 'https://jsonviewer.stack.hu/'],
+	          ['de4js — JS deobfuscator', 'https://lelinhtinh.github.io/de4js/'],
+	          [
+	            'URL Decoder/Encoder',
+	            'https://meyerweb.com/eric/tools/dencoder/',
+	          ],
+	          ['OnlineGDB — C/C++ compiler', 'https://www.onlinegdb.com/'],
+	          [
+	            'Ruby online compiler',
+	            'https://www.adaface.com/online-compiler/online-ruby-compiler',
+	          ],
+	          ['GitHub topics — payloads', 'https://github.com/topics/payloads'],
+	          ['Bash scripting cheatsheet', 'https://devhints.io/bash'],
+	          ['Icon converter', 'https://redketchup.io/icon-converter'],
+	        ],
+	      },
+
+	      {
+	        dir: '~/general',
+	        desc: 'distro & misc resources',
+	        items: [
+	          ['Kali Linux', 'https://www.kali.org/'],
+	          ['Kali Tools', 'https://www.kali.org/tools/'],
+	          ['Kali Docs', 'https://www.kali.org/docs/'],
+	          ['Kali Forums', 'https://forums.kali.org/'],
+	          ['Kali NetHunter', 'https://www.kali.org/kali-nethunter/'],
+	          ['Exploit-DB', 'https://www.exploit-db.com/'],
+	          [
+	            'Google Hacking Database',
+	            'https://www.exploit-db.com/google-hacking-database',
+	          ],
+	          ['OffSec', 'https://www.offsec.com/'],
+	          [
+	            'Burp Suite Professional (GitHub)',
+	            'https://github.com/xiv3r/Burpsuite-Professional',
+	          ],
+	          [
+	            'Google Cloud console — Kali image',
+	            'https://console.cloud.google.com/marketplace/product/techlatest-public/kali-linux',
+	          ],
+	        ],
+	      },
+	    ];
+
+	    /* BOOT SEQUENCE */
+	    const bootEl = document.getElementById('boot');
+	    const bootLines = document.getElementById('boot-lines');
+	    const reducedMotion = window.matchMedia(
+	      '(prefers-reduced-motion: reduce)',
+	    ).matches;
+	    const alreadyBooted = sessionStorage.getItem('raje_booted') === '1';
+
+	    function finishBoot() {
+	      bootEl.classList.add('hide');
+	      setTimeout(() => {
+	        bootEl.style.display = 'none';
+	      }, 450);
+	      sessionStorage.setItem('raje_booted', '1');
+	    }
+
+	    if (alreadyBooted || reducedMotion) {
+	      bootEl.style.display = 'none';
+	    } else {
+	      const lines = [
+	        'root@raje-toolkit:~$ ./init.sh',
+	        '[ OK ] mounting ~/recon',
+	        '[ OK ] loading payload wordlists',
+	        '[ OK ] establishing collaborator session',
+	        '[ OK ] indexing ' +
+	          DATA.reduce((n, c) => n + c.items.length, 0) +
+	          ' tools across ' +
+	          DATA.length +
+	          ' directories',
+	        '[ OK ] toolkit ready',
+	      ];
+	      lines.forEach((text, i) => {
+	        const d = document.createElement('div');
+	        d.className = 'line';
+	        d.textContent = text;
+	        d.style.animation = 'none';
+	        bootLines.appendChild(d);
+	        setTimeout(
+	          () => {
+	            d.style.transition = 'opacity .12s';
+	            d.style.opacity = '1';
+	          },
+	          160 * i + 80,
+	        );
+	      });
+	      setTimeout(finishBoot, 160 * lines.length + 650);
+	      bootEl.addEventListener('click', finishBoot);
+	    }
+
+	    /* CLOCK */
+	    const startTime = Date.now();
+	    function pad(n) {
+	      return n.toString().padStart(2, '0');
+	    }
+	    function tick() {
+	      const now = new Date();
+	      document.getElementById('clk-time').textContent =
+	        pad(now.getHours()) + ':' + pad(now.getMinutes());
+	      const upSec = Math.floor((Date.now() - startTime) / 1000);
+	      const m = Math.floor(upSec / 60),
+	        s = upSec % 60;
+	      document.getElementById('clk-uptime').textContent =
+	        pad(m) + ':' + pad(s);
+	    }
+	    tick();
+	    setInterval(tick, 1000);
+
+	    /* FAVICON HELPERS */
+	    function hostLabel(url) {
+	      try {
+	        const u = new URL(url);
+	        if (u.protocol === 'file:') return 'local file';
+	        return u.hostname.replace(/^www\./, '');
+	      } catch (e) {
+	        return url;
+	      }
+	    }
+
+	    function makeFallbackIcon(size) {
+	      const span = document.createElement('span');
+	      span.className = 'fav fav-fallback';
+	      span.style.width = size + 'px';
+	      span.style.height = size + 'px';
+	      span.style.fontSize = Math.max(8, size - 6) + 'px';
+	      span.textContent = '◆';
+	      return span;
+	    }
+
+	    function makeFavicon(url, size) {
+	      size = size || 16;
+	      let hostname;
+	      try {
+	        const u = new URL(url);
+	        if (u.protocol === 'file:') return makeFallbackIcon(size);
+	        hostname = u.hostname;
+	      } catch (e) {
+	        return makeFallbackIcon(size);
+	      }
+	      const img = document.createElement('img');
+	      img.className = 'fav';
+	      img.width = size;
+	      img.height = size;
+	      img.loading = 'lazy';
+	      img.decoding = 'async';
+	      img.alt = '';
+	      img.src = 'https://www.google.com/s2/favicons?sz=64&domain=' + hostname;
+	      img.addEventListener(
+	        'error',
+	        () => {
+	          img.replaceWith(makeFallbackIcon(size));
+	        },
+	        { once: true },
+	      );
+	      return img;
+	    }
+
+	    /* DYNAMIC TITLE FETCH */
+	    const _titleCache = {};
+	    async function fetchPageTitle(url) {
+	      if (_titleCache[url]) return _titleCache[url];
+	      try {
+	        const u = new URL(url);
+	        // Skip local files, known non-HTML resources
+	        if (u.protocol === 'file:') return null;
+	        if (
+	          /\.(pdf|zip|tar|gz|png|jpg|jpeg|gif|svg|txt|json|yaml|yml|csv)$/i.test(
+	            u.pathname,
+	          )
+	        )
+	          return null;
+
+	        const proxyUrl =
+	          'https://api.allorigins.win/get?url=' + encodeURIComponent(url);
+	        const ctrl = new AbortController();
+	        const timer = setTimeout(() => ctrl.abort(), 5000); // 5s timeout
+	        const res = await fetch(proxyUrl, { signal: ctrl.signal });
+	        clearTimeout(timer);
+	        if (!res.ok) return null;
+	        const data = await res.json();
+	        const html = data.contents || '';
+	        // Extract <title> from HTML string
+	        const match = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+	        if (!match) return null;
+	        // Decode HTML entities and clean whitespace
+	        const raw = match[1]
+	          .replace(/&amp;/g, '&')
+	          .replace(/&lt;/g, '<')
+	          .replace(/&gt;/g, '>')
+	          .replace(/&quot;/g, '"')
+	          .replace(/&#39;/g, "'")
+	          .replace(/\s+/g, ' ')
+	          .trim();
+	        if (!raw) return null;
+	        _titleCache[url] = raw;
+	        return raw;
+	      } catch (e) {
+	        return null; // timeout, network error, etc.
+	      }
+	    }
+
+	    /* RECENTLY VISITED */
+	    const RECENT_KEY = 'raje_recent_links';
+	    const RECENT_MAX_STORE = 30;
+	    const RECENT_MAX_SHOW = 16;
+
+	    function getRecent() {
+	      try {
+	        return JSON.parse(localStorage.getItem(RECENT_KEY)) || [];
+	      } catch (e) {
+	        return [];
+	      }
+	    }
+
+	    async function logVisit(title, url) {
+	      let list = getRecent();
+	      const existing = list.find((r) => r.url === url);
+	      if (existing) {
+	        // update timestamp only, keep position (preserve drag order)
+	        existing.ts = Date.now();
+	        existing.title = title;
+	      } else {
+	        // brand new entry — add at front
+	        const pinned = false;
+	        list.unshift({ title, url, ts: Date.now(), pinned });
+	        list = trimRecent(list);
+	      }
+	      localStorage.setItem(RECENT_KEY, JSON.stringify(list));
+	      renderRecent();
+
+	      if (!_titleCache[url]) {
+	        const realTitle = await fetchPageTitle(url);
+	        if (realTitle && realTitle !== title) {
+	          // Update stored title
+	          const updated = getRecent();
+	          const item = updated.find((r) => r.url === url);
+	          if (item) {
+	            item.title = realTitle;
+	            localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
+	            renderRecent();
+	          }
+	        }
+	      }
+	    }
+
+	    function trimRecent(list) {
+	      return list.slice(0, RECENT_MAX_STORE);
+	    }
+
+	    function togglePin(url) {
+	      const list = getRecent();
+	      const item = list.find((r) => r.url === url);
+	      if (!item) return;
+	      item.pinned = !item.pinned;
+	      localStorage.setItem(RECENT_KEY, JSON.stringify(trimRecent(list)));
+	      renderRecent();
+	    }
+
+	    function removeRecent(url) {
+	      const list = getRecent().filter((r) => r.url !== url);
+	      localStorage.setItem(RECENT_KEY, JSON.stringify(list));
+	      renderRecent();
+	    }
+
+	    function timeAgo(ts) {
+	      const diff = Math.floor((Date.now() - ts) / 1000);
+	      if (diff < 60) return diff + 's ago';
+	      if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+	      if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+	      return Math.floor(diff / 86400) + 'd ago';
+	    }
+
+	    /* APP ICON CARD RENDERER */
+	    function renderRecent() {
+	      const el = document.getElementById('recent-list');
+	      const all = getRecent();
+	      const list = all.slice(0, RECENT_MAX_SHOW);
+
+	      el.innerHTML = '';
+	      if (list.length === 0) {
+	        const empty = document.createElement('div');
+	        empty.className = 'recent-empty';
+	        empty.textContent =
+	          "no links opened yet this profile — click anything below and it'll show up here.";
+	        el.appendChild(empty);
+	        return;
+	      }
+
+	      list.forEach((r) => {
+	        const wrap = document.createElement('div');
+	        wrap.className = 'app-icon-wrap' + (r.pinned ? ' ' : '');
+	        wrap.title = r.url + '\n' + timeAgo(r.ts);
+
+	        /* action buttons */
+	        const actions = document.createElement('div');
+	        actions.className = 'app-icon-actions';
+
+	        const pinBtn = document.createElement('button');
+	        pinBtn.type = 'button';
+	        pinBtn.className = 'icon-btn pin-btn' + (r.pinned ? ' pinned' : '');
+	        pinBtn.title = r.pinned ? 'Unpin' : 'Pin';
+	        pinBtn.innerHTML = `<svg class="pin-btn-svg ${r.pinned ? 'pinned' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="80%" height="80%" style="transform: rotate(-30deg);">  <path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6l1.8 2 1.8-2v-6H20v-2l-2-2zm-2 2H10V4h4v10z"/> </svg>`;
+	        pinBtn.addEventListener('click', (e) => {
+	          e.preventDefault();
+	          e.stopPropagation();
+	          togglePin(r.url);
+	        });
+
+	        const removeBtn = document.createElement('button');
+	        removeBtn.type = 'button';
+	        removeBtn.className = 'icon-btn';
+	        removeBtn.title = 'Remove';
+	        removeBtn.innerHTML = `<svg class="remove-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="100%" height="100%"> <defs> <filter id="glow" x="-20%" y="-20%" width="100%" height="100%"> <feDropShadow dx="0" dy="4" stdDeviation="5" flood-opacity="0.2" /> </filter> </defs> <g stroke-width="20" stroke-linecap="round" stroke-linejoin="round"> <line x1="95" y1="95" x2="205" y2="205" /> <line x1="95" y1="205" x2="205" y2="95" /> </g> </svg>`;
+	        removeBtn.addEventListener('click', (e) => {
+	          e.preventDefault();
+	          e.stopPropagation();
+	          removeRecent(r.url);
+	        });
+
+	        actions.appendChild(pinBtn);
+	        actions.appendChild(removeBtn);
+	        wrap.appendChild(actions);
+
+	        /* icon box */
+	        const iconBox = document.createElement('div');
+	        iconBox.className = 'app-icon-box';
+
+	        // Use larger favicon (64px from Google S2)
+	        let hostname;
+	        try {
+	          const u = new URL(r.url);
+	          if (u.protocol === 'file:') hostname = null;
+	          else hostname = u.hostname;
+	        } catch (e) {
+	          hostname = null;
+	        }
+
+	        if (hostname) {
+	          const img = document.createElement('img');
+	          img.loading = 'lazy';
+	          img.decoding = 'async';
+	          img.alt = '';
+	          img.src =
+	            'https://www.google.com/s2/favicons?sz=64&domain=' + hostname;
+	          img.addEventListener(
+	            'error',
+	            () => {
+	              img.replaceWith(makeFallbackIcon(34));
+	            },
+	            { once: true },
+	          );
+	          iconBox.appendChild(img);
+	        } else {
+	          iconBox.appendChild(makeFallbackIcon(34));
+	        }
+
+	        /* label */
+	        const label = document.createElement('div');
+	        label.className = 'app-icon-label';
+	        // Shorten title: strip common suffixes like " | Site Name"
+	        let displayTitle = r.title;
+	        // Remove long suffixes after first pipe/dash/em-dash if title is long
+	        if (displayTitle.length > 30) {
+	          const shortened = displayTitle
+	            .replace(/\s*[\|–—]\s*.{3,}$/, '')
+	            .trim();
+	          if (shortened.length >= 5) displayTitle = shortened;
+	        }
+	        label.textContent = displayTitle;
+
+	        // --- DRAG & DROP ---
+	        wrap.draggable = true;
+	        wrap.dataset.url = r.url;
+	        let isDragging = false;
+	        /* link wrapper — clicking opens URL */
+	        const link = document.createElement('a');
+	        link.href = r.url;
+	        link.target = '_blank';
+	        link.rel = 'noopener';
+	        link.style.cssText =
+	          'display:flex;flex-direction:column;align-items:center;gap:0;text-decoration:none;';
+	        link.addEventListener('click', (e) => {
+	          if (isDragging) {
+	            e.preventDefault();
+	            isDragging = false;
+	            return;
+	          }
+	          logVisit(r.title, r.url);
+	        });
+
+	        link.appendChild(iconBox);
+	        link.appendChild(label);
+	        wrap.appendChild(link);
+
+	        wrap.addEventListener('dragstart', (e) => {
+	          isDragging = true;
+	          e.dataTransfer.effectAllowed = 'move';
+	          e.dataTransfer.setData('text/plain', r.url);
+	          setTimeout(() => wrap.classList.add('dragging'), 0);
+	        });
+	        wrap.addEventListener('dragend', () => {
+	          wrap.classList.remove('dragging');
+	          document
+	            .querySelectorAll('.app-icon-wrap.drag-over')
+	            .forEach((el) => el.classList.remove('drag-over'));
+	        });
+	        wrap.addEventListener('dragover', (e) => {
+	          e.preventDefault();
+	          e.dataTransfer.dropEffect = 'move';
+	          const draggingEl = document.querySelector(
+	            '.app-icon-wrap.dragging',
+	          );
+	          if (draggingEl && draggingEl !== wrap)
+	            wrap.classList.add('drag-over');
+	        });
+	        wrap.addEventListener('dragleave', () =>
+	          wrap.classList.remove('drag-over'),
+	        );
+	        wrap.addEventListener('drop', (e) => {
+	          e.preventDefault();
+	          wrap.classList.remove('drag-over');
+	          const fromUrl = e.dataTransfer.getData('text/plain');
+	          const toUrl = r.url;
+	          if (fromUrl === toUrl) return;
+
+	          // Reorder in localStorage
+	          const all = getRecent();
+	          const fromIdx = all.findIndex((x) => x.url === fromUrl);
+	          const toIdx = all.findIndex((x) => x.url === toUrl);
+	          if (fromIdx === -1 || toIdx === -1) return;
+	          const [moved] = all.splice(fromIdx, 1);
+	          all.splice(toIdx, 0, moved);
+	          localStorage.setItem(RECENT_KEY, JSON.stringify(all));
+	          renderRecent();
+	        });
+	        // --- END DRAG & DROP ---
+	        el.appendChild(wrap);
+	      });
+	    }
+
+	    renderRecent();
+	    setInterval(renderRecent, 30000);
+
+	    document.getElementById('clear-recent').addEventListener('click', () => {
+	      localStorage.removeItem(RECENT_KEY);
+	      renderRecent();
+	    });
+
+	    /* RENDER DIRECTORY GRID */
+	    const grid = document.getElementById('grid');
+	    let totalItems = 0;
+
+	    DATA.forEach((cat, ci) => {
+	      totalItems += cat.items.length;
+
+	      const catEl = document.createElement('div');
+	      catEl.className = 'cat';
+
+	      const head = document.createElement('button');
+	      head.className = 'cat-head';
+	      head.setAttribute('aria-expanded', 'false');
+	      head.innerHTML =
+	        '<span class="chev">&#9656;</span>' +
+	        '<span class="perm">drwxr-xr-x</span>' +
+	        '<span class="dirname">' +
+	        cat.dir +
+	        '</span>' +
+	        '<span class="desc">' +
+	        cat.desc +
+	        ' &middot; ' +
+	        cat.items.length +
+	        '</span>';
+	      head.addEventListener('click', () => {
+	        const open = catEl.classList.toggle('open');
+	        head.setAttribute('aria-expanded', open ? 'true' : 'false');
+	      });
+
+	      const body = document.createElement('div');
+	      body.className = 'cat-body';
+	      const inner = document.createElement('div');
+	      inner.className = 'cat-body-inner';
+	      const list = document.createElement('div');
+	      list.className = 'item-list';
+
+	      cat.items.forEach(([title, url], idx) => {
+	        const row = document.createElement('div');
+	        row.className = 'item-row';
+	        const sizeKB = ((title.length * 3 + idx * 7 + ci * 5) % 38) + 2;
+
+	        const permSpan = document.createElement('span');
+	        permSpan.className = 'perm';
+	        permSpan.textContent = '-rw-r--r-- ' + sizeKB + 'K';
+
+	        const favEl = makeFavicon(url, 14);
+
+	        const a = document.createElement('a');
+	        a.href = url;
+	        a.target = '_blank';
+	        a.rel = 'noopener';
+	        a.dataset.title = title;
+	        a.textContent = title;
+	        a.addEventListener('click', () => logVisit(title, url));
+
+	        row.appendChild(permSpan);
+	        row.appendChild(favEl);
+	        row.appendChild(a);
+	        list.appendChild(row);
+	      });
+
+	      inner.appendChild(list);
+	      body.appendChild(inner);
+	      catEl.appendChild(head);
+	      catEl.appendChild(body);
+	      grid.appendChild(catEl);
+	    });
+
+	    document.getElementById('stats').textContent =
+	      totalItems + ' tools indexed across ' + DATA.length + ' directories';
+	    document.getElementById('sync-date').textContent = new Date()
+	      .toISOString()
+	      .slice(0, 10);
+
+	    /* WEB SEARCH */
+	    const SEARCH_ENGINES = [
+	      {
+	        id: 'google',
+	        name: 'Google',
+	        domain: 'google.com',
+	        url: (q) =>
+	          'https://www.google.com/search?q=' + encodeURIComponent(q),
+	      },
+	      {
+	        id: 'bing',
+	        name: 'Bing',
+	        domain: 'bing.com',
+	        url: (q) => 'https://www.bing.com/search?q=' + encodeURIComponent(q),
+	      },
+	      {
+	        id: 'duckduckgo',
+	        name: 'DuckDuckGo',
+	        domain: 'duckduckgo.com',
+	        url: (q) => 'https://duckduckgo.com/?q=' + encodeURIComponent(q),
+	      },
+	      {
+	        id: 'brave',
+	        name: 'Brave',
+	        domain: 'search.brave.com',
+	        url: (q) =>
+	          'https://search.brave.com/search?q=' + encodeURIComponent(q),
+	      },
+	      {
+	        id: 'startpage',
+	        name: 'Startpage',
+	        domain: 'startpage.com',
+	        url: (q) =>
+	          'https://www.startpage.com/sp/search?query=' +
+	          encodeURIComponent(q),
+	      },
+	    ];
+	    const WS_ENGINE_KEY = 'raje_search_engine';
+	    const engineSelect = document.getElementById('ws-engine-select');
+	    const engineBtn = document.getElementById('ws-engine-btn');
+	    const engineIcon = document.getElementById('ws-engine-icon');
+	    const engineName = document.getElementById('ws-engine-name');
+	    const engineMenu = document.getElementById('ws-engine-menu');
+
+	    let activeEngineId = localStorage.getItem(WS_ENGINE_KEY) || 'google';
+	    if (!SEARCH_ENGINES.some((e) => e.id === activeEngineId))
+	      activeEngineId = 'google';
+
+	    function faviconFor(domain) {
+	      return 'https://www.google.com/s2/favicons?sz=64&domain=' + domain;
+	    }
+
+	    function buildEngineMenu() {
+	      engineMenu.innerHTML = '';
+	      SEARCH_ENGINES.forEach((eng) => {
+	        const li = document.createElement('li');
+	        li.className =
+	          'ws-engine-option' + (eng.id === activeEngineId ? ' selected' : '');
+	        li.setAttribute('role', 'option');
+
+	        const img = document.createElement('img');
+	        img.src = faviconFor(eng.domain);
+	        img.alt = '';
+	        img.loading = 'lazy';
+
+	        const span = document.createElement('span');
+	        span.textContent = eng.name;
+
+	        li.appendChild(img);
+	        li.appendChild(span);
+	        li.addEventListener('click', () => setActiveEngine(eng.id));
+	        engineMenu.appendChild(li);
+	      });
+	    }
+
+	    function openEngineMenu() {
+	      engineSelect.classList.add('open');
+	      engineBtn.setAttribute('aria-expanded', 'true');
+	    }
+	    function closeEngineMenu() {
+	      engineSelect.classList.remove('open');
+	      engineBtn.setAttribute('aria-expanded', 'false');
+	    }
+
+	    function setActiveEngine(id) {
+	      const eng =
+	        SEARCH_ENGINES.find((e) => e.id === id) || SEARCH_ENGINES[0];
+	      activeEngineId = eng.id;
+	      localStorage.setItem(WS_ENGINE_KEY, eng.id);
+	      engineIcon.src = faviconFor(eng.domain);
+	      engineName.textContent = eng.name;
+	      buildEngineMenu();
+	      closeEngineMenu();
+	    }
+
+	    engineBtn.addEventListener('click', (e) => {
+	      e.stopPropagation();
+	      engineSelect.classList.contains('open')
+	        ? closeEngineMenu()
+	        : openEngineMenu();
+	    });
+	    document.addEventListener('click', (e) => {
+	      if (!engineSelect.contains(e.target)) closeEngineMenu();
+	    });
+	    document.addEventListener('keydown', (e) => {
+	      if (e.key === 'Escape') closeEngineMenu();
+	    });
+
+	    setActiveEngine(activeEngineId);
+
+	    document.getElementById('ws-form').addEventListener('submit', (e) => {
+	      e.preventDefault();
+	      const input = document.getElementById('ws-input');
+	      const q = input.value.trim();
+	      if (!q) return;
+	      const eng =
+	        SEARCH_ENGINES.find((e) => e.id === activeEngineId) ||
+	        SEARCH_ENGINES[0];
+	      window.open(eng.url(q), '_blank', 'noopener');
+	    });
+
+	    /* SEARCH / FILTER */
+	    const filterInput = document.getElementById('filter');
+	    const filterCount = document.getElementById('filter-count');
+
+	    filterInput.addEventListener('input', () => {
+	      const q = filterInput.value.trim().toLowerCase();
+	      let visibleCount = 0;
+
+	      document.querySelectorAll('.cat').forEach((catEl) => {
+	        let matchesInCat = 0;
+	        catEl.querySelectorAll('.item-row').forEach((row) => {
+	          const title = row.querySelector('a').textContent.toLowerCase();
+	          const isMatch = q === '' || title.includes(q);
+	          row.classList.toggle('hidden', !isMatch);
+	          if (isMatch) {
+	            matchesInCat++;
+	            visibleCount++;
+	          }
+	        });
+	        catEl.classList.toggle('cat-hidden', q !== '' && matchesInCat === 0);
+	        if (q !== '' && matchesInCat > 0) catEl.classList.add('open');
+	        if (q === '') catEl.classList.remove('open');
+	      });
+
+	      filterCount.textContent =
+	        q === ''
+	          ? ''
+	          : visibleCount + ' match' + (visibleCount === 1 ? '' : 'es');
+	    });
+	    /* SETTINGS MODAL */
+	    function openModal() {
+	      document.getElementById('modal-backdrop').classList.add('open');
+	    }
+	    function closeModal() {
+	      document.getElementById('modal-backdrop').classList.remove('open');
+	    }
+
+	    document
+	      .getElementById('settings-btn')
+	      .addEventListener('click', openModal);
+	    document
+	      .getElementById('modal-close')
+	      .addEventListener('click', closeModal);
+	    document
+	      .getElementById('modal-backdrop')
+	      .addEventListener('click', (e) => {
+	        if (e.target === e.currentTarget) closeModal();
+	      });
+	    document.addEventListener('keydown', (e) => {
+	      if (e.key === 'Escape') closeModal();
+	    });
+
+	    /* TOAST */
+	    let _toastTimer;
+	    function showToast(msg, type = 'success') {
+	      const t = document.getElementById('toast');
+	      t.textContent = (type === 'success' ? '✓ ' : '✗ ') + msg;
+	      t.className = 'show ' + type;
+	      clearTimeout(_toastTimer);
+	      _toastTimer = setTimeout(() => {
+	        t.className = '';
+	      }, 3200);
+	    }
+
+	    /* AUTO-CATEGORIZE */
+	    const CAT_RULES = [
+	      {
+	        dir: '~/recon',
+	        keywords: [
+	          'recon',
+	          'subdomain',
+	          'whois',
+	          'nmap',
+	          'nslookup',
+	          'osint',
+	          'shodan',
+	          'censys',
+	          'dns',
+	          'wayback',
+	          'archive',
+	          'ipaddress',
+	          'cidr',
+	          'subfinder',
+	          'amass',
+	          'resolver',
+	          'chaos',
+	        ],
+	      },
+	      {
+	        dir: '~/payloads',
+	        keywords: [
+	          'payload',
+	          'xss',
+	          'sqli',
+	          'injection',
+	          'bypass',
+	          'exploit',
+	          'fuzzing',
+	          'wordlist',
+	          'seclist',
+	          'assetnote',
+	          'clickjack',
+	          'polyglot',
+	          'lfi',
+	          'rfi',
+	          'ssti',
+	          'ssrf',
+	          'prototype',
+	          'xxe',
+	          'idor',
+	          'csrf',
+	          'crlf',
+	        ],
+	      },
+	      {
+	        dir: '~/api',
+	        keywords: [
+	          'api',
+	          'jwt',
+	          'graphql',
+	          'websocket',
+	          'swagger',
+	          'postman',
+	          'burp',
+	          'interactsh',
+	          'oob',
+	          'feroxbuster',
+	          'kiterunner',
+	          'bxss',
+	          'blind xss',
+	          'pipedream',
+	        ],
+	      },
+	      {
+	        dir: '~/web-academy',
+	        keywords: [
+	          'portswigger',
+	          'web-security',
+	          'web security',
+	          'web academy',
+	          'all-labs',
+	          'learning path',
+	        ],
+	      },
+	      {
+	        dir: '~/labs',
+	        keywords: [
+	          'tryhackme',
+	          'hackthebox',
+	          'htb',
+	          'ctf',
+	          'vulnhub',
+	          'overthewire',
+	          'pwnable',
+	          'root-me',
+	          'vulnversity',
+	          'nahamstore',
+	          'picoctf',
+	          'metasploit',
+	          'udemy',
+	          'workshop',
+	        ],
+	      },
+	      {
+	        dir: '~/writeups',
+	        keywords: [
+	          'writeup',
+	          'write-up',
+	          'pentester.land',
+	          'hackerone.com/reports',
+	          'orange.tw',
+	          'vulnerability-lab',
+	          'cve',
+	          'nvd',
+	          'nist.gov',
+	          'cve.org',
+	          'bugbountybook',
+	          'devcraft',
+	          'tls handshake',
+	        ],
+	      },
+	      {
+	        dir: '~/platforms',
+	        keywords: [
+	          'hackerone',
+	          'bugcrowd',
+	          'intigriti',
+	          'yeswehack',
+	          'synack',
+	          'cobalt',
+	          'zerocopter',
+	          'yogosha',
+	          'hackenproof',
+	          'detectify',
+	          'safehats',
+	          'openbugbounty',
+	          'cyberarmy',
+	          'firebounty',
+	          'bugbase',
+	        ],
+	      },
+	      {
+	        dir: '~/mail',
+	        keywords: [
+	          'gmail',
+	          'mail.google',
+	          'zoho mail',
+	          'temp-mail',
+	          'tempmail',
+	          'mailinator',
+	          'protonmail',
+	          'drive.google',
+	          'google drive',
+	        ],
+	      },
+	      {
+	        dir: '~/dev-tools',
+	        keywords: [
+	          'cyberchef',
+	          'regexr',
+	          'crackstation',
+	          'json viewer',
+	          'de4js',
+	          'deobfuscat',
+	          'url decode',
+	          'base64',
+	          'hash',
+	          'compiler',
+	          'onlinegdb',
+	          'devhints',
+	          'cheatsheet',
+	          'icon converter',
+	          'decoder',
+	          'encoder',
+	        ],
+	      },
+	      {
+	        dir: '~/ai',
+	        keywords: [
+	          'chatgpt',
+	          'openai',
+	          'copilot',
+	          'blackbox.ai',
+	          'mistral',
+	          'claude',
+	          'gemini',
+	          'perplexity',
+	          'duck.ai',
+	          'bard',
+	          'llm',
+	          'ai chat',
+	          'gpt',
+	          'html to markdown',
+	          'extract url',
+	        ],
+	      },
+	      {
+	        dir: '~/general',
+	        keywords: [
+	          'kali linux',
+	          'kali.org',
+	          'nethunter',
+	          'exploit-db',
+	          'exploitdb',
+	          'offsec',
+	          'offensive security',
+	          'google hacking database',
+	          'ghdb',
+	          'burpsuite professional',
+	        ],
+	      },
+	    ];
+
+	    function autoCategory(title, url, folderHint) {
+	      const hay = (
+	        title +
+	        ' ' +
+	        url +
+	        ' ' +
+	        (folderHint || '')
+	      ).toLowerCase();
+	      if (folderHint) {
+	        const fh = folderHint.toLowerCase();
+	        for (const r of CAT_RULES) {
+	          const d = r.dir.replace('~/', '');
+	          if (fh.includes(d) || d.split('-').some((w) => fh.includes(w)))
+	            return r.dir;
+	        }
+	      }
+	      let best = null,
+	        bestScore = 0;
+	      for (const r of CAT_RULES) {
+	        let score = 0;
+	        for (const kw of r.keywords) if (hay.includes(kw)) score += kw.length;
+	        if (score > bestScore) {
+	          bestScore = score;
+	          best = r.dir;
+	        }
+	      }
+	      return bestScore > 0 ? best : '~/imported';
+	    }
+
+	    /* IMPORT STORAGE */
+	    const IMPORT_KEY = 'raje_imported_bookmarks';
+	    function getImported() {
+	      try {
+	        return JSON.parse(localStorage.getItem(IMPORT_KEY)) || [];
+	      } catch {
+	        return [];
+	      }
+	    }
+	    function saveImported(list) {
+	      localStorage.setItem(IMPORT_KEY, JSON.stringify(list));
+	    }
+
+	    function updateImportStats() {
+	      const n = getImported().length;
+	      const el = document.getElementById('modal-import-stats');
+	      el.innerHTML = n
+	        ? '<span class="hl">' +
+	          n +
+	          '</span> imported bookmarks currently active'
+	        : 'no imported bookmarks.';
+	    }
+
+	    /* PARSE FIREFOX BOOKMARKS */
+	    function parseFirefoxBookmarks(html) {
+	      const doc = new DOMParser().parseFromString(html, 'text/html');
+	      const results = [];
+	      function walkDL(dl, folder) {
+	        for (const dt of dl.children) {
+	          if (dt.tagName !== 'DT') continue;
+	          const h3 = dt.querySelector(':scope > H3');
+	          const a = dt.querySelector(':scope > A');
+	          const sub =
+	            dt.querySelector(':scope > DL') ||
+	            (dt.nextElementSibling?.tagName === 'DL'
+	              ? dt.nextElementSibling
+	              : null);
+	          if (h3 && sub) {
+	            walkDL(sub, h3.textContent.trim());
+	            continue;
+	          }
+	          if (a) {
+	            const url = a.getAttribute('href') || '';
+	            if (!url || url.startsWith('place:')) continue;
+	            const title = a.textContent.trim() || url;
+	            results.push({
+	              title,
+	              url,
+	              dir: autoCategory(title, url, folder),
+	              folderHint: folder,
+	            });
+	          }
+	        }
+	      }
+	      const topDLs = doc.querySelectorAll('body > dl, body > DL');
+	      if (topDLs.length) topDLs.forEach((dl) => walkDL(dl, ''));
+	      else {
+	        const dl = doc.querySelector('dl, DL');
+	        if (dl) walkDL(dl, '');
+	      }
+	      if (!results.length) {
+	        doc.querySelectorAll('a[href]').forEach((a) => {
+	          const url = a.getAttribute('href') || '';
+	          if (!url || url.startsWith('place:')) return;
+	          const title = a.textContent.trim() || url;
+	          results.push({
+	            title,
+	            url,
+	            dir: autoCategory(title, url, ''),
+	            folderHint: '',
+	          });
+	        });
+	      }
+	      return results;
+	    }
+
+	    /* EXPORT */
+	    function escH(s) {
+	      return String(s)
+	        .replace(/&/g, '&amp;')
+	        .replace(/</g, '&lt;')
+	        .replace(/>/g, '&gt;');
+	    }
+	    function escA(s) {
+	      return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+	    }
+
+	    function exportBookmarks() {
+	      const ts = Math.floor(Date.now() / 1000);
+	      // Build merged map
+	      const dirMap = new Map();
+	      DATA.forEach((c) =>
+	        dirMap.set(c.dir, { dir: c.dir, desc: c.desc, items: [...c.items] }),
+	      );
+	      getImported().forEach((bm) => {
+	        if (!dirMap.has(bm.dir))
+	          dirMap.set(bm.dir, { dir: bm.dir, desc: 'imported', items: [] });
+	        const existing = dirMap.get(bm.dir);
+	        if (!existing.items.find((i) => i[1] === bm.url))
+	          existing.items.push([bm.title, bm.url]);
+	      });
+
+	      let out = `<!DOCTYPE NETSCAPE-Bookmark-file-1>\n<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">\n<TITLE>Bookmarks</TITLE>\n<H1>RAJE Toolkit</H1>\n<DL><p>\n`;
+	      dirMap.forEach((cat) => {
+	        out += `    <DT><H3 ADD_DATE="${ts}">${escH(cat.dir)} — ${escH(cat.desc)}</H3>\n    <DL><p>\n`;
+	        cat.items.forEach(([title, url]) => {
+	          if (!url || url.startsWith('file:')) return;
+	          out += `        <DT><A HREF="${escA(url)}" ADD_DATE="${ts}">${escH(title)}</A>\n`;
+	        });
+	        out += `    </DL><p>\n`;
+	      });
+	      out += `</DL>`;
+
+	      const a = document.createElement('a');
+	      a.href = URL.createObjectURL(
+	        new Blob([out], { type: 'text/html;charset=utf-8' }),
+	      );
+	      a.download =
+	        'raje-bookmarks-' + new Date().toISOString().slice(0, 10) + '.html';
+	      a.click();
+	      URL.revokeObjectURL(a.href);
+	      showToast(
+	        'exported — ' +
+	          [...dirMap.values()].reduce((n, c) => n + c.items.length, 0) +
+	          ' bookmarks',
+	      );
+	    }
+
+	    /* WIRE UP BUTTONS */
+	    const fileInput = document.getElementById('bm-file-input');
+
+	    document.getElementById('import-btn').addEventListener('click', () => {
+	      fileInput.value = '';
+	      fileInput.click();
+	    });
+
+	    fileInput.addEventListener('change', () => {
+	      const file = fileInput.files[0];
+	      if (!file) return;
+	      const reader = new FileReader();
+	      reader.onload = (e) => {
+	        try {
+	          const parsed = parseFirefoxBookmarks(e.target.result);
+	          if (!parsed.length) {
+	            showToast('no bookmarks found', 'error');
+	            return;
+	          }
+	          const existingUrls = new Set(getImported().map((b) => b.url));
+	          const fresh = parsed.filter((b) => !existingUrls.has(b.url));
+	          saveImported([...getImported(), ...fresh]);
+	          updateImportStats();
+	          showToast(
+	            fresh.length +
+	              ' imported · ' +
+	              (parsed.length - fresh.length) +
+	              ' duplicates skipped',
+	          );
+	        } catch (err) {
+	          showToast('parse error: ' + err.message, 'error');
+	        }
+	      };
+	      reader.readAsText(file);
+	    });
+
+	    document
+	      .getElementById('export-btn')
+	      .addEventListener('click', exportBookmarks);
+
+	    document
+	      .getElementById('clear-import-btn')
+	      .addEventListener('click', () => {
+	        localStorage.removeItem(IMPORT_KEY);
+	        updateImportStats();
+	        showToast('imported bookmarks cleared');
+	      });
+
+	    document
+	      .getElementById('clear-history-modal-btn')
+	      .addEventListener('click', () => {
+	        localStorage.removeItem(RECENT_KEY);
+	        renderRecent();
+	        showToast('visit history cleared');
+	      });
+
+	    updateImportStats();
+	  </script>
+	</body>
+</html>
