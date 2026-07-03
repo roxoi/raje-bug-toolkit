@@ -21,6 +21,8 @@
       content="https://other4.github.io/raje-bug-toolkit/projects.html"
     />
     <meta property="og:title" content="My Projects | Roxoi BugHunt Toolkit" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.5/purify.min.js"></script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap');
       :root {
@@ -32,6 +34,8 @@
         --accent2: #00b8ff;
         --warn: #ff6b35;
         --danger: #ff3366;
+        --gold: #ffc300;
+        --violet: #a78bfa;
         --muted: #4a5568;
         --text: #c8d8e8;
         --dim: #6b7f94;
@@ -1204,7 +1208,6 @@
         font-size: 16px;
         font-weight: 700;
         color: #fff;
-        margin-bottom: 14px;
       }
       .modal textarea {
         width: 100%;
@@ -1249,6 +1252,13 @@
         box-shadow:
           0 24px 80px rgba(0, 0, 0, 0.6),
           0 0 0 1px rgba(255, 255, 255, 0.04);
+      }
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1px 4px 1px 4px;
+        height: 2.5rem;
       }
       .detail-header {
         padding: 20px 24px 16px;
@@ -2156,7 +2166,7 @@
         word-break: break-word;
         color: var(--text);
         font-size: 12px;
-        line-height: 1.7;
+        line-height: 1;
         max-height: 70vh;
         overflow-y: auto;
         padding: 1px 2rem 1rem 2rem;
@@ -2288,6 +2298,66 @@
         transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         transform-origin: center;
       }
+      .notes-preview-body h1,
+      .notes-preview-body h2,
+      .notes-preview-body h3,
+      .notes-preview-body h4,
+      .notes-preview-body h5,
+      .notes-preview-body h6 {
+        margin: 0.4em 0 0.1em;
+        font-family: var(--sans);
+        font-weight: 700;
+      }
+      .notes-preview-body h1 {
+        font-size: 1.5em;
+        color: var(--accent);
+      }
+      .notes-preview-body h2 {
+        font-size: 1.3em;
+        color: var(--accent2);
+      }
+      .notes-preview-body h3 {
+        font-size: 1.15em;
+        color: var(--gold);
+      }
+      .notes-preview-body h4 {
+        font-size: 1em;
+        color: var(--warn);
+      }
+      .notes-preview-body h5 {
+        font-size: 0.9em;
+        color: var(--violet);
+      }
+      .notes-preview-body h6 {
+        font-size: 0.85em;
+        color: var(--danger);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .notes-preview-body p { margin: 0.5em 0; }
+      .notes-preview-body ul,
+      .notes-preview-body ol { margin: 0.5em 0 0.5em 1.4em; }
+      .notes-preview-body code {
+        background: #1a1f26;
+        padding: 1px 5px;
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+      .notes-preview-body pre {
+        background: #0d1014;
+        border: 1px solid var(--border);
+        padding: 10px 14px;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
+      .notes-preview-body pre code { background: none; padding: 0; }
+      .notes-preview-body blockquote {
+        border-left: 3px solid var(--accent2);
+        margin: 0.5em 0;
+        padding: 2px 12px;
+        color: var(--dim);
+      }
+      .notes-preview-body a { color: var(--accent2); }
     </style>
   </head>
   <body>
@@ -2680,10 +2750,15 @@
     <!-- Notes Edit modal -->
     <div class="modal-overlay" id="notesModal">
       <div class="modal">
-        <h3 id="modalTitle">Edit Notes</h3>
+        <div class="modal-header">
+          <h3 id="modalTitle">Edit Notes</h3>
+          <button class="act-btn" id="modalTogglePreview" type="button" tooltip="Preview">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+        </div>
         <textarea
           id="modalNotes"
-          style="width: 80rem; height: 70vh"
+          style="width: 90vw; height: 70vh"
           placeholder="Scope details, recon findings, bug leads..."
         ></textarea>
         <div
@@ -4404,8 +4479,11 @@
           document.getElementById('notesPreviewTitle').textContent = proj.target
             ? proj.target + ' - Notes'
             : 'Notes';
-          document.getElementById('notesPreviewBody').textContent =
-            proj.notes || '';
+          // document.getElementById('notesPreviewBody').textContent =
+          //   proj.notes || '';
+          document.getElementById('notesPreviewBody').innerHTML = DOMPurify.sanitize(
+            marked.parse(proj.notes || '', { breaks: true, gfm: true })
+          );
           document.getElementById('notesPreviewModal').classList.add('open');
         }
 
@@ -4443,11 +4521,19 @@
         });
 
         /* Notes modal (legacy quick edit) */
+        function resetNotesModalPreview() {
+          const ta = document.getElementById('modalNotes');
+          const preview = document.getElementById('modalNotesPreview');
+          if (preview) preview.remove();
+          ta.style.display = '';
+          document.getElementById('modalTogglePreview').innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>';
+        }
         document
           .getElementById('modalCancel')
           .addEventListener('click', function () {
             document.getElementById('notesModal').classList.remove('open');
             editingIdx = null;
+            resetNotesModalPreview();
           });
         document
           .getElementById('notesModal')
@@ -4455,6 +4541,7 @@
             if (e.target === this) {
               this.classList.remove('open');
               editingIdx = null;
+              resetNotesModalPreview();
             }
           });
         document
@@ -4468,10 +4555,35 @@
             saveProjects(projects);
             document.getElementById('notesModal').classList.remove('open');
             editingIdx = null;
+            resetNotesModalPreview();
             render();
             showToast('Notes saved');
           });
 
+          document.getElementById('modalTogglePreview').addEventListener('click', function () {
+          const ta = document.getElementById('modalNotes');
+          const existingPreview = document.getElementById('modalNotesPreview');
+
+          if (existingPreview) {
+            existingPreview.remove();
+            ta.style.display = '';
+            this.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>';
+            this.setAttribute('tooltip', 'Preview');
+          } else {
+            ta.style.display = 'none';
+            const previewDiv = document.createElement('div');
+            previewDiv.id = 'modalNotesPreview';
+            previewDiv.className = 'notes-preview-body';
+            previewDiv.style.width = '90vw';
+            previewDiv.style.height = '70vh';
+            previewDiv.innerHTML = DOMPurify.sanitize(
+              marked.parse(ta.value, { breaks: true, gfm: true })
+            );
+            ta.insertAdjacentElement('afterend', previewDiv);
+            this.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="anim-edit-icon"><path class="anim-edit-box" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path class="anim-edit-pencil" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            this.setAttribute('tooltip', 'Edit');
+          }
+        });
         /* Filters & sort */
         document.querySelectorAll('.filter-btn').forEach(function (btn) {
           btn.addEventListener('click', function () {
