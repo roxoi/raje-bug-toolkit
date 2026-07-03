@@ -233,11 +233,15 @@
       }
       /* Firefox */
       @supports (-moz-appearance: none) {
-        html {
+        * {
           scrollbar-width: thin;
           scrollbar-color: var(--border) #080b0e;
         }
-        html:hover {
+        html:hover,
+        .modal:hover,
+        .notes-preview-body:hover,
+        .detail-body:hover,
+        .mpd-menu:hover {
           scrollbar-color: var(--accent2) #080b0e;
         }
       }
